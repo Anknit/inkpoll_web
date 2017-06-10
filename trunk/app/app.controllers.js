@@ -29,20 +29,54 @@
     function creator(pollEditor, pollCategories) {
         var scope = this;
         this.category = {};
+        resetPollEditor();
         pollCategories.getCategories().then(function(response){
             if(response.status) {
                 scope.pollCatArr = response.data;
                 scope.category = scope.pollCatArr[0];
             }
         });
-        this.poll = {
-            question: '',
-            optionArr: ['', '', '']
-        };
         this.createpoll = function () {
             scope.poll.category = scope.category.catId;
-            pollEditor.addNewPoll(scope.poll);
-        }
+            if(scope.poll.question.trim() == '') {
+                alert('Enter poll question');
+                return false;
+            }
+            for(var i=0; i< scope.poll.optionArr.length; i++) {
+                if(scope.poll.optionArr[i].trim() == '') {
+                    alert('You have one or more empty option. Please remove them if not needed');
+                    return false;
+                }
+            }
+            pollEditor.addNewPoll(scope.poll).then(function(response){
+                if(response.status) {
+                    alert('Success');
+                    resetPollEditor();
+                }
+            });
+        };
+        this.addoption = function () {
+            scope.poll.optionArr.push('');
+        };
+        this.moveoption = function(index, direction) {
+            var pos = index;
+            if(direction == 'down') {
+                pos++;
+            } else {
+                pos--;
+            }
+            scope.poll.optionArr.splice(pos, 0 , scope.poll.optionArr.splice(index, 1)[0]);
+        };
+        this.removeoption = function(index) {
+            scope.poll.optionArr.splice(index, 1);
+        };
+        function resetPollEditor() {
+            scope.poll = {
+                question: '',
+                category: 0,
+                optionArr: ['', '', '']
+            };
+        };
     }
 
     polllist.$inject = ['pollCaster', 'pollReader'];
