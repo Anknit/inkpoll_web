@@ -3,14 +3,36 @@
         <form>
             <div class="form-group">
                 <label class="control-label">Poll Question</label>
-                <textarea class="form-control" data-ng-model="crt.poll.question" placeholder="Write your poll question here ..." rows="4"></textarea>
+                <textarea class="form-control" data-ng-model="crt.poll.question" placeholder="Write your poll question here ..." rows="4" required></textarea>
             </div>
             <div class="form-group">
                 <label class="control-label">Category</label>
                 <select class="form-control" data-ng-model="crt.category" data-ng-options="item as item.catName for item in crt.pollCatArr track by item.catId"></select>
             </div>
             <div class="form-group ng-cloack" data-ng-repeat="(i, option) in crt.poll.optionArr track by $index">
-                <input type="text" class="form-control" placeholder="{{'Option ' + ($index + 1)}}" data-ng-model="crt.poll.optionArr[i]" />
+                <div class="input-group">
+                    <div class="input-group-btn">
+                        <button type="button" class="btn btn-default" data-ng-disabled="$first" data-ng-click="crt.moveoption($index,'up')">
+                            <span class="glyphicon glyphicon-arrow-up"></span>
+                            &nbsp;Up
+                        </button>
+                        <button type="button" class="btn btn-default" data-ng-disabled="$last" data-ng-click="crt.moveoption($index,'down')">
+                            <span class="glyphicon glyphicon-arrow-down"></span>
+                            &nbsp;Down
+                        </button>
+                    </div>
+                    <input type="text" class="form-control" placeholder="{{'Option ' + ($index + 1)}}" data-ng-model="crt.poll.optionArr[i]" />
+                    <div class="input-group-btn">
+                        <button type="button" class="btn btn-default" data-ng-click="crt.removeoption($index)" data-ng-disabled="crt.poll.optionArr.length <3">
+                            <span class="glyphicon glyphicon-remove"></span>
+                            &nbsp;Remove
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+            <div class="form-group">
+                <button type="button" class="btn btn-link" data-ng-click="crt.addoption()">Add Option</button>
             </div>
             <div class="form-group">
                 <button type="button" class="btn btn-warning" data-ng-click="crt.createpoll()">Create</button>
