@@ -1,7 +1,9 @@
+/*global angular*/
 (function () {
+    'use strict';
     angular.module('app', ['ngRoute'])
         .config(appConfig)
-        .constant('APIBASE', 'http://localhost/feeddasm/server/request.php');
+        .constant('APIBASE', './server/request.php');
 
     function appConfig($httpProvider, $routeProvider, $locationProvider) {
         $routeProvider.when("/", {
@@ -27,7 +29,13 @@
          */
         var param = function (obj) {
             var query = '',
-                name, value, fullSubName, subName, subValue, innerObj, i;
+                name,
+                value,
+                fullSubName,
+                subName,
+                subValue,
+                innerObj,
+                i;
 
             for (name in obj) {
                 value = obj[name];

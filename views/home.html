@@ -1,7 +1,7 @@
 <div data-ng-controller="polllist as plst">
     <div class="col-xs-12">
-        <div class="row" data-ng-repeat="item in plst.list">
-            <div class="col-xs-12">
+        <div class="row">
+            <div class="col-xs-12 col-sm-6 col-md-4" data-ng-repeat="item in plst.list">
                 <div class="panel panel-warning">
                     <div class="panel-heading">
                         #{{$index + 1 + ' ' + item.questionText}}

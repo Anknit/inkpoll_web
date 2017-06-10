@@ -2,6 +2,7 @@
     angular.module('app')
         .service('pollCaster', pollCaster)
         .service('pollReader', pollReader)
+        .service('pollCategories', pollCategories)
         .service('pollEditor', pollEditor);
 
     pollEditor.$inject = ['$http', 'APIBASE'];
@@ -27,6 +28,19 @@
             return $http.post(APIBASE + '?request=castvote', {
                 data: pollData
             }).then(function (response) {
+                return response.data;
+            }, function (error) {
+                console.log(error);
+            });
+        };
+    }
+
+    pollCategories.$inject = ['$http', 'APIBASE'];
+
+    function pollCategories($http, APIBASE) {
+        var pollCategories = this;
+        this.getCategories = function () {
+            return $http.get(APIBASE + '?request=getCategories').then(function (response) {
                 return response.data;
             }, function (error) {
                 console.log(error);
