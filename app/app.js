@@ -1,7 +1,7 @@
 (function () {
     angular.module('app', ['ngRoute'])
         .config(appConfig)
-        .constant('APIBASE', 'http://localhost/feedd/server/request.php');
+        .constant('APIBASE', 'http://localhost/feeddasm/server/request.php');
 
     function appConfig($httpProvider, $routeProvider, $locationProvider) {
         $routeProvider.when("/", {
