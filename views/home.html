@@ -1,0 +1,30 @@
+<div data-ng-controller="polllist as plst">
+    <div class="col-xs-12">
+        <div class="row" data-ng-repeat="item in plst.list">
+            <div class="col-xs-12">
+                <div class="panel panel-warning">
+                    <div class="panel-heading">
+                        #{{$index + 1 + ' ' + item.questionText}}
+                    </div>
+                    <ul class="list-group">
+                        <li class="list-group-item" data-ng-repeat="option in item.optionArr track by $index">
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" data-ng-model="item.userChoice" name="{{'optionsRadios_' + (item.id)}}" value="{{option.id}}">
+                                    {{option.optionText}}
+                                </label>
+                            </div>
+                        </li>
+                        <li class="list-group-item action-item">
+                            <a class="btn btn-success" data-ng-disabled="!item.userChoice" data-ng-click="plst.submitPollVote(item)">Vote</a>&nbsp;
+                            <a class="btn btn-link">Skip</a>
+                        </li>
+                    </ul>
+                    <div class="panel-footer">
+                        <p class="text-right">Created by <span data-ng-bind="item.createdby"></span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,8 @@
+Options +FollowSymlinks
+RewriteEngine On
+RewriteBase /feedd/
+#RewriteRule .* https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !.*\.(css|js|html|png|jpg|jpeg|gif|txt)
+RewriteRule (.*) ?%{QUERY_STRING} [L]
