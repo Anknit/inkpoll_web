@@ -1,7 +1,9 @@
 <?php
 require_once __DIR__.'/OperateDB/DbMgrInterface.php';
+require_once __DIR__.'/definitions.php';
 require_once __DIR__.'/polleditor.php';
 require_once __DIR__.'/voteCaster.php';
+require_once __DIR__.'/pollCategories.php';
 require_once __DIR__.'/pollReader.php';
     if(isset($_REQUEST['request'])) {
         $req = trim($_REQUEST['request']);
@@ -26,7 +28,7 @@ function validateRequest ($request){
     // Logic to validate request permission etc.
     return true;
 }
-function serveRequest ($request, $data){
+function serveRequest ($request, $data = array()){
     switch ($request) {
         case 'newpoll':
             $reqHandler = new PollEditor();
@@ -39,6 +41,10 @@ function serveRequest ($request, $data){
         case 'readPolls':
             $reqHandler = new PollReader();
             return $reqHandler->getPolls($data);
+            break;
+        case 'getCategories':
+            $reqHandler = new PollCategories();
+            return $reqHandler->getCategories();
             break;
         default:
             break;

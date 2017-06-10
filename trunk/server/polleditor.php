@@ -17,7 +17,8 @@
                 'Table'=>'pollitem',
                 'Fields' =>array(
                     'pollQuestion' => $pollData['question'],
-                    'userId' => $userId
+                    'userId' => $userId,
+                    'catId' => $pollData['category']
                 )
             ));
             if($insertQues) {

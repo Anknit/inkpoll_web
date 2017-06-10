@@ -12,38 +12,35 @@
 
     }
 
-    categoryHome.$inject = [];
+    categoryHome.$inject = ['pollCategories'];
 
-    function categoryHome() {
+    function categoryHome(pollCategories) {
         var scope = this;
-        this.catlist = [
-            {
-                catName: 'Entertainment'
-            },
-            {
-                catName: 'Sports'
-            },
-            {
-                catName: 'Politics'
-            },
-            {
-                catName: 'Education'
-            },
-            {
-                catName: 'Business'
+        this.catlist = [];
+        pollCategories.getCategories().then(function(response){
+            if(response.status) {
+                scope.catlist = response.data;
             }
-        ];
+        });
     }
 
-    creator.$inject = ['pollEditor'];
+    creator.$inject = ['pollEditor', 'pollCategories'];
 
-    function creator(pollEditor) {
+    function creator(pollEditor, pollCategories) {
         var scope = this;
-        scope.poll = {
+        this.category = {};
+        pollCategories.getCategories().then(function(response){
+            if(response.status) {
+                scope.pollCatArr = response.data;
+                scope.category = scope.pollCatArr[0];
+            }
+        });
+        this.poll = {
             question: '',
             optionArr: ['', '', '']
         };
-        scope.createpoll = function () {
+        this.createpoll = function () {
+            scope.poll.category = scope.category.catId;
             pollEditor.addNewPoll(scope.poll);
         }
     }
