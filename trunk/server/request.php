@@ -7,7 +7,10 @@ require_once __DIR__.'/pollReader.php';
         $req = trim($_REQUEST['request']);
         if(validateRequest($req)){
             $response = array('status'=> false);
-            $reqData = $_REQUEST['data'];
+            $reqData = array();
+            if(isset($_REQUEST['data'])) {
+                $reqData = $_REQUEST['data'];
+            }
             $response = serveRequest($req, $reqData);
             echo json_encode($response);
         } else {
