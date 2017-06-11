@@ -3,7 +3,8 @@
     'use strict';
     angular.module('app', ['ngRoute'])
         .config(appConfig)
-        .constant('APIBASE', './server/request.php');
+        .constant('APIBASE', './server/request.php')
+        .run(['$rootScope', '$window', 'fbAuthService', runMethod]);
 
     function appConfig($httpProvider, $routeProvider, $locationProvider) {
         $routeProvider.when("/", {
@@ -13,6 +14,10 @@
             templateUrl: 'views/category-home.html',
             controller: 'categoryHome',
             controllerAs: 'catmgr'
+        }).when("/polls/:category", {
+            templateUrl: 'views/category-polls.html',
+            controller: 'categoryPolls',
+            controllerAs: 'catPoll'
         }).when("/pollcreater", {
             templateUrl: 'views/poll-creater.html'
         }).otherwise({
@@ -67,6 +72,77 @@
         $httpProvider.defaults.transformRequest = [function (data) {
             return angular.isObject(data) && String(data) !== '[object File]' ? param(data) : data;
         }];
+    }
+
+    function runMethod($rootScope, $window, sAuth) {
+        $rootScope.user = {};
+        $window.fbAsyncInit = function () {
+            FB.init({
+
+                /*
+                 The app id of the web app;
+                 To register a new app visit Facebook App Dashboard
+                 ( https://developers.facebook.com/apps/ )
+                */
+
+                appId: '1356379634397148',
+
+                /*
+                 Adding a Channel File improves the performance
+                 of the javascript SDK, by addressing issues
+                 with cross-domain communication in certain browsers.
+                */
+
+                channelUrl: 'app/channel.html',
+
+                /*
+                 Set if you want to check the authentication status
+                 at the start up of the app
+                */
+
+                status: true,
+
+                /*
+                 Enable cookies to allow the server to access
+                 the session
+                */
+
+                cookie: true,
+
+                /* Parse XFBML */
+
+                xfbml: true,
+                
+                /* Graph API Version */
+                
+                version: 'v2.4'
+            });
+
+            sAuth.watchLoginChange();
+
+        };
+
+        (function (d) {
+            // load the Facebook javascript SDK
+
+            var js,
+                id = 'facebook-jssdk',
+                ref = d.getElementsByTagName('script')[0];
+
+            if (d.getElementById(id)) {
+                return;
+            }
+
+            js = d.createElement('script');
+            js.id = id;
+            js.async = true;
+            js.src = "//connect.facebook.net/en_US/sdk.js";
+
+            ref.parentNode.insertBefore(js, ref);
+
+        }(document));
+
+
     }
 
 })();

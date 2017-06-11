@@ -21,7 +21,9 @@
                         </li>
                     </ul>
                     <div class="panel-footer">
-                        <p class="text-right">Created by <span data-ng-bind="item.createdby"></span></p>
+                        <p class="text-right">
+                            <a data-ng-href="{{'polls/' + item.pollcategory}}" data-ng-bind="item.pollcategory"></a>
+                        </p>
                     </div>
                 </div>
             </div>

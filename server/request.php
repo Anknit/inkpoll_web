@@ -3,6 +3,7 @@ require_once __DIR__.'/OperateDB/DbMgrInterface.php';
 require_once __DIR__.'/definitions.php';
 require_once __DIR__.'/polleditor.php';
 require_once __DIR__.'/voteCaster.php';
+require_once __DIR__.'/authMgr.php';
 require_once __DIR__.'/pollCategories.php';
 require_once __DIR__.'/pollReader.php';
     if(isset($_REQUEST['request'])) {
@@ -45,6 +46,10 @@ function serveRequest ($request, $data = array()){
         case 'getCategories':
             $reqHandler = new PollCategories();
             return $reqHandler->getCategories();
+            break;
+        case 'login':
+            $reqHandler = new AuthMgr();
+            return $reqHandler->login();
             break;
         default:
             break;
