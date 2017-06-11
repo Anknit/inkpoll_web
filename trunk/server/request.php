@@ -1,4 +1,5 @@
 <?php
+date_default_timezone_set('Asia/Kolkata');
 session_start();
 require_once __DIR__.'/OperateDB/DbMgrInterface.php';
 require_once __DIR__.'/definitions.php';
