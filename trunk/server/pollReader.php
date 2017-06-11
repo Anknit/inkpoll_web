@@ -25,8 +25,15 @@
             
             $offset =  ($pageIndex - 1) * $count;
             
-            $readPollQuestion = DB_Query('Select pollitem.id, pollitem.userId, pollitem.pollQuestion as questionText, userinfo.id as userId, userinfo.name as createdby, pollresponses.optionId as userChoice from pollitem left join userinfo on pollitem.userId = userinfo.id left join pollresponses on pollitem.id = pollresponses.pollId and pollresponses.userId = '.$userId.' order by id desc limit '.$offset.','.$count, 'ASSOC', '', 'id');
-//            echo json_encode($readPollQuestion); die();
+            $query = 'Select pollitem.id, pollitem.userId, pollitem.pollQuestion as questionText, userinfo.id as userId, userinfo.name as createdby, pollresponses.optionId as userChoice, pollcategories.catName as pollcategory from pollitem left join userinfo on pollitem.userId = userinfo.id left join pollresponses on pollitem.id = pollresponses.pollId and pollresponses.userId = '.$userId.' left join pollcategories on pollitem.catId = pollcategories.catId';
+            
+            if(isset($readData['category'])) {
+                $query .= ' where pollitem.catId = '.$this->getCatId($readData['category']);
+            }
+            
+            $query  .= ' order by pollitem.id desc limit '.$offset.','.$count;
+            
+            $readPollQuestion = DB_Query($query, 'ASSOC', '', 'id');
             if($readPollQuestion) {
                 $readPollOptions = DB_Read(array(
                     'Table' => 'polloptions',
@@ -60,6 +67,20 @@
                 $resData['data'] = $responseArray;
             }
             return $resData;
-        }   
-    } 
+        }
+        private function getCatId($catName) {
+            $catId = 0;
+            if(isset($catName)) {
+                $queryResponse = DB_Read(array(
+                    'Table' => 'pollcategories',
+                    'Fields'=> 'catId',
+                    'clause'=> 'catName = "'.$catName.'"'
+                ),'ASSOC', '');
+                if($queryResponse) {
+                    $catId = $queryResponse[0]['catId'];
+                }
+            }
+            return $catId;
+        }
+     } 
 ?>

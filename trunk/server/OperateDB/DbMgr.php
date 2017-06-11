@@ -36,10 +36,12 @@ class DBMgr{
 	
 	private function set_mysqlError($Query, &$DB_OperationError = '')
 	{
+/*
 		include_once __DIR__.'./../ErrorHandling.php';
+*/
 		$DB_OperationError	=	"";
 		$DB_OperationError	=	mysqli_error($this->connection);
-		ErrorLogging('query: --'.$Query.' -- '.'Error: --'.$DB_OperationError);
+		echo('query: --'.$Query.' -- '.'Error: --'.$DB_OperationError); die();
 	}
 	
 	private function FieldValuePair_ToString($FieldValueArray)
