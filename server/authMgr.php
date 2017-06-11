@@ -158,7 +158,7 @@
                     'userName' => $_SESSION['userName'],
                     'userEmail' => $_SESSION['userEmail'],
                     'userType' => $_SESSION['userType'],
-                    'fbUserId' => $_SESSION['fb_user_id'],
+                    'fbUserId' => $_SESSION['fb_userid'],
                     'accessToken' => $_SESSION['fb_access_token']
                 );
             } else {
