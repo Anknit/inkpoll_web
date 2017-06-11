@@ -109,7 +109,6 @@
                 $resData['data'] = $responseArray;
             }
             return $resData;
-            
         }
         
         private function checkDbUserExist ($userId) {
@@ -124,6 +123,54 @@
                 $response['data'] = $userData[0];
             }
             return $response;
+        }
+        
+        public function logout() {
+            $error = '';
+            $status = false;
+            $responseArray = array();
+
+            unset($_SESSION['fb_access_token']);
+            unset($_SESSION['fb_userid']);
+            unset($_SESSION['userId']);
+            unset($_SESSION['userName']);
+            unset($_SESSION['userEmail']);
+            unset($_SESSION['userType']);
+
+            $status = true;
+            
+            $resData = array('status' => $status);
+            if(!$status) {
+                $resData['error'] = $error;
+            } else {
+                $resData['data'] = $responseArray;
+            }
+            return $resData;
+        }
+        
+        public function getUserData() {
+            $status = false;
+            $error = '';
+            if(isset($_SESSION['userId'])) {
+                $status = true;
+                $responseArray = array(
+                    'userId' => $_SESSION['userId'],
+                    'userName' => $_SESSION['userName'],
+                    'userEmail' => $_SESSION['userEmail'],
+                    'userType' => $_SESSION['userType'],
+                    'fbUserId' => $_SESSION['fb_user_id'],
+                    'accessToken' => $_SESSION['fb_access_token']
+                );
+            } else {
+                $error = 'User session is not active';
+            }
+            $resData = array('status' => $status);
+            if(!$status) {
+                $resData['error'] = $error;
+            } else {
+                $resData['data'] = $responseArray;
+            }
+            return $resData;
         }
     }
 ?>

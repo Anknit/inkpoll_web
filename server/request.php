@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once __DIR__.'/OperateDB/DbMgrInterface.php';
 require_once __DIR__.'/definitions.php';
 require_once __DIR__.'/polleditor.php';
@@ -26,8 +27,13 @@ require_once __DIR__.'/pollReader.php';
     }
 
 function validateRequest ($request){
-    // Logic to validate request permission etc.
-    return true;
+    $validation = true;
+    if($_REQUEST['request'] == 'newpoll') {
+        if(!isset($_SESSION['userId'])) {
+            $validation = false;
+        }
+    }
+    return $validation;
 }
 function serveRequest ($request, $data = array()){
     switch ($request) {
@@ -50,6 +56,14 @@ function serveRequest ($request, $data = array()){
         case 'login':
             $reqHandler = new AuthMgr();
             return $reqHandler->login();
+            break;
+        case 'logout':
+            $reqHandler = new AuthMgr();
+            return $reqHandler->logout();
+            break;
+        case 'userdata':
+            $reqHandler = new AuthMgr();
+            return $reqHandler->getUserData();
             break;
         default:
             break;

@@ -28,11 +28,18 @@
                             &nbsp;Remove
                         </button>
                     </div>
-
                 </div>
             </div>
             <div class="form-group">
                 <button type="button" class="btn btn-link" data-ng-click="crt.addoption()">Add Option</button>
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" data-ng-model="crt.poll.anonvote" />
+                        Allow anonymous vote
+                    </label>
+                </div>
             </div>
             <div class="form-group">
                 <button type="button" class="btn btn-warning" data-ng-click="crt.createpoll()">Create</button>

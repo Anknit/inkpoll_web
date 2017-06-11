@@ -25,7 +25,7 @@
             
             $offset =  ($pageIndex - 1) * $count;
             
-            $query = 'Select pollitem.id, pollitem.userId, pollitem.pollQuestion as questionText, userinfo.id as userId, userinfo.name as createdby, pollresponses.optionId as userChoice, pollcategories.catName as pollcategory from pollitem left join userinfo on pollitem.userId = userinfo.id left join pollresponses on pollitem.id = pollresponses.pollId and pollresponses.userId = '.$userId.' left join pollcategories on pollitem.catId = pollcategories.catId';
+            $query = 'Select pollitem.id, pollitem.userId, pollitem.anonymousvote, pollitem.pollQuestion as questionText, userinfo.id as userId, userinfo.name as createdby, pollresponses.optionId as userChoice, pollcategories.catName as pollcategory from pollitem left join userinfo on pollitem.userId = userinfo.id left join pollresponses on pollitem.id = pollresponses.pollId and pollresponses.userId = '.$userId.' left join pollcategories on pollitem.catId = pollcategories.catId';
             
             if(isset($readData['category'])) {
                 $query .= ' where pollitem.catId = '.$this->getCatId($readData['category']);

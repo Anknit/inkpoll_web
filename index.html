@@ -8,7 +8,7 @@
 </head>
 
 <body class="container-fluid" style="margin-top:60px;">
-    <header class="row">
+    <header class="row" data-ng-controller="headerCtrl as head">
         <nav class="navbar navbar-default navbar-fixed-top">
             <div class="container-fluid">
                 <!-- Brand and toggle get grouped for better mobile display -->
@@ -24,19 +24,27 @@
                     </a>
                 </div>
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                    <ul class="nav navbar-nav navbar-right">
+                    <ul class="nav navbar-nav">
                         <li><a href="./">Home</a></li>
                         <li><a href="categories">Categories</a></li>
-                        <li><a href="pollcreater">Creator</a></li>
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Login <span class="caret"></span></a>
+                        <li><a href="pollcreater" data-auth-user-only>Creator</a></li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="dropdown" ng-cloak data-ng-if="user.name">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                <span>{{'Welcome ' + user.name.split(' ')[0]}}</span>
+                                <span class="caret"></span>
+                            </a>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a>
-                                        <div class="fb-login-button" data-width="150" data-max-rows="1" data-size="large" data-scope="email" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="true" data-use-continue-as="false"></div>
-                                    </a>
+                                    <a class="btn btn-link" data-ng-click="head.logout()">Logout</a>
                                 </li>
                             </ul>
+                        </li>
+                        <li>
+                            <a role="button">
+                                <span ng-cloak data-ng-if="!user.name" data-ng-click="head.showAuthModal()">Signin</span>
+                            </a>
                         </li>
                     </ul>
                 </div>
@@ -49,18 +57,37 @@
 
     <div data-ng-view class="row"></div>
 
+    <div class="modal fade" tabindex="-1" role="dialog" id="auth-modal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Login</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="fb-login-button" data-display="popup" data-size="medium" data-button-type="login_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
     <script>
-/*
-        (function(d, s, id) {
-            var js, fjs = d.getElementsByTagName(s)[0];
-            if (d.getElementById(id)) return;
-            js = d.createElement(s);
-            js.id = id;
-            js.src = "//connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v2.9&appId=1356379634397148";
-            fjs.parentNode.insertBefore(js, fjs);
-        }(document, 'script', 'facebook-jssdk'));
+        /*
+                                (function(d, s, id) {
+                                    var js, fjs = d.getElementsByTagName(s)[0];
+                                    if (d.getElementById(id)) return;
+                                    js = d.createElement(s);
+                                    js.id = id;
+                                    js.src = "//connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v2.9&appId=1356379634397148";
+                                    fjs.parentNode.insertBefore(js, fjs);
+                                }(document, 'script', 'facebook-jssdk'));
 
-*/
+                        */
+
     </script>
 
     <script type="application/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -70,7 +97,7 @@
     <script type="application/javascript" src="app/app.js"></script>
     <script type="application/javascript" src="app/app.controllers.js"></script>
     <script type="application/javascript" src="app/app.services.js"></script>
-    <!--    <script type="application/javascript" src="app.directives.js"></script>-->
+    <script type="application/javascript" src="app/app.directives.js"></script>
 </body>
 
 </html>

@@ -10,15 +10,15 @@
             $error = '';
             $status = false;
             
-            // UserID needs to be fetched
-            $userId = 1;
+            $userId = $_SESSION['userId'];
             
             $insertQues = DB_Insert(array(
                 'Table'=>'pollitem',
                 'Fields' =>array(
                     'pollQuestion' => $pollData['question'],
                     'userId' => $userId,
-                    'catId' => $pollData['category']
+                    'catId' => $pollData['category'],
+                    'anonymousvote' => ($pollData['anonvote'] == true)
                 )
             ));
             if($insertQues) {
