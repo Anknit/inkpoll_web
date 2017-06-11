@@ -2,7 +2,7 @@
     <div class="col-xs-12">
         <div class="row">
             <div class="col-xs-12 col-sm-6 col-md-4" data-ng-repeat="item in catPoll.list">
-                <div class="panel panel-warning">
+                <div class="panel panel-warning" data-ng-init="item.alreadyVoted = !!item.userChoice">
                     <div class="panel-heading">
                         #{{$index + 1 + ' ' + item.questionText}}
                     </div>
@@ -16,13 +16,17 @@
                             </div>
                         </li>
                         <li class="list-group-item action-item">
-                            <a class="btn btn-success" data-ng-disabled="!item.userChoice" data-ng-click="catPoll.submitPollVote(item)">Vote</a>&nbsp;
+                            <a data-ng-cloak class="btn btn-success" data-ng-hide="((item.anonymousvote =='0' && !$root.user.name) || item.alreadyVoted)" data-ng-disabled="(!item.userChoice)" data-ng-click="catPoll.submitPollVote(item)">Vote</a>&nbsp;
+                            <a data-ng-cloak role="button" data-ng-show="(item.anonymousvote =='0' && !$root.user.name)" data-ng-click="catPoll.showAuthModal()">Login to vote</a>&nbsp;
+                            <span data-ng-cloak data-ng-show="item.alreadyVoted && $root.user.name">Already Voted</span>&nbsp;
                             <a class="btn btn-link">Skip</a>
                         </li>
                     </ul>
 <!--
                     <div class="panel-footer">
-                        <p class="text-right">Created by <span data-ng-bind="item.createdby"></span></p>
+                        <p class="text-right">
+                            <a data-ng-href="{{'polls/' + item.pollcategory}}" data-ng-bind="item.pollcategory"></a>
+                        </p>
                     </div>
 -->
                 </div>

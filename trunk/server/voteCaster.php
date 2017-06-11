@@ -11,10 +11,23 @@
             $status = false;
             
             //User Id needs to be fetched
-            $userId = 1;
+            $userId = 0;
+            if(isset($_SESSION['userId'])) {
+                $userId = $_SESSION['userId'];
+                $alreadyVoted = $this->checkVoteExist($voteData, $userId);
+                $voteAllowed = true;
+                if($alreadyVoted) {
+                    $error = 'You have already voted for this poll';
+                }
+            } else {
+                $voteAllowed = $this->isAnonVoteAllowed($voteData);
+                $alreadyVoted = false;
+                if(!$voteAllowed) {
+                    $error = 'Anonymous vote not allowed for this poll. You must sign in.';
+                }
+            }
             
-            $alreadyVoted = $this->checkVoteExist($voteData, $userId);
-            if(!$alreadyVoted) {
+            if(!$alreadyVoted && $voteAllowed) {
                 $validOption = $this->isOptionValid($voteData);
                 if($validOption) {
                     $insertVote = DB_Insert(array(
@@ -33,8 +46,6 @@
                 } else {
                     $error = 'You have voted for an invalid option';
                 }
-            } else {
-                $error = 'You have already voted for this poll';
             }
             $resData = array('status' => $status);
             if(!$status) {
@@ -43,7 +54,6 @@
                 $resData['data'] = array('voteid' => $insertVote);
             }
             return $resData;
-            
         }
         private function checkVoteExist ($voteData, $userId) {
             $alreadyVoted = true;
@@ -52,6 +62,14 @@
                 $alreadyVoted = false;
             }
             return $alreadyVoted;
+        }
+        private function isAnonVoteAllowed ($voteData) {
+            $voteAllowed = false;
+            $runQuery = DB_Query('Select anonymousvote from pollitem where id = "'.$voteData["pollItemId"].'"');
+            if($runQuery[0]['anonymousvote'] == "1") {
+                $voteAllowed = true;
+            }
+            return $voteAllowed;
         }
         private function isOptionValid ($voteData) {
             $validResponse = false;

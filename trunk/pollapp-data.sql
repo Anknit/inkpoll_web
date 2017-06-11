@@ -56,9 +56,10 @@ CREATE TABLE `pollitem` (
   `pollQuestion` text,
   `userId` int(11) DEFAULT NULL,
   `catId` int(11) DEFAULT NULL,
+  `anonymousvote` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -67,7 +68,7 @@ CREATE TABLE `pollitem` (
 
 LOCK TABLES `pollitem` WRITE;
 /*!40000 ALTER TABLE `pollitem` DISABLE KEYS */;
-INSERT INTO `pollitem` VALUES (1,'akdjhfkj',1,8),(2,'akdjhfkj',1,8),(3,'akdjhfkj',1,8),(4,'test yor code. is it working',1,8),(5,'What is category of this poll',1,4),(6,'hjhjdghj',1,5),(7,'dsdsd khk',1,5),(8,'sjhdgfhghd',1,3),(9,'sjhdgfhghd',1,4),(10,'Is editor functionality working',1,8),(11,'',1,1),(12,'',1,1),(13,'',1,1),(14,'jsdjghjhs',1,1);
+INSERT INTO `pollitem` VALUES (1,'akdjhfkj',1,8,0),(2,'akdjhfkj',1,8,1),(3,'akdjhfkj',1,8,0),(4,'test yor code. is it working',1,8,1),(5,'What is category of this poll',1,4,0),(6,'hjhjdghj',1,5,1),(7,'dsdsd khk',1,5,0),(8,'sjhdgfhghd',1,3,1),(9,'sjhdgfhghd',1,4,1),(10,'Is editor functionality working',1,8,0),(11,'',1,1,0),(12,'',1,1,1),(13,'',1,1,0),(14,'jsdjghjhs',1,1,1),(15,'Test anonymous',4,1,0),(16,'kksjkfjkks',4,1,0),(17,'jkdfjk',4,1,0),(18,'jkdfjk',4,1,1);
 /*!40000 ALTER TABLE `pollitem` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -84,7 +85,7 @@ CREATE TABLE `polloptions` (
   `optionText` text,
   PRIMARY KEY (`optionId`),
   UNIQUE KEY `optionid_UNIQUE` (`optionId`)
-) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -93,7 +94,7 @@ CREATE TABLE `polloptions` (
 
 LOCK TABLES `polloptions` WRITE;
 /*!40000 ALTER TABLE `polloptions` DISABLE KEYS */;
-INSERT INTO `polloptions` VALUES (1,1,'jksf jdsj'),(2,1,'jfj'),(3,1,'jb s fjsd'),(4,2,'jksf jdsj'),(5,2,'jfj'),(6,2,'jb s fjsd'),(7,3,'jksf jdsj'),(8,3,'jfj'),(9,3,'jb s fjsd'),(10,4,'yes'),(11,4,'no'),(12,4,'dont know'),(13,5,'Sports'),(14,5,'Politics'),(15,5,'Education'),(16,6,'jhg'),(17,6,'kl'),(18,6,'klk'),(19,7,'sdf'),(20,7,'sdfd'),(21,7,'fvssdv'),(22,8,'dfd'),(23,8,'adfas'),(24,8,'sdvsdf'),(25,9,'dfd'),(26,9,'adfas'),(27,9,'sdvsdf'),(28,10,'Array'),(29,10,'Array'),(30,10,'Array'),(31,10,'Sure'),(32,11,'Array'),(33,11,'Array'),(34,11,'789'),(35,11,'doiois'),(36,12,'789'),(37,12,'pol'),(38,12,'hjnn'),(39,13,''),(40,13,''),(41,13,''),(42,14,'shhdhkjs');
+INSERT INTO `polloptions` VALUES (1,1,'jksf jdsj'),(2,1,'jfj'),(3,1,'jb s fjsd'),(4,2,'jksf jdsj'),(5,2,'jfj'),(6,2,'jb s fjsd'),(7,3,'jksf jdsj'),(8,3,'jfj'),(9,3,'jb s fjsd'),(10,4,'yes'),(11,4,'no'),(12,4,'dont know'),(13,5,'Sports'),(14,5,'Politics'),(15,5,'Education'),(16,6,'jhg'),(17,6,'kl'),(18,6,'klk'),(19,7,'sdf'),(20,7,'sdfd'),(21,7,'fvssdv'),(22,8,'dfd'),(23,8,'adfas'),(24,8,'sdvsdf'),(25,9,'dfd'),(26,9,'adfas'),(27,9,'sdvsdf'),(28,10,'Array'),(29,10,'Array'),(30,10,'Array'),(31,10,'Sure'),(32,11,'Array'),(33,11,'Array'),(34,11,'789'),(35,11,'doiois'),(36,12,'789'),(37,12,'pol'),(38,12,'hjnn'),(39,13,''),(40,13,''),(41,13,''),(42,14,'shhdhkjs'),(43,15,'shdjh'),(44,15,'hjgjhg'),(45,15,'jhghjhghj'),(46,16,'45'),(47,16,'879'),(48,16,'jh'),(49,17,'45'),(50,17,'scs'),(51,17,'kl'),(52,18,'45'),(53,18,'scs'),(54,18,'kl');
 /*!40000 ALTER TABLE `polloptions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -111,7 +112,7 @@ CREATE TABLE `pollresponses` (
   `userId` int(11) DEFAULT NULL,
   PRIMARY KEY (`resId`),
   UNIQUE KEY `resId_UNIQUE` (`resId`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -120,7 +121,7 @@ CREATE TABLE `pollresponses` (
 
 LOCK TABLES `pollresponses` WRITE;
 /*!40000 ALTER TABLE `pollresponses` DISABLE KEYS */;
-INSERT INTO `pollresponses` VALUES (1,1,2,1),(3,2,6,1),(4,4,10,1),(5,3,8,1),(6,12,37,1),(7,10,31,1),(8,11,34,1),(9,13,39,1);
+INSERT INTO `pollresponses` VALUES (1,1,2,1),(3,2,6,1),(4,4,10,1),(5,3,8,1),(6,12,37,1),(7,10,31,1),(8,11,34,1),(9,13,39,1),(10,14,42,1),(11,5,14,1),(12,17,50,1),(13,17,50,4),(14,18,54,4);
 /*!40000 ALTER TABLE `pollresponses` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -162,4 +163,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-06-11 15:13:22
+-- Dump completed on 2017-06-12  0:08:54

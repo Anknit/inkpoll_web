@@ -117,9 +117,7 @@
                 
                 version: 'v2.4'
             });
-
             sAuth.watchLoginChange();
-
         };
 
         (function (d) {

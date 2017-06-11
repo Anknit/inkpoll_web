@@ -1,6 +1,7 @@
 (function () {
     angular.module('app')
         .controller('home', home)
+        .controller('headerCtrl', headerCtrl)
         .controller('categoryHome', categoryHome)
         .controller('categoryPolls', categoryPolls)
         .controller('creator', creator)
@@ -11,6 +12,18 @@
     function home() {
         var scope = this;
 
+    }
+
+    headerCtrl.$inject = ['fbAuthService'];
+
+    function headerCtrl(fbAuthService) {
+        var scope = this;
+        this.logout = function () {
+            fbAuthService.logout();
+        };
+        this.showAuthModal = function() {
+            jQuery('#auth-modal').modal('show');
+        };
     }
 
     categoryPolls.$inject = ['pollCaster', 'pollReader', '$routeParams'];
@@ -25,6 +38,10 @@
                 scope.list = response.data;
             }
         });
+        this.showAuthModal = function() {
+            jQuery('#auth-modal').modal('show');
+        };
+
         this.submitPollVote = function (pollItem) {
             var voteData = {
                 pollItemId: pollItem.id,
@@ -103,7 +120,8 @@
             scope.poll = {
                 question: '',
                 category: 0,
-                optionArr: ['', '', '']
+                optionArr: ['', '', ''],
+                anonvote: false
             };
         };
     }
@@ -119,6 +137,10 @@
                 scope.list = response.data;
             }
         });
+        this.showAuthModal = function() {
+            jQuery('#auth-modal').modal('show');
+        };
+
         this.submitPollVote = function (pollItem) {
             var voteData = {
                 pollItemId: pollItem.id,
