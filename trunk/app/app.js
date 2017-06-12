@@ -4,7 +4,7 @@
     angular.module('app', ['ngRoute'])
         .config(appConfig)
         .constant('APIBASE', './server/request.php')
-        .run(['$rootScope', '$window', 'fbAuthService', runMethod]);
+        .run(['$rootScope', '$window', 'fbAuthService', 'googleAuthService', runMethod]);
 
     function appConfig($httpProvider, $routeProvider, $locationProvider) {
         $routeProvider.when("/", {
@@ -74,7 +74,7 @@
         }];
     }
 
-    function runMethod($rootScope, $window, sAuth) {
+    function runMethod($rootScope, $window, sAuth, gAuth) {
         $rootScope.user = {};
         $window.fbAsyncInit = function () {
             FB.init({
@@ -112,9 +112,9 @@
                 /* Parse XFBML */
 
                 xfbml: true,
-                
+
                 /* Graph API Version */
-                
+
                 version: 'v2.4'
             });
             sAuth.watchLoginChange();
@@ -140,6 +140,35 @@
 
         }(document));
 
+        $window.gapiAsyncInit = function () {
+            gapi.load('auth2', function(){
+                gapi.auth2.init({
+                    client_id: '418125885627-j2a16gbm8m1i62qqe820fspdkvb7fqop.apps.googleusercontent.com'
+                });
+            })
+            gapi.signin2.render('google-signin', {
+                'scope': 'profile email',
+                'onsuccess': gAuth.signinSuccess,
+                'onfailure': gAuth.signinFailure
+            });
+        };
+        (function (d) {
+            var js,
+                id = 'google-platform',
+                ref = d.getElementsByTagName('script')[0];
+
+            if (d.getElementById(id)) {
+                return;
+            }
+
+            js = d.createElement('script');
+            js.id = id;
+            js.async = true;
+            js.src = "//apis.google.com/js/platform.js?onload=gapiAsyncInit";
+
+            ref.parentNode.insertBefore(js, ref);
+
+        }(document));
 
     }
 

@@ -14,12 +14,13 @@
 
     }
 
-    headerCtrl.$inject = ['fbAuthService'];
+    headerCtrl.$inject = ['fbAuthService', 'googleAuthService'];
 
-    function headerCtrl(fbAuthService) {
+    function headerCtrl(fbAuthService, googleAuthService) {
         var scope = this;
         this.logout = function () {
             fbAuthService.logout();
+            googleAuthService.logout();
         };
         this.showAuthModal = function() {
             jQuery('#auth-modal').modal('show');
