@@ -3,6 +3,7 @@
         .service('pollCaster', pollCaster)
         .service('pollReader', pollReader)
         .service('fbAuthService', fbAuthService)
+        .service('googleAuthService', googleAuthService)
         .service('pollCategories', pollCategories)
         .service('pollEditor', pollEditor);
 
@@ -78,9 +79,9 @@
                      The user is already logged,
                      is possible retrieve his personal info
                     */
-/*
-                    _self.getUserInfo();
-*/
+                    /*
+                                        _self.getUserInfo();
+                    */
 
                     /*
                      This is also the point where you should create a
@@ -98,7 +99,7 @@
                                 name: response.data.userName
                             };
                         } else {
-                        //    alert(response.error);
+                            //    alert(response.error);
                         }
                     }, function (error) {
                         console.log(error);
@@ -130,7 +131,10 @@
                      res.authResponse object.
                     */
                     $http.post(APIBASE + '?request=login', {
-                        data: res.authResponse
+                        data: {
+                            vendor: 'FACEBOOK',
+                            authData: res.authResponse
+                        }
                     }).then(function (response) {
                         response = response.data;
                         if (response.status) {
@@ -163,7 +167,7 @@
         this.logout = function () {
 
             var _self = this;
-            FB.logout(function(res){
+            FB.logout(function (res) {
                 $http.post(APIBASE + '?request=logout', {
                     data: {}
                 }).then(function (response) {
@@ -177,6 +181,39 @@
                 }, function (error) {
                     console.log(error);
                 });
+            });
+        };
+    }
+
+    googleAuthService.$inject = ['$rootScope', '$http', 'APIBASE'];
+
+    function googleAuthService($rootScope, $http, APIBASE) {
+        this.signinSuccess = function (response) {
+            var id_token = response.getAuthResponse().id_token;
+            $http.post(APIBASE + '?request=login', {
+                data: {
+                    vendor: 'GOOGLE',
+                    token: id_token
+                }
+            }).then(function(response){
+                response = response.data;
+                if(response.status) {
+                    location.reload();
+                } else {
+                    console.log(response.error);
+                }
+            }, function(error){
+                console.log(error);
+            });
+            console.log(id_token);
+        };
+        this.signinFailure = function (response) {
+            console.log(response);
+        };
+        this.signout = function () {
+            var auth2 = gapi.auth2.getAuthInstance();
+            auth2.signOut().then(function () {
+                console.log('User signed out.');
             });
         };
     }
