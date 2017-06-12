@@ -10,8 +10,12 @@
             $error = '';
             $status = false;
             
+            $userId = 0;
+            
             // UserID needs to be fetched
-            $userId = 1;
+            if(isset($_SESSION['userId'])) {
+                $userId = $_SESSION['userId'];
+            }
 
             $count = 10;
             $pageIndex = 1;

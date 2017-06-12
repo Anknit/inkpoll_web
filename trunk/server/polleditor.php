@@ -18,6 +18,7 @@
                     'pollQuestion' => $pollData['question'],
                     'userId' => $userId,
                     'catId' => $pollData['category'],
+                    'status' => POLL_PENDING,
                     'anonymousvote' => ($pollData['anonvote'] == true)
                 )
             ));

@@ -8,11 +8,102 @@
         public function __destruct() {
             
         }
-        public function login() {
+        public function login($data) {
+            $error = '';
+            $status = false;
+            $responseArray = array();
+            
+            if(isset($data['vendor'])){
+                if($data['vendor'] == 'GOOGLE') {
+                    if(isset($data['token'])) {
+                        $authResponse = $this->verifyGoogleAuth($data['token']);
+                    } else {
+                        $error = 'Auth token absent';
+                    }
+                } else if($data['vendor'] == 'FACEBOOK') {
+                    $authResponse = $this->verifyFbAuth();
+                } else {
+                    $error = 'Unknown auth vendor';
+                }
+            } else {
+                $error = 'Auth vendor not defined';
+            }
+
+            $resData = array('status' => $status);
+            if(!$status) {
+                $resData['error'] = $error;
+            } else {
+                $resData['data'] = $responseArray;
+            }
+            return $resData;
+        }
+        
+        private function checkDbUserExist ($userId) {
+            $response = array('status' => false);
+            $userData = DB_Read(array(
+                'Table' => 'userinfo',
+                'Fields'=> 'id,name,email,usertype',
+                'clause'=> 'userid = '.$userId
+            ),'ASSOC','');
+            if($userData && is_array($userData)){
+                $response['status'] = true;
+                $response['data'] = $userData[0];
+            }
+            return $response;
+        }
+        
+        public function logout() {
             $error = '';
             $status = false;
             $responseArray = array();
 
+            unset($_SESSION['fb_access_token']);
+            unset($_SESSION['fb_userid']);
+            unset($_SESSION['userId']);
+            unset($_SESSION['userName']);
+            unset($_SESSION['userEmail']);
+            unset($_SESSION['userType']);
+
+            $status = true;
+            
+            $resData = array('status' => $status);
+            if(!$status) {
+                $resData['error'] = $error;
+            } else {
+                $resData['data'] = $responseArray;
+            }
+            return $resData;
+        }
+        
+        public function getUserData() {
+            $status = false;
+            $error = '';
+            if(isset($_SESSION['userId'])) {
+                $status = true;
+                $responseArray = array(
+                    'userId' => $_SESSION['userId'],
+                    'userName' => $_SESSION['userName'],
+                    'userEmail' => $_SESSION['userEmail'],
+                    'userType' => $_SESSION['userType'],
+                    'fbUserId' => $_SESSION['fb_userid'],
+                    'accessToken' => $_SESSION['fb_access_token']
+                );
+            } else {
+                $error = 'User session is not active';
+            }
+            $resData = array('status' => $status);
+            if(!$status) {
+                $resData['error'] = $error;
+            } else {
+                $resData['data'] = $responseArray;
+            }
+            return $resData;
+        }
+        
+        private function verifyFbAuth() {
+            $status = false;
+            $error = '';
+            $responseArray = array();
             $fb = new Facebook\Facebook([
                   'app_id' => '1356379634397148',
                   'app_secret' => '3ed4818e4459b38e3b00595fa0acb21c',
@@ -111,58 +202,23 @@
             return $resData;
         }
         
-        private function checkDbUserExist ($userId) {
-            $response = array('status' => false);
-            $userData = DB_Read(array(
-                'Table' => 'userinfo',
-                'Fields'=> 'id,name,email,usertype',
-                'clause'=> 'userid = '.$userId
-            ),'ASSOC','');
-            if($userData && is_array($userData)){
-                $response['status'] = true;
-                $response['data'] = $userData[0];
-            }
-            return $response;
-        }
-        
-        public function logout() {
-            $error = '';
+        private function verifyGoogleAuth($token) {
             $status = false;
+            $error = '';
             $responseArray = array();
-
-            unset($_SESSION['fb_access_token']);
-            unset($_SESSION['fb_userid']);
-            unset($_SESSION['userId']);
-            unset($_SESSION['userName']);
-            unset($_SESSION['userEmail']);
-            unset($_SESSION['userType']);
-
-            $status = true;
+            $CLIENT_ID = '418125885627-j2a16gbm8m1i62qqe820fspdkvb7fqop.apps.googleusercontent.com';
             
-            $resData = array('status' => $status);
-            if(!$status) {
-                $resData['error'] = $error;
-            } else {
-                $resData['data'] = $responseArray;
-            }
-            return $resData;
-        }
-        
-        public function getUserData() {
-            $status = false;
-            $error = '';
-            if(isset($_SESSION['userId'])) {
+            require_once __DIR__.'/Google/autoload.php';
+            
+            $client = new Google_Client(['client_id' => $CLIENT_ID]);
+            $payload = $client->verifyIdToken($id_token);
+            if ($payload) {
                 $status = true;
-                $responseArray = array(
-                    'userId' => $_SESSION['userId'],
-                    'userName' => $_SESSION['userName'],
-                    'userEmail' => $_SESSION['userEmail'],
-                    'userType' => $_SESSION['userType'],
-                    'fbUserId' => $_SESSION['fb_userid'],
-                    'accessToken' => $_SESSION['fb_access_token']
-                );
+                $responseArray['userid'] = $payload['sub'];
+                $responseArray['email'] = $payload['email'];
+                $responseArray['name'] = $payload['name'];
             } else {
-                $error = 'User session is not active';
+                $error = 'Authentication Failure';
             }
             $resData = array('status' => $status);
             if(!$status) {
