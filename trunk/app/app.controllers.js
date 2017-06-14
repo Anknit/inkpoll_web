@@ -20,7 +20,7 @@
         var scope = this;
         this.logout = function () {
             fbAuthService.logout();
-            googleAuthService.logout();
+            googleAuthService.signout();
         };
         this.showAuthModal = function() {
             jQuery('#auth-modal').modal('show');
