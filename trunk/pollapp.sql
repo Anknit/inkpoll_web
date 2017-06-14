@@ -47,6 +47,9 @@ CREATE TABLE `pollitem` (
   `userId` int(11) DEFAULT NULL,
   `catId` int(11) DEFAULT NULL,
   `anonymousvote` int(11) DEFAULT NULL,
+  `status` int(11) DEFAULT NULL,
+  `createdon` varchar(45) DEFAULT NULL,
+  `updatedon` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=latin1;
@@ -80,6 +83,7 @@ CREATE TABLE `pollresponses` (
   `pollId` int(11) DEFAULT NULL,
   `optionId` int(11) DEFAULT NULL,
   `userId` int(11) DEFAULT NULL,
+  `createdon` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`resId`),
   UNIQUE KEY `resId_UNIQUE` (`resId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
@@ -114,4 +118,4 @@ CREATE TABLE `userinfo` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-06-14 18:00:55
+-- Dump completed on 2017-06-15  0:31:16

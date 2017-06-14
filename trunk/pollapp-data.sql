@@ -57,6 +57,9 @@ CREATE TABLE `pollitem` (
   `userId` int(11) DEFAULT NULL,
   `catId` int(11) DEFAULT NULL,
   `anonymousvote` int(11) DEFAULT NULL,
+  `status` int(11) DEFAULT NULL,
+  `createdon` varchar(45) DEFAULT NULL,
+  `updatedon` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=latin1;
@@ -68,7 +71,7 @@ CREATE TABLE `pollitem` (
 
 LOCK TABLES `pollitem` WRITE;
 /*!40000 ALTER TABLE `pollitem` DISABLE KEYS */;
-INSERT INTO `pollitem` VALUES (1,'akdjhfkj',1,8,0),(2,'akdjhfkj',1,8,1),(3,'akdjhfkj',1,8,0),(4,'test yor code. is it working',1,8,1),(5,'What is category of this poll',1,4,0),(6,'hjhjdghj',1,5,1),(7,'dsdsd khk',1,5,0),(8,'sjhdgfhghd',1,3,1),(9,'sjhdgfhghd',1,4,1),(10,'Is editor functionality working',1,8,0),(11,'',1,1,0),(12,'',1,1,1),(13,'',1,1,0),(14,'jsdjghjhs',1,1,1),(15,'Test anonymous',4,1,0),(16,'kksjkfjkks',4,1,0),(17,'jkdfjk',4,1,0),(18,'jkdfjk',4,1,1);
+INSERT INTO `pollitem` VALUES (1,'akdjhfkj',1,8,0,NULL,'2017-06-14 22:15:54','2017-06-14 22:15:54'),(2,'akdjhfkj',1,8,1,NULL,'2017-06-14 22:15:54','2017-06-14 22:15:54'),(3,'akdjhfkj',1,8,0,NULL,'2017-06-14 22:15:54','2017-06-14 22:15:54'),(4,'test yor code. is it working',1,8,1,NULL,'2017-06-14 22:15:54','2017-06-14 22:15:54'),(5,'What is category of this poll',1,4,0,NULL,'2017-06-14 22:15:54','2017-06-14 22:15:54'),(6,'hjhjdghj',1,5,1,NULL,'2017-06-14 22:15:54','2017-06-14 22:15:54'),(7,'dsdsd khk',1,5,0,NULL,'2017-06-14 22:15:54','2017-06-14 22:15:54'),(8,'sjhdgfhghd',1,3,1,NULL,'2017-06-14 22:15:54','2017-06-14 22:15:54'),(9,'sjhdgfhghd',1,4,1,NULL,'2017-06-14 22:15:54','2017-06-14 22:15:54'),(10,'Is editor functionality working',1,8,0,NULL,'2017-06-14 22:15:54','2017-06-14 22:15:54'),(11,'',1,1,0,NULL,'2017-06-14 22:15:54','2017-06-14 22:15:54'),(12,'',1,1,1,NULL,'2017-06-14 22:15:54','2017-06-14 22:15:54'),(13,'',1,1,0,NULL,'2017-06-14 22:15:54','2017-06-14 22:15:54'),(14,'jsdjghjhs',1,1,1,NULL,'2017-06-14 22:15:54','2017-06-14 22:15:54'),(15,'Test anonymous',6,1,0,NULL,'2017-06-14 22:15:54','2017-06-14 22:15:54'),(16,'kksjkfjkks',6,1,0,NULL,'2017-06-14 22:15:54','2017-06-14 22:15:54'),(17,'jkdfjk',6,1,0,NULL,'2017-06-14 22:15:54','2017-06-14 22:15:54'),(18,'jkdfjk',6,1,1,NULL,'2017-06-14 22:15:54','2017-06-14 22:15:54');
 /*!40000 ALTER TABLE `pollitem` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -110,6 +113,7 @@ CREATE TABLE `pollresponses` (
   `pollId` int(11) DEFAULT NULL,
   `optionId` int(11) DEFAULT NULL,
   `userId` int(11) DEFAULT NULL,
+  `createdon` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`resId`),
   UNIQUE KEY `resId_UNIQUE` (`resId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
@@ -121,7 +125,7 @@ CREATE TABLE `pollresponses` (
 
 LOCK TABLES `pollresponses` WRITE;
 /*!40000 ALTER TABLE `pollresponses` DISABLE KEYS */;
-INSERT INTO `pollresponses` VALUES (1,1,2,1),(3,2,6,1),(4,4,10,1),(5,3,8,1),(6,12,37,1),(7,10,31,1),(8,11,34,1),(9,13,39,1),(10,14,42,1),(11,5,14,1),(12,17,50,1),(13,17,50,4),(14,18,54,4),(15,18,53,0);
+INSERT INTO `pollresponses` VALUES (1,1,2,1,'2017-06-15 00:01:15'),(3,2,6,1,'2017-06-15 00:01:15'),(4,4,10,1,'2017-06-15 00:01:15'),(5,3,8,1,'2017-06-15 00:01:15'),(6,12,37,1,'2017-06-15 00:01:15'),(7,10,31,1,'2017-06-15 00:01:15'),(8,11,34,1,'2017-06-15 00:01:15'),(9,13,39,1,'2017-06-15 00:01:15'),(10,14,42,1,'2017-06-15 00:01:15'),(11,5,14,1,'2017-06-15 00:01:15'),(12,17,50,1,'2017-06-15 00:01:15'),(13,17,50,6,'2017-06-15 00:01:15'),(14,18,54,6,'2017-06-15 00:01:15'),(15,18,53,0,'2017-06-15 00:01:15');
 /*!40000 ALTER TABLE `pollresponses` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -151,7 +155,7 @@ CREATE TABLE `userinfo` (
 
 LOCK TABLES `userinfo` WRITE;
 /*!40000 ALTER TABLE `userinfo` DISABLE KEYS */;
-INSERT INTO `userinfo` VALUES (1,'Ankit Agarwal','admin','ankitakkii24@gmail.com',1,'0192023a7bbd73250516f069df18b500',NULL),(4,'AnKit Agarwal','1586737744731743','ankitfbnot@gmail.com',1,'',NULL),(5,'Ankit Agarwal','116953657481149615588','ankitakkii24@gmail.com',1,'','GOOGLE'),(6,'AnKit Agarwal','1586737744731743','ankitfbnot@gmail.com',1,'','FACEBOOK');
+INSERT INTO `userinfo` VALUES (1,'Ankit Agarwal','admin','ankitakkii24@gmail.com',1,'0192023a7bbd73250516f069df18b500',NULL),(5,'Ankit Agarwal','116953657481149615588','ankitakkii24@gmail.com',1,'','GOOGLE'),(6,'AnKit Agarwal','1586737744731743','ankitfbnot@gmail.com',1,'','FACEBOOK');
 /*!40000 ALTER TABLE `userinfo` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -164,4 +168,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-06-14 18:00:37
+-- Dump completed on 2017-06-15  0:30:51

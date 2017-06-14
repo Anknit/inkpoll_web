@@ -50,6 +50,14 @@ function serveRequest ($request, $data = array()){
             $reqHandler = new PollReader();
             return $reqHandler->getPolls($data);
             break;
+        case 'userPolls':
+            $reqHandler = new PollReader();
+            return $reqHandler->getUserPolls($data);
+            break;
+        case 'userVotePolls':
+            $reqHandler = new PollReader();
+            return $reqHandler->getUserVotePolls($data);
+            break;
         case 'getCategories':
             $reqHandler = new PollCategories();
             return $reqHandler->getCategories();

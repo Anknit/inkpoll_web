@@ -86,5 +86,102 @@
             }
             return $catId;
         }
+        public function getUserPolls ($readData) {
+            $status = false;
+            $error = '';
+            $responseArray = array();
+            
+            $userId = $readData['userid'];
+            $pageIndex = $readData['page'];
+            $sortorder = $readData['order'];
+            $count = 10;
+            
+            $offset = ($pageIndex - 1) * $count;
+
+            $query = 'Select pollitem.id, pollitem.pollQuestion as questionText from pollitem';
+            $query .= ' where pollitem.userId = '.$userId;
+            $query .= ' order by ';
+            switch($sortorder) {
+                case 'newest':
+                    $query .= 'createdon desc';
+                    break;
+                case 'votes':
+                    $query .= 'createdon desc';
+                    break;
+                case 'views':
+                    $query .= 'createdon desc';
+                    break;
+                default:
+                    $query .= 'createdon desc';
+                    break;
+            }
+            $query .= ' limit '.$offset.','.$count;
+            
+            $readUserPolls = DB_Query($query, 'ASSOC', '');
+            if(is_array($readUserPolls)) {
+                $responseArray['polllist'] = $readUserPolls;
+            } else {
+                $error = 'Failed to read polls from database';
+            }
+            $readTotalPolls = DB_Query('Select count(*) as total from pollitem where userId ='.$userId);
+            if(is_array($readTotalPolls)) {
+                $responseArray['totalPolls'] = $readTotalPolls[0]['total'];
+                $responseArray['totalPages'] = ceil(((int)$readTotalPolls[0]['total'])/$count);
+            } else {
+                $error = 'Failed to get total polls of user';
+            }
+            if($error == ''){
+                $status = true;
+            }
+            return array('status' => $status, 'data' => $responseArray, 'error' => $error);
+        }
+        public function getUserVotePolls ($readData) {
+            $status = false;
+            $error = '';
+            $responseArray = array();
+            
+            $userId = $readData['userid'];
+            $pageIndex = $readData['page'];
+            $sortorder = $readData['order'];
+            $count = 10;
+            
+            $offset = ($pageIndex - 1) * $count;
+
+            $query = 'Select pollitem.id, pollitem.pollQuestion as questionText FROM pollitem right join pollresponses on pollitem.id = pollresponses.pollId where pollresponses.userId = '.$userId;
+            $query .= ' order by ';
+            switch($sortorder) {
+                case 'newest':
+                    $query .= 'pollresponses.createdon desc';
+                    break;
+                case 'votes':
+                    $query .= 'pollresponses.createdon desc';
+                    break;
+                case 'views':
+                    $query .= 'pollresponses.createdon desc';
+                    break;
+                default:
+                    $query .= 'pollresponses.createdon desc';
+                    break;
+            }
+            $query .= ' limit '.$offset.','.$count;
+            
+            $readUserPolls = DB_Query($query, 'ASSOC', '');
+            if(is_array($readUserPolls)) {
+                $responseArray['polllist'] = $readUserPolls;
+            } else {
+                $error = 'Failed to read polls from database';
+            }
+            $readTotalPolls = DB_Query('Select count(*) as total from pollitem right join pollresponses on pollitem.id = pollresponses.pollId where pollresponses.userId = '.$userId);
+            if(is_array($readTotalPolls)) {
+                $responseArray['totalVotes'] = $readTotalPolls[0]['total'];
+                $responseArray['totalPages'] = ceil(((int)$readTotalPolls[0]['total'])/$count);
+            } else {
+                $error = 'Failed to get total polls of user';
+            }
+            if($error == ''){
+                $status = true;
+            }
+            return array('status' => $status, 'data' => $responseArray, 'error' => $error);
+        }
      } 
 ?>

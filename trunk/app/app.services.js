@@ -93,6 +93,32 @@
                 console.log(error);
             });
         };
+        this.getUserPolls = function (userid, page, order) {
+            return $http.post(APIBASE + '?request=userPolls', {
+                data: {
+                    userid: userid,
+                    page: page,
+                    order: order
+                }
+            }).then(function (response) {
+                return response.data;
+            }, function (error) {
+                console.log(error);
+            });
+        };
+        this.getUserVotePolls = function (userid, page, order) {
+            return $http.post(APIBASE + '?request=userVotePolls', {
+                data: {
+                    userid: userid,
+                    page: page,
+                    order: order
+                }
+            }).then(function (response) {
+                return response.data;
+            }, function (error) {
+                console.log(error);
+            });
+        };
     }
 
     fbAuthService.$inject = ['$rootScope', '$http', 'APIBASE', 'cookieService'];
@@ -126,9 +152,12 @@
                         if (response.status) {
                             $rootScope.user = {
                                 email: response.data.userEmail,
+                                id: response.data.userId,
+                                type: response.data.userType,
                                 name: response.data.userName
                             };
                         } else {
+                            cookieService.setCookie("sessionStatus", "inactive", -1);
                             //    alert(response.error);
                         }
                     }, function (error) {
@@ -253,9 +282,12 @@
                     if (response.status) {
                         $rootScope.user = {
                             email: response.data.userEmail,
+                            id: response.data.userId,
+                            type: response.data.userType,
                             name: response.data.userName
                         };
                     } else {
+                        cookieService.setCookie("sessionStatus", "inactive", -1);
                         //    alert(response.error);
                     }
                 }, function (error) {

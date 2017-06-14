@@ -1,16 +1,42 @@
-<html data-ng-app="app">
+<html data-ng-app="app" lang="en">
 
 <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible">
     <title>Feedd</title>
     <base href="/feeddasm/" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<!--
+    <!--
     <meta name="google-signin-client_id" content="418125885627-j2a16gbm8m1i62qqe820fspdkvb7fqop.apps.googleusercontent.com">
 -->
     <link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <style>
+        body{
+            margin-top:60px;
+        }
+        .cat-list-banner {
+            overflow-x: auto;
+            white-space: nowrap;
+            background: #555;
+            padding-top: 10px;
+            margin-bottom: 15px;
+            position: fixed;
+            top:50px;
+            z-index:10;
+        }
+        .cat-list-banner li a{
+            color:#f3f3f3;
+            padding: 5px 10px;
+        }
+        @media (max-width:767px) {
+            body{
+                margin-top:100px;
+            }
+        }
+    </style>
 </head>
 
-<body class="container-fluid" style="margin-top:60px;">
+<body class="container-fluid">
     <header class="row" data-ng-controller="headerCtrl as head">
         <nav class="navbar navbar-default navbar-fixed-top">
             <div class="container-fluid">
@@ -27,12 +53,18 @@
                     </a>
                 </div>
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                    <ul class="nav navbar-nav">
+                    <ul class="nav navbar-nav hidden-xs">
+                        <li data-ng-repeat="item in head.pollCatArr">
+                            <a data-ng-href="{{'polls/' + item.catName}}" data-ng-bind="item.catName"></a>
+                        </li>
+                        <!--
                         <li><a href="./">Home</a></li>
                         <li><a href="categories">Categories</a></li>
                         <li><a href="pollcreater" data-auth-user-only>Creator</a></li>
+-->
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
+                        <!--
                         <li class="dropdown" ng-cloak data-ng-if="user.name">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                                 <span>{{'Welcome ' + user.name.split(' ')[0]}}</span>
@@ -44,9 +76,13 @@
                                 </li>
                             </ul>
                         </li>
-                        <li>
+-->
+                        <li ng-cloak data-ng-if="user.name">
+                            <a data-ng-href="{{'users/' + user.id +'/' + user.name.split(' ').join('-')}}">{{'Welcome ' + user.name.split(' ')[0]}}</a>
+                        </li>
+                        <li ng-cloak data-ng-if="!user.name">
                             <a role="button">
-                                <span ng-cloak data-ng-if="!user.name" data-ng-click="head.showAuthModal()">Signin</span>
+                                <span data-ng-click="head.showAuthModal()">Signin</span>
                             </a>
                         </li>
                     </ul>
@@ -55,6 +91,13 @@
             <!-- /.navbar-collapse -->
             <!-- /.container-fluid -->
         </nav>
+        <div class="visible-xs col-xs-12 cat-list-banner">
+            <ul class="list-inline">
+                <li data-ng-repeat="item in head.pollCatArr">
+                    <a data-ng-href="{{'polls/' + item.catName}}" data-ng-bind="item.catName"></a>
+                </li>
+            </ul>
+        </div>
     </header>
     <div id="fb-root"></div>
 
@@ -81,16 +124,16 @@
     </div>
     <script>
         /*
-                                (function(d, s, id) {
-                                    var js, fjs = d.getElementsByTagName(s)[0];
-                                    if (d.getElementById(id)) return;
-                                    js = d.createElement(s);
-                                    js.id = id;
-                                    js.src = "//connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v2.9&appId=1356379634397148";
-                                    fjs.parentNode.insertBefore(js, fjs);
-                                }(document, 'script', 'facebook-jssdk'));
+                                        (function(d, s, id) {
+                                            var js, fjs = d.getElementsByTagName(s)[0];
+                                            if (d.getElementById(id)) return;
+                                            js = d.createElement(s);
+                                            js.id = id;
+                                            js.src = "//connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v2.9&appId=1356379634397148";
+                                            fjs.parentNode.insertBefore(js, fjs);
+                                        }(document, 'script', 'facebook-jssdk'));
 
-                        */
+                                */
 
     </script>
 
