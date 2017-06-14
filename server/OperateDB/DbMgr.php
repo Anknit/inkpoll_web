@@ -71,7 +71,7 @@ class DBMgr{
 	
 	public function Prepare_Output($output, $output_Format, $keyField_Output = '')
 	{
-		if($output->num_rows == 0)
+		if(!($output_Format == "ASSOC") && $output->num_rows == 0)
 			return 0;	
 			
 		switch($output_Format)
@@ -90,6 +90,7 @@ class DBMgr{
 			break;
 			case 'ASSOC':
 			default:
+                $output_arr = array();
 			    while ($row = $output->fetch_assoc()) {
 					if($keyField_Output != '' && isset($row[$keyField_Output])){
 						$output_arr[strval($row[$keyField_Output])]	=	$row;

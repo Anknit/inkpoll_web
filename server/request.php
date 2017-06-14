@@ -56,7 +56,7 @@ function serveRequest ($request, $data = array()){
             break;
         case 'login':
             $reqHandler = new AuthMgr();
-            return $reqHandler->login();
+            return $reqHandler->login($data);
             break;
         case 'logout':
             $reqHandler = new AuthMgr();

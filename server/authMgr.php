@@ -14,16 +14,32 @@
             $responseArray = array();
             
             if(isset($data['vendor'])){
-                if($data['vendor'] == 'GOOGLE') {
-                    if(isset($data['token'])) {
-                        $authResponse = $this->verifyGoogleAuth($data['token']);
+                $authResponse = $this->verifyAuth($data);
+                if($authResponse['status']) {
+                    $responseArray = $authResponse['data'];
+                    $userExist = $this->checkDbUserExist($responseArray['userid'], $data['vendor']);
+                    if($userExist['status']) {
+                        if(!$userExist['data']['exist']) {
+                            $insertUser = $this->insertUserDB($responseArray, $data['vendor']);
+                            if($insertUser['status']) {
+                                $responseArray['id'] = $insertUser['data']['newuserid'];
+                                $responseArray['usertype'] = $insertUser['data']['newusertype'];
+                                $status = true;
+                            } else {
+                                $error = 'Failed to insert New User in database. '.$insertUser['error'];
+                            }
+                        } else {
+                            $responseArray = $userExist['data']['userData'];
+                            $status = true;
+                        }
+                        if($status){
+                            $this->setUserSession($responseArray);
+                        }
                     } else {
-                        $error = 'Auth token absent';
+                        $error = 'Failed to check user existence. '.$userExist['error'];
                     }
-                } else if($data['vendor'] == 'FACEBOOK') {
-                    $authResponse = $this->verifyFbAuth();
                 } else {
-                    $error = 'Unknown auth vendor';
+                    $error = 'Authentication failed. '.$authResponse['error'];
                 }
             } else {
                 $error = 'Auth vendor not defined';
@@ -38,16 +54,23 @@
             return $resData;
         }
         
-        private function checkDbUserExist ($userId) {
-            $response = array('status' => false);
+        private function checkDbUserExist ($userId, $vendor) {
+            $response = array('status' => false, 'data' => array(), 'error' => '');
             $userData = DB_Read(array(
                 'Table' => 'userinfo',
                 'Fields'=> 'id,name,email,usertype',
-                'clause'=> 'userid = '.$userId
+                'clause'=> 'userid = '.$userId. ' and authvendor = "'.$vendor.'"'
             ),'ASSOC','');
-            if($userData && is_array($userData)){
+            if(is_array($userData)) {
                 $response['status'] = true;
-                $response['data'] = $userData[0];
+                if(count($userData) == 1) {
+                    $response['data']['exist'] = true;
+                    $response['data']['userData'] = $userData[0];
+                } else {
+                    $response['data']['exist'] = false;
+                }
+            } else {
+                $response['error'] = 'Failed to read from database';
             }
             return $response;
         }
@@ -84,9 +107,7 @@
                     'userId' => $_SESSION['userId'],
                     'userName' => $_SESSION['userName'],
                     'userEmail' => $_SESSION['userEmail'],
-                    'userType' => $_SESSION['userType'],
-                    'fbUserId' => $_SESSION['fb_userid'],
-                    'accessToken' => $_SESSION['fb_access_token']
+                    'userType' => $_SESSION['userType']
                 );
             } else {
                 $error = 'User session is not active';
@@ -126,7 +147,7 @@
                 $error =  'No cookie set or no OAuth data could be obtained from cookie.'.' '.$error;
             } else {
                 try {
-                    $userId = $helper->getUserId();
+                    $userData = $fb->get('/me?fields=id,name,email', $accessToken->getValue());
                 } catch(Facebook\Exceptions\FacebookResponseException $e) {
                     // When Graph returns an error
                     $error .= 'Graph returned an error: ' . $e->getMessage();
@@ -134,61 +155,17 @@
                     // When validation fails or other local issues
                     $error .= 'Facebook SDK returned an error: ' . $e->getMessage();
                 }
-                if(isset($userId)) {
+                if(isset($userData)) {
+/*
                     $_SESSION['fb_access_token'] = (string) $accessToken->getValue();
                     $_SESSION['fb_userid'] = $userId;
+*/
                     $responseArray['accessToken'] = $accessToken->getValue();
-                    $responseArray['fbUserId'] = $userId;
-                    $userExist = $this->checkDbUserExist($userId);
-                    if(!$userExist['status']) {
-                        try{
-                            $response = $fb->get('/me?fields=name,email', $accessToken->getValue());
-                        } catch(Facebook\Exceptions\FacebookResponseException $e) {
-                            $error .= 'Graph returned an error: ' . $e->getMessage();
-                        } catch(Facebook\Exceptions\FacebookSDKException $e) {
-                            $error .= 'Facebook SDK returned an error: ' . $e->getMessage();
-                        }
-
-                        if(isset($response)) {
-                            $user = $response->getGraphUser();
-                            $_SESSION['userName'] = $user->getName();
-                            $_SESSION['userEmail'] = $user->getEmail();
-                            $_SESSION['userType'] = USER_NORMAL;
-                            $responseArray['userName'] = $user->getName();
-                            $responseArray['userEmail'] = $user->getEmail();
-                            $responseArray['userType'] = USER_NORMAL;
-                            $insertUser = DB_Insert(array(
-                                'Table' => 'userinfo',
-                                'Fields'=> array(
-                                    'userid' => $userId,
-                                    'name'   => $user->getName(),
-                                    'email'  => $user->getEmail(),
-                                    'usertype' => USER_NORMAL,
-                                    'password' => ''
-                                )
-                            ));
-                            if($insertUser){
-                                $_SESSION['userId'] = $insertUser;
-                                $responseArray['userId'] = $insertUser;
-                                $status = true;
-                            } else {
-                                $error .= 'Failed to insert user in database';
-                            }
-                        } else {
-                            $error .= 'Failed to get Name and Email of user';
-                        }
-
-                    } else {
-                        $status = true;
-                        $_SESSION['userId'] = $userExist['data']['id'];
-                        $_SESSION['userName'] = $userExist['data']['name'];
-                        $_SESSION['userEmail'] = $userExist['data']['email'];
-                        $_SESSION['userType'] = $userExist['data']['usertype'];
-                        $responseArray['userId'] = $userExist['data']['id'];
-                        $responseArray['userName'] = $userExist['data']['name'];
-                        $responseArray['userEmail'] = $userExist['data']['email'];
-                        $responseArray['userType'] = $userExist['data']['usertype'];
-                    }
+                    $userData = $userData->getGraphUser();
+                    $responseArray['userid'] = $userData->getId();
+                    $responseArray['name'] = $userData->getName();
+                    $responseArray['email'] = $userData->getField('email');
+                    $status = true;
                 } else {
                     $error .= 'Failed to get Fb User Id';
                 }
@@ -208,10 +185,10 @@
             $responseArray = array();
             $CLIENT_ID = '418125885627-j2a16gbm8m1i62qqe820fspdkvb7fqop.apps.googleusercontent.com';
             
-            require_once __DIR__.'/Google/autoload.php';
+            require_once __DIR__.'/Google/vendor/autoload.php';
             
             $client = new Google_Client(['client_id' => $CLIENT_ID]);
-            $payload = $client->verifyIdToken($id_token);
+            $payload = $client->verifyIdToken($token);
             if ($payload) {
                 $status = true;
                 $responseArray['userid'] = $payload['sub'];
@@ -227,6 +204,64 @@
                 $resData['data'] = $responseArray;
             }
             return $resData;
+        }
+        
+        private function verifyAuth($data) {
+            $status = false;
+            $error = '';
+            $resData = array();
+            if($data['vendor'] == 'GOOGLE') {
+                if(isset($data['token'])) {
+                    $authResponse = $this->verifyGoogleAuth($data['token']);
+                } else {
+                    $error = 'Auth token absent';
+                }
+            } else if($data['vendor'] == 'FACEBOOK') {
+                $authResponse = $this->verifyFbAuth();
+            } else {
+                $error = 'Unknown auth vendor';
+            }
+            if($error == '') {
+                $status = $authResponse['status'];
+            }
+            if($status) {
+                $resData = $authResponse['data'];
+            } else {
+                $error .=  $authResponse['error'];
+            }
+            return array('status' => $status, 'error' => $error, 'data' => $resData);
+        }
+        
+        private function insertUserDB($data, $vendor) {
+            $error = '';
+            $status = false;
+            $responseArray = array();
+            $insertUser = DB_Insert(array(
+                'Table' => 'userinfo',
+                'Fields'=> array(
+                    'userid' => $data['userid'],
+                    'name'   => $data['name'],
+                    'email'  => $data['email'],
+                    'usertype' => USER_NORMAL,
+                    'password' => '',
+                    'authvendor' => $vendor
+                )
+            ));
+            if($insertUser) {
+                $status = true;
+                $responseArray['newuserid'] = $insertUser;
+                $responseArray['newusertype'] = USER_NORMAL;
+            } else {
+                $error = 'Failed to insert new user entry in database.';
+            }
+            return array('status'=>$status, 'error' => $error, 'data' => $responseArray);
+        }
+        
+        private function setUserSession($data) {
+            $_SESSION['userId'] = $data['id'];
+            $_SESSION['userName'] = $data['name'];
+            $_SESSION['userEmail'] = $data['email'];
+            $_SESSION['userType'] = $data['usertype'];
         }
     }
 ?>

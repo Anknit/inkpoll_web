@@ -2,6 +2,7 @@
     angular.module('app')
         .service('pollCaster', pollCaster)
         .service('pollReader', pollReader)
+        .service('cookieService', cookieService)
         .service('fbAuthService', fbAuthService)
         .service('googleAuthService', googleAuthService)
         .service('pollCategories', pollCategories)
@@ -20,6 +21,35 @@
                 console.log(error);
             });
         };
+    }
+
+    cookieService.$inject = [];
+
+    function cookieService() {
+        this.setCookie = setCookie;
+        this.getCookie = getCookie;
+
+        function setCookie(cname, cvalue, exdays) {
+            var d = new Date();
+            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+            var expires = "expires=" + d.toUTCString();
+            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+        }
+
+        function getCookie(cname) {
+            var name = cname + "=";
+            var ca = document.cookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
     }
 
     pollCaster.$inject = ['$http', 'APIBASE'];
@@ -65,9 +95,9 @@
         };
     }
 
-    fbAuthService.$inject = ['$rootScope', '$http', 'APIBASE'];
+    fbAuthService.$inject = ['$rootScope', '$http', 'APIBASE', 'cookieService'];
 
-    function fbAuthService($rootScope, $http, APIBASE) {
+    function fbAuthService($rootScope, $http, APIBASE, cookieService) {
         this.watchLoginChange = function () {
 
             var _self = this;
@@ -138,6 +168,8 @@
                     }).then(function (response) {
                         response = response.data;
                         if (response.status) {
+                            cookieService.setCookie("sessionStatus", "active", 365);
+                            cookieService.setCookie("authvendor", "FACEBOOK", 365);
                             location.reload();
                         } else {
                             alert(response.error);
@@ -167,54 +199,93 @@
         this.logout = function () {
 
             var _self = this;
-            FB.logout(function (res) {
-                $http.post(APIBASE + '?request=logout', {
-                    data: {}
+            if (cookieService.getCookie("authvendor") == "FACEBOOK") {
+                FB.logout(function (res) {
+                    $http.post(APIBASE + '?request=logout', {
+                        data: {}
+                    }).then(function (response) {
+                        response = response.data;
+                        if (response.status) {
+                            cookieService.setCookie("sessionStatus", "inactive", -1);
+                            $rootScope.user = this.user = {};
+                            location.reload();
+                        } else {
+                            alert(response.error);
+                        }
+                    }, function (error) {
+                        console.log(error);
+                    });
+                });
+            }
+
+        };
+    }
+
+    googleAuthService.$inject = ['$rootScope', '$http', 'APIBASE', 'cookieService'];
+
+    function googleAuthService($rootScope, $http, APIBASE, cookieService) {
+        this.user = {};
+        this.signinSuccess = function (response) {
+            var id_token = response.getAuthResponse().id_token;
+            if (cookieService.getCookie("sessionStatus") != "active") {
+                $http.post(APIBASE + '?request=login', {
+                    data: {
+                        vendor: 'GOOGLE',
+                        token: id_token
+                    }
                 }).then(function (response) {
                     response = response.data;
                     if (response.status) {
-                        $rootScope.user = this.user = {};
+                        cookieService.setCookie("sessionStatus", "active", 365);
+                        cookieService.setCookie("authvendor", "GOOGLE", 365);
                         location.reload();
                     } else {
-                        alert(response.error);
+                        console.log(response.error);
                     }
                 }, function (error) {
                     console.log(error);
                 });
-            });
-        };
-    }
-
-    googleAuthService.$inject = ['$rootScope', '$http', 'APIBASE'];
-
-    function googleAuthService($rootScope, $http, APIBASE) {
-        this.signinSuccess = function (response) {
-            var id_token = response.getAuthResponse().id_token;
-            $http.post(APIBASE + '?request=login', {
-                data: {
-                    vendor: 'GOOGLE',
-                    token: id_token
-                }
-            }).then(function(response){
-                response = response.data;
-                if(response.status) {
-                    location.reload();
-                } else {
-                    console.log(response.error);
-                }
-            }, function(error){
-                console.log(error);
-            });
-            console.log(id_token);
+            } else {
+                $http.post(APIBASE + '?request=userdata', {
+                    data: {}
+                }).then(function (response) {
+                    response = response.data;
+                    if (response.status) {
+                        $rootScope.user = {
+                            email: response.data.userEmail,
+                            name: response.data.userName
+                        };
+                    } else {
+                        //    alert(response.error);
+                    }
+                }, function (error) {
+                    console.log(error);
+                });
+            }
         };
         this.signinFailure = function (response) {
             console.log(response);
         };
         this.signout = function () {
-            var auth2 = gapi.auth2.getAuthInstance();
-            auth2.signOut().then(function () {
-                console.log('User signed out.');
-            });
+            if (cookieService.getCookie("authvendor") == "GOOGLE") {
+                var auth2 = gapi.auth2.getAuthInstance();
+                auth2.signOut().then(function () {
+                    $http.post(APIBASE + '?request=logout', {
+                        data: {}
+                    }).then(function (response) {
+                        response = response.data;
+                        if (response.status) {
+                            cookieService.setCookie("sessionStatus", "inactive", -1);
+                            $rootScope.user = this.user = {};
+                            location.reload();
+                        } else {
+                            alert(response.error);
+                        }
+                    }, function (error) {
+                        console.log(error);
+                    });
+                });
+            }
         };
     }
 })();
