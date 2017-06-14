@@ -19,7 +19,13 @@
             controller: 'categoryPolls',
             controllerAs: 'catPoll'
         }).when("/pollcreater", {
-            templateUrl: 'views/poll-creater.html'
+            templateUrl: 'views/poll-creater.html',
+            isAuth:true
+        }).when("/users/:id/:name", {
+            templateUrl: 'views/user-home.html',
+            isAuth:true,
+            controller:'userCtrl',
+            controllerAs: 'User'
         }).otherwise({
             redirectTo: '/'
         });
