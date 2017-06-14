@@ -1,8 +1,8 @@
 -- MySQL dump 10.13  Distrib 5.7.17, for Linux (x86_64)
 --
--- Host: localhost    Database: pollapp
+-- Host: 127.0.0.1    Database: pollapp
 -- ------------------------------------------------------
--- Server version	5.7.18-0ubuntu0.16.04.1
+-- Server version	5.7.17-0ubuntu0.16.04.2
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -112,7 +112,7 @@ CREATE TABLE `pollresponses` (
   `userId` int(11) DEFAULT NULL,
   PRIMARY KEY (`resId`),
   UNIQUE KEY `resId_UNIQUE` (`resId`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -121,7 +121,7 @@ CREATE TABLE `pollresponses` (
 
 LOCK TABLES `pollresponses` WRITE;
 /*!40000 ALTER TABLE `pollresponses` DISABLE KEYS */;
-INSERT INTO `pollresponses` VALUES (1,1,2,1),(3,2,6,1),(4,4,10,1),(5,3,8,1),(6,12,37,1),(7,10,31,1),(8,11,34,1),(9,13,39,1),(10,14,42,1),(11,5,14,1),(12,17,50,1),(13,17,50,4),(14,18,54,4);
+INSERT INTO `pollresponses` VALUES (1,1,2,1),(3,2,6,1),(4,4,10,1),(5,3,8,1),(6,12,37,1),(7,10,31,1),(8,11,34,1),(9,13,39,1),(10,14,42,1),(11,5,14,1),(12,17,50,1),(13,17,50,4),(14,18,54,4),(15,18,53,0);
 /*!40000 ALTER TABLE `pollresponses` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -139,9 +139,10 @@ CREATE TABLE `userinfo` (
   `email` varchar(200) DEFAULT NULL,
   `usertype` int(11) DEFAULT NULL,
   `password` varchar(200) DEFAULT NULL,
+  `authvendor` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -150,7 +151,7 @@ CREATE TABLE `userinfo` (
 
 LOCK TABLES `userinfo` WRITE;
 /*!40000 ALTER TABLE `userinfo` DISABLE KEYS */;
-INSERT INTO `userinfo` VALUES (1,'Ankit Agarwal','admin','ankitakkii24@gmail.com',1,'0192023a7bbd73250516f069df18b500'),(4,'AnKit Agarwal','1586737744731743','ankitfbnot@gmail.com',1,'');
+INSERT INTO `userinfo` VALUES (1,'Ankit Agarwal','admin','ankitakkii24@gmail.com',1,'0192023a7bbd73250516f069df18b500',NULL),(4,'AnKit Agarwal','1586737744731743','ankitfbnot@gmail.com',1,'',NULL),(5,'Ankit Agarwal','116953657481149615588','ankitakkii24@gmail.com',1,'','GOOGLE'),(6,'AnKit Agarwal','1586737744731743','ankitfbnot@gmail.com',1,'','FACEBOOK');
 /*!40000 ALTER TABLE `userinfo` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -163,4 +164,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-06-12  0:08:54
+-- Dump completed on 2017-06-14 18:00:37
