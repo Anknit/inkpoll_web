@@ -1,0 +1,69 @@
+.poll-item {
+    background: #fff;
+    box-shadow: 0px 0px 3px #cdcdcd;
+    margin-top: 25px;
+    margin-bottom: 10px;
+}
+
+.poll-item-question {
+    padding: 10px 15px;
+    background: #4AA;
+}
+
+.poll-item-question a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.poll-item-question a:hover {
+    color: #000;
+}
+
+.poll-item-option-container {
+    padding: 0px;
+    list-style: none;
+    margin-bottom: 0px;
+}
+
+.poll-item-option {
+    padding: 0px 0px;
+    border-bottom: 1px solid #d9d9d9;
+}
+
+.poll-item-option .radio input[type=radio] {
+    opacity: 0;
+    width: 0px;
+    height: 0px;
+    margin: 0px;
+}
+
+.poll-item-option .radio label {
+    width: 100%;
+    transition: background linear 0.5s;
+    padding: 10px 15px;
+}
+
+.poll-item-option .radio {
+    padding: 0px 0px;
+    margin: 0px;
+}
+
+.poll-item-option .radio label:hover {
+    background: #f1f1ff;
+}
+
+.poll-item-option .radio label.selected {
+    color: dodgerblue;
+    font-weight: bold;
+}
+
+.poll-item-option .radio label.selected::after{
+    content: '\2714';
+} 
+
+.poll-item-credits {
+    padding: 10px 15px;
+}
+.poll-item-credits a{
+    text-decoration: none;
+}
