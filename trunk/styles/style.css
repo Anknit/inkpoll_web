@@ -1,0 +1,26 @@
+body {
+    margin-top: 60px;
+    background: #f5f5f5;
+}
+
+.cat-list-banner {
+    overflow-x: auto;
+    white-space: nowrap;
+    background: #555;
+    padding-top: 10px;
+    margin-bottom: 15px;
+    position: fixed;
+    top: 50px;
+    z-index: 10;
+}
+
+.cat-list-banner li a {
+    color: #f3f3f3;
+    padding: 5px 10px;
+}
+
+@media (max-width:767px) {
+    body {
+        margin-top: 100px;
+    }
+}

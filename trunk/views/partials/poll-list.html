@@ -1,0 +1,52 @@
+<div class="row" data-ng-repeat="item in plst.list">
+    <div class="col-xs-12">
+        <div class="poll-item" data-ng-init="item.alreadyVoted = !!item.userChoice">
+            <div class="poll-item-question">
+                <a data-ng-href="{{'polls/' + item.id + '/' + item.questionText.split(' ').join('-')}}">
+                    <h4 data-ng-bind="item.questionText"></h4>
+                </a>
+            </div>
+            <ul class="poll-item-option-container">
+                <li class="poll-item-option" data-ng-repeat="option in item.optionArr track by $index">
+                    <div class="radio">
+                        <label data-ng-class="{'selected':item.userChoice == option.id}" auth-user-only>
+                            <input type="radio" data-ng-model="item.userChoice" name="{{'optionsRadios_' + (item.id)}}" value="{{option.id}}">
+                            {{option.optionText}}
+                        </label>
+                    </div>
+                </li>
+            </ul>
+<!--
+            <div class="poll-item-action action-item">
+                <a data-ng-cloak class="btn btn-success" data-ng-hide="((item.anonymousvote =='0' && !$root.user.name) || item.alreadyVoted)" data-ng-disabled="(!item.userChoice)" data-ng-click="plst.submitPollVote(item)">Vote</a>
+                <a data-ng-cloak role="button" data-ng-show="(item.anonymousvote =='0' && !$root.user.name)" auth-user-only>Login to vote</a>
+                <span data-ng-cloak data-ng-show="item.alreadyVoted && $root.user.name">Already Voted</span>
+                <a class="btn btn-link">Skip</a>
+            </div>
+-->
+            <div class="poll-item-credits text-right">
+                <a data-ng-href="{{'polls/' + item.pollcategory}}">
+                    <label class="label label-info" data-ng-bind="item.pollcategory" role="button" title="{{'See polls of ' + item.pollcategory + ' category'}}">
+                    </label>
+                </a>
+                <a data-ng-href="{{'users/' + item.userId + '/' + item.createdby.split(' ').join('-')}}">
+                    <label class="label label-default" data-ng-bind="item.createdby" role="button" title="{{'Go to ' + item.createdby + '\'s profile'}}">
+                    </label>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-xs-12 text-center" data-ng-hide="plst.listCompleted" ng-cloak>
+    <p>
+        <button class="btn btn-default" data-ng-click="plst.loadmore()">Show more</button>
+    </p>
+</div>
+<div class="col-xs-12" data-ng-show="plst.listCompleted" ng-cloak>
+    <p data-ng-if="plst.list.length == 0">
+        <i>Sorry currently there are no items in this list. Please try after a while</i>
+    </p>
+    <p data-ng-if="plst.list.length != 0">
+        <i>That's all folks</i>
+    </p>
+</div>
