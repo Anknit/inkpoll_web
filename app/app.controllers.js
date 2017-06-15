@@ -81,38 +81,11 @@
         });
     }
 
-    categoryPolls.$inject = ['pollCaster', 'pollReader', '$routeParams'];
+    categoryPolls.$inject = ['$routeParams'];
 
-    function categoryPolls(pollCaster, pollReader, $routeParams) {
+    function categoryPolls($routeParams) {
         var scope = this;
-        this.list = [];
         this.category = $routeParams.category;
-
-        pollReader.readPolls({
-            category: this.category
-        }).then(function (response) {
-            if (response.status) {
-                scope.list = response.data;
-            }
-        });
-        this.showAuthModal = function () {
-            jQuery('#auth-modal').modal('show');
-        };
-
-        this.submitPollVote = function (pollItem) {
-            var voteData = {
-                pollItemId: pollItem.id,
-                voteOption: pollItem.userChoice
-            }
-            pollCaster.castVote(voteData).then(function (response) {
-                if (response.status) {
-                    alert('Success');
-                } else {
-                    alert(response.error);
-                }
-            });
-        };
-
     }
 
     categoryHome.$inject = ['pollCategories'];
@@ -184,17 +157,35 @@
         };
     }
 
-    polllist.$inject = ['pollCaster', 'pollReader'];
+    polllist.$inject = ['$scope', '$attrs', 'pollCaster', 'pollReader'];
 
-    function polllist(pollCaster, pollReader) {
-        var scope = this;
+    function polllist($scope, $attrs, pollCaster, pollReader) {
+        var scope = this, configObj = {};
         this.list = [];
-
-        pollReader.readPolls({}).then(function (response) {
-            if (response.status) {
-                scope.list = response.data;
+        this.pIndex=1;
+        this.category = '';
+        this.listCompleted = false;
+        if($attrs.type == 'category-polls') {
+            this.category = $scope.catPoll.category;
+        }
+        this.loadPolls = function() {
+            if(this.category != '') {
+                configObj['category'] = this.category;
             }
-        });
+            configObj['index'] = this.pIndex;
+            pollReader.readPolls(configObj).then(function (response) {
+                if (response.status) {
+                    scope.list = scope.list.concat(response.data);
+                    if(response.data.length == 0) {
+                        scope.listCompleted = true;
+                    }
+                }
+            });
+        };
+        this.loadmore = function() {
+            this.pIndex++;
+            this.loadPolls();
+        };
         this.showAuthModal = function () {
             jQuery('#auth-modal').modal('show');
         };
@@ -212,6 +203,7 @@
                 }
             });
         };
+        this.loadPolls();
     }
 
 })();

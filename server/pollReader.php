@@ -10,7 +10,7 @@
             $error = '';
             $status = false;
             
-            $userId = 0;
+            $userId = -1;
             
             // UserID needs to be fetched
             if(isset($_SESSION['userId'])) {
@@ -38,27 +38,32 @@
             $query  .= ' order by pollitem.id desc limit '.$offset.','.$count;
             
             $readPollQuestion = DB_Query($query, 'ASSOC', '', 'id');
-            if($readPollQuestion) {
-                $readPollOptions = DB_Read(array(
-                    'Table' => 'polloptions',
-                    'Fields'=> '*',
-                    'clause' => 'pollId in ('.implode(array_keys($readPollQuestion), ",").')',
-                    'order' => 'optionId asc'
-                ),'ASSOC','','optionId');
-                if($readPollOptions) {
-                    foreach($readPollOptions as $optionId => $data) {
-                        if(!isset($readPollQuestion[$data['pollId']]['optionArr'])) {
-                            $readPollQuestion[$data['pollId']]['optionArr'] = array();
+            if(is_array($readPollQuestion)) {
+                if(count($readPollQuestion) > 0) {
+                    $readPollOptions = DB_Read(array(
+                        'Table' => 'polloptions',
+                        'Fields'=> '*',
+                        'clause' => 'pollId in ('.implode(array_keys($readPollQuestion), ",").')',
+                        'order' => 'optionId asc'
+                    ),'ASSOC','','optionId');
+                    if($readPollOptions) {
+                        foreach($readPollOptions as $optionId => $data) {
+                            if(!isset($readPollQuestion[$data['pollId']]['optionArr'])) {
+                                $readPollQuestion[$data['pollId']]['optionArr'] = array();
+                            }
+                            $readPollQuestion[$data['pollId']]['optionArr'][] = array('id'=>$optionId, 'optionText' => $data['optionText']);
                         }
-                        $readPollQuestion[$data['pollId']]['optionArr'][] = array('id'=>$optionId, 'optionText' => $data['optionText']);
+                        $responseArray = array();
+                        foreach($readPollQuestion as $key => $value) {
+                            $responseArray[] = $value;
+                        }
+                        $status = true;
+                    } else {
+                        $error = 'Failed to read options for voting';
                     }
-                    $responseArray = array();
-                    foreach($readPollQuestion as $key => $value) {
-                        $responseArray[] = $value;
-                    }
-                    $status = true;
                 } else {
-                    $error = 'Failed to read options for voting';
+                    $status = true;
+                    $responseArray = array();
                 }
             } else {
                 $error = 'Failed to read poll questions';

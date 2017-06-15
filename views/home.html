@@ -1,34 +1,10 @@
-<div data-ng-controller="polllist as plst">
-    <div class="col-xs-12">
-        <div class="row">
-            <div class="col-xs-12 col-sm-6 col-md-4" data-ng-repeat="item in plst.list">
-                <div class="panel panel-warning" data-ng-init="item.alreadyVoted = !!item.userChoice">
-                    <div class="panel-heading">
-                        #{{$index + 1 + ' ' + item.questionText}}
-                    </div>
-                    <ul class="list-group">
-                        <li class="list-group-item" data-ng-repeat="option in item.optionArr track by $index">
-                            <div class="radio">
-                                <label>
-                                    <input type="radio" data-ng-model="item.userChoice" name="{{'optionsRadios_' + (item.id)}}" value="{{option.id}}">
-                                    {{option.optionText}}
-                                </label>
-                            </div>
-                        </li>
-                        <li class="list-group-item action-item">
-                            <a data-ng-cloak class="btn btn-success" data-ng-hide="((item.anonymousvote =='0' && !$root.user.name) || item.alreadyVoted)" data-ng-disabled="(!item.userChoice)" data-ng-click="plst.submitPollVote(item)">Vote</a>&nbsp;
-                            <a data-ng-cloak role="button" data-ng-show="(item.anonymousvote =='0' && !$root.user.name)" data-ng-click="plst.showAuthModal()">Login to vote</a>&nbsp;
-                            <span data-ng-cloak data-ng-show="item.alreadyVoted && $root.user.name">Already Voted</span>&nbsp;
-                            <a class="btn btn-link">Skip</a>
-                        </li>
-                    </ul>
-                    <div class="panel-footer">
-                        <p class="text-right">
-                            <a data-ng-href="{{'polls/' + item.pollcategory}}" data-ng-bind="item.pollcategory"></a>
-                        </p>
-                    </div>
-                </div>
-            </div>
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12 col-md-8 bg-default">
+            <poll-list data-type="home" data-cat="all"></poll-list>
+        </div>
+        <div class="col-xs-12 col-md-4">
+        
         </div>
     </div>
 </div>
