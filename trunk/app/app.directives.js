@@ -1,6 +1,7 @@
 (function () {
     angular.module('app')
-        .directive('authUserOnly', authUserOnly);
+        .directive('authUserOnly', authUserOnly)
+        .directive('pollList', pollList);
 
     authUserOnly.$inject = ['$rootScope'];
 
@@ -16,6 +17,18 @@
                     }
                 };
             }
+        };
+        return DDO;
+    }
+
+    pollList.$inject = [];
+
+    function pollList() {
+        var DDO = {
+            restrict: 'E',
+            templateUrl: 'views/partials/poll-list.html',
+            controller: 'polllist',
+            controllerAs: 'plst'
         };
         return DDO;
     }
