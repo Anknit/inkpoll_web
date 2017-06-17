@@ -130,6 +130,8 @@
 
             FB.Event.subscribe('auth.statusChange', function (res) {
                 if (res.status === 'connected') {
+                    cookieService.setCookie("sessionStatus", "active", 365);
+                    cookieService.setCookie("authvendor", "FACEBOOK", 365);
 
                     /*
                      The user is already logged,

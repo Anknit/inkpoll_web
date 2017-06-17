@@ -34,6 +34,9 @@
             if(isset($readData['category'])) {
                 $query .= ' where pollitem.catId = '.$this->getCatId($readData['category']);
             }
+            if(isset($readData['pollid'])) {
+                $query .= ' where pollitem.id = '.$readData['pollid'];
+            }
             
             $query  .= ' order by pollitem.id desc limit '.$offset.','.$count;
             

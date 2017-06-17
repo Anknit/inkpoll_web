@@ -18,6 +18,10 @@
             templateUrl: 'views/category-polls.html',
             controller: 'categoryPolls',
             controllerAs: 'catPoll'
+        }).when("/polls/:id/:name", {
+            templateUrl: 'views/poll-page.html',
+            controller: 'pollPage',
+            controllerAs: 'poll'
         }).when("/pollcreater", {
             templateUrl: 'views/poll-creater.html',
             isAuth:true
