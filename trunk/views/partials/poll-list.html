@@ -10,7 +10,7 @@
                 <li class="poll-item-option" data-ng-repeat="option in item.optionArr track by $index">
                     <div class="radio">
                         <label data-ng-class="{'selected':item.userChoice == option.id}" auth-user-only>
-                            <input type="radio" data-ng-model="item.userChoice" name="{{'optionsRadios_' + (item.id)}}" value="{{option.id}}">
+                            <input type="radio" data-ng-model="item.userChoice" name="{{'optionsRadios_' + (item.id)}}" value="{{option.id}}" data-ng-change="plst.submitPollVote(item)">
                             {{option.optionText}}
                         </label>
                     </div>
@@ -34,10 +34,20 @@
                     </label>
                 </a>
             </div>
+            <div class="poll-item-share">
+<!--
+                <div class="fb-share-button" data-ng-href="{{'polls/' + item.id + '/' + item.questionText.split(' ').join('-')}}" data-layout="button_count" data-size="small" data-mobile-iframe="true">
+                    <a class="fb-xfbml-parse-ignore" target="_blank" data-ng-href="{{'https://www.facebook.com/sharer/sharer.php?u=http://localhost/feeddasm/polls/' + item.id + '/' + item.questionText.split(' ').join('-') + '&amp;src=sdkpreparse'}}">
+                        Share
+                    </a>
+                </div>
+-->
+                <img role="button" src="images/fb-share.png" fb-share  data-ng-href="{{'polls/' + item.id + '/' + item.questionText.split(' ').join('-')}}" data-mobile-iframe="true" height="30px"/>
+            </div>
         </div>
     </div>
 </div>
-<div class="col-xs-12 text-center" data-ng-hide="plst.listCompleted" ng-cloak>
+<div class="col-xs-12 text-center" data-ng-hide="plst.listCompleted || (plst.pollId != 0)" ng-cloak>
     <p>
         <button class="btn btn-default" data-ng-click="plst.loadmore()">Show more</button>
     </p>

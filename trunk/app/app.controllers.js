@@ -4,6 +4,7 @@
         .controller('headerCtrl', headerCtrl)
         .controller('categoryHome', categoryHome)
         .controller('userCtrl', userCtrl)
+        .controller('pollPage', pollPage)
         .controller('categoryPolls', categoryPolls)
         .controller('creator', creator)
         .controller('polllist', polllist);
@@ -13,6 +14,14 @@
     function home() {
         var scope = this;
 
+    }
+
+    pollPage.$inject = ['$routeParams'];
+
+    function pollPage($routeParams) {
+        var scope = this;
+        this.pollId = $routeParams.id;
+        this.pollName = $routeParams.name;
     }
 
     userCtrl.$inject = ['$routeParams', 'pollReader','fbAuthService', 'googleAuthService'];
@@ -164,13 +173,18 @@
         this.list = [];
         this.pIndex=1;
         this.category = '';
+        this.pollId = 0;
         this.listCompleted = false;
         if($attrs.type == 'category-polls') {
             this.category = $scope.catPoll.category;
+        } else if($attrs.type == 'single-poll') {
+            this.pollId = $scope.poll.pollId;
         }
         this.loadPolls = function() {
             if(this.category != '') {
                 configObj['category'] = this.category;
+            } else if(this.pollId != 0) {
+                configObj['pollid'] = this.pollId;
             }
             configObj['index'] = this.pIndex;
             pollReader.readPolls(configObj).then(function (response) {

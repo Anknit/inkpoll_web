@@ -1,6 +1,7 @@
 (function () {
     angular.module('app')
         .directive('authUserOnly', authUserOnly)
+        .directive('fbShare', fbShare)
         .directive('pollList', pollList);
 
     authUserOnly.$inject = ['$rootScope'];
@@ -31,6 +32,27 @@
             controllerAs: 'plst'
         };
         return DDO;
+    }
+
+    fbShare.$inject = [];
+    function fbShare() {
+        return {
+            restrict: 'A',
+            link: function(scope, element, attr) {
+                var attrs = attr;
+                element.on('click', function() {
+                    FB.ui({
+                        method: 'share',
+/*
+                        href: 'http://localhost/feeddasm/' + attrs.href
+*/
+                        href: 'http://umaginesoft.com/heritageaviation/data/pollapp/feeddasm/'
+                    }, function(response) {
+                        console.log(response);
+                    });
+                });
+            }
+        };
     }
 
 })();

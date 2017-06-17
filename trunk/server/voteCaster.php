@@ -12,12 +12,15 @@
             
             //User Id needs to be fetched
             $userId = 0;
+            $editVoteMode = true; // Flag to allow re vote option
             if(isset($_SESSION['userId'])) {
                 $userId = $_SESSION['userId'];
                 $alreadyVoted = $this->checkVoteExist($voteData, $userId);
                 $voteAllowed = true;
                 if($alreadyVoted) {
-                    $error = 'You have already voted for this poll';
+                    if(!$editVoteMode) {
+                        $error = 'You have already voted for this poll';
+                    }
                 }
             } else {
                 $voteAllowed = $this->isAnonVoteAllowed($voteData);
@@ -27,21 +30,40 @@
                 }
             }
             
-            if(!$alreadyVoted && $voteAllowed) {
+            if($voteAllowed) {
                 $validOption = $this->isOptionValid($voteData);
                 if($validOption) {
-                    $insertVote = DB_Insert(array(
-                        'Table' => 'pollresponses',
-                        'Fields'=>  array(
-                            'pollId' => $voteData["pollItemId"],
-                            'optionId'=> $voteData["voteOption"],
-                            'userId' => $userId
-                        )
-                    ));
-                    if($insertVote) {
-                        $status = true;
+                    if(!$alreadyVoted) {
+                        $insertVote = DB_Insert(array(
+                            'Table' => 'pollresponses',
+                            'Fields'=>  array(
+                                'pollId' => $voteData["pollItemId"],
+                                'optionId'=> $voteData["voteOption"],
+                                'userId' => $userId
+                            )
+                        ));
+                        if($insertVote) {
+                            $status = true;
+                        } else {
+                            $error = 'Failed to cast vote';
+                        }
                     } else {
-                        $error = 'Failed to cast vote';
+                        if($editVoteMode) {
+                            $updateVote = DB_Update(array(
+                                'Table' => 'pollresponses',
+                                'Fields'=>  array(
+                                    'pollId' => $voteData["pollItemId"],
+                                    'optionId'=> $voteData["voteOption"],
+                                    'userId' => $userId
+                                ),
+                                'clause' => 'pollId ='.$voteData["pollItemId"].' and userId ='.$userId
+                            ));
+                            if($updateVote) {
+                                $status = true;
+                            } else {
+                                $error = 'Failed to update vote';
+                            }
+                        }
                     }
                 } else {
                     $error = 'You have voted for an invalid option';

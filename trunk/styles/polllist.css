@@ -67,3 +67,6 @@
 .poll-item-credits a{
     text-decoration: none;
 }
+.poll-item-share {
+    padding: 10px 15px;
+}
