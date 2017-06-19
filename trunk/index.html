@@ -6,17 +6,15 @@
     <title>Feedd</title>
     <base href="/feeddasm/" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!--
-    <meta name="google-signin-client_id" content="418125885627-j2a16gbm8m1i62qqe820fspdkvb7fqop.apps.googleusercontent.com">
--->
     <link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="styles/style.css" />
     <link type="text/css" rel="stylesheet" href="styles/polllist.css" />
 </head>
 
 <body class="container-fluid">
     <header class="row" data-ng-controller="headerCtrl as head">
-        <nav class="navbar navbar-default navbar-fixed-top">
+        <nav class="navbar navbar-default navbar-fixed-top navbar-theme">
             <div class="container-fluid">
                 <!-- Brand and toggle get grouped for better mobile display -->
                 <div class="navbar-header">
@@ -41,29 +39,37 @@
                         <li><a href="pollcreater" data-auth-user-only>Creator</a></li>
 -->
                     </ul>
-                    <ul class="nav navbar-nav navbar-right">
-                        <!--
-                        <li class="dropdown" ng-cloak data-ng-if="user.name">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                <span>{{'Welcome ' + user.name.split(' ')[0]}}</span>
-                                <span class="caret"></span>
-                            </a>
-                            <ul class="dropdown-menu">
+                    <form class="navbar-form navbar-right">
+                        <button data-ng-if="!user.name" type="button" class="btn btn-info" data-ng-click="head.showAuthModal()">
+                            Signin
+                        </button>
+                        <div class="dropdown" data-ng-if="user.name" style="display:inline">
+                            <button class="btn btn-link dropdown-toggle btn-xs" type="button" id="usernotifications" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="color:#fff;text-decoration:none;">
+                                <span class="glyphicon glyphicon-bell"></span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="usernotifications">
                                 <li>
-                                    <a class="btn btn-link" data-ng-click="head.logout()">Logout</a>
+                                    <a class="text-muted">
+                                        You have no new notifications
+                                    </a>
                                 </li>
                             </ul>
-                        </li>
--->
-                        <li ng-cloak data-ng-if="user.name">
-                            <a data-ng-href="{{'users/' + user.id +'/' + user.name.split(' ').join('-')}}">{{'Welcome ' + user.name.split(' ')[0]}}</a>
-                        </li>
-                        <li ng-cloak data-ng-if="!user.name">
-                            <a role="button">
-                                <span data-ng-click="head.showAuthModal()">Signin</span>
-                            </a>
-                        </li>
-                    </ul>
+                        </div>
+                        <div class="dropdown" data-ng-if="user.name" style="display:inline">
+                            <button class="btn btn-link dropdown-toggle" type="button" id="userdropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="color:#fff;text-decoration:none;">
+                                {{'Hi, ' + user.name.split(' ')[0] + ' '}}
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="userdropdown">
+                                <li><a data-ng-href="{{'users/' + user.id +'/' + user.name.split(' ').join('-')}}" >My Profile</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li><a role="button" data-ng-click="head.logout()">Logout</a></li>
+                            </ul>
+                        </div>
+                        <a data-ng-if="user.name" role="button" class="btn btn-success" href="pollcreater">
+                            <span class="glyphicon glyphicon-plus"></span>&nbsp;Create
+                        </a>
+                    </form>
                 </div>
             </div>
             <!-- /.navbar-collapse -->
@@ -79,7 +85,7 @@
     </header>
     <div id="fb-root"></div>
 
-    <div data-ng-view class="row"></div>
+    <div data-ng-view class="row" style="padding-top:20px;"></div>
 
     <div class="modal fade" tabindex="-1" role="dialog" id="auth-modal">
         <div class="modal-dialog" role="document">
@@ -102,17 +108,16 @@
     </div>
     <script>
         /*
-                                        (function(d, s, id) {
-                                            var js, fjs = d.getElementsByTagName(s)[0];
-                                            if (d.getElementById(id)) return;
-                                            js = d.createElement(s);
-                                            js.id = id;
-                                            js.src = "//connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v2.9&appId=1356379634397148";
-                                            fjs.parentNode.insertBefore(js, fjs);
-                                        }(document, 'script', 'facebook-jssdk'));
+                                                                (function(d, s, id) {
+                                                                    var js, fjs = d.getElementsByTagName(s)[0];
+                                                                    if (d.getElementById(id)) return;
+                                                                    js = d.createElement(s);
+                                                                    js.id = id;
+                                                                    js.src = "//connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v2.9&appId=1356379634397148";
+                                                                    fjs.parentNode.insertBefore(js, fjs);
+                                                                }(document, 'script', 'facebook-jssdk'));
 
-                                */
-
+                                                        */
     </script>
 
     <script type="application/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>

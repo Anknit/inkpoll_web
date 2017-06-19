@@ -75,9 +75,9 @@
         this.getCurrentPolls();
     }
 
-    headerCtrl.$inject = ['pollCategories'];
+    headerCtrl.$inject = ['pollCategories', 'fbAuthService', 'googleAuthService'];
 
-    function headerCtrl(pollCategories) {
+    function headerCtrl(pollCategories, fbAuthService, googleAuthService) {
         var scope = this;
         this.pollCatArr = [];
         this.showAuthModal = function () {
@@ -88,6 +88,11 @@
                 scope.pollCatArr = response.data;
             }
         });
+        this.logout = function () {
+            fbAuthService.logout();
+            googleAuthService.signout();
+        };
+
     }
 
     categoryPolls.$inject = ['$routeParams'];
