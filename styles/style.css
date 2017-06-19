@@ -1,8 +1,23 @@
 body {
     margin-top: 60px;
-    background: #f5f5f5;
+    font-family: 'Lato', 'Arial', sans-serif;
+    background-color: #f9f9f9;
 }
 
+.navbar-theme{
+    background-color:rgba(29, 29, 97, 0.85);
+}
+nav.navbar-theme .navbar-nav>li>a{
+    color:#bbb;
+    transition: color linear 0.25s;
+    font-weight: bold;
+}
+nav.navbar-theme .navbar-brand{
+    color:#fff;
+}
+nav.navbar-theme .navbar-nav>li>a:hover, nav.navbar-theme .navbar-nav>li>a:focus, nav.navbar-theme .navbar-brand:hover, nav.navbar-theme .navbar-brand:focus{
+    color:#fff;
+}
 .cat-list-banner {
     overflow-x: auto;
     white-space: nowrap;
@@ -17,6 +32,26 @@ body {
 .cat-list-banner li a {
     color: #f3f3f3;
     padding: 5px 10px;
+}
+
+.side-banner-section {
+    background: #fff;
+    box-shadow: 0px 0px 2px #ddd;
+    padding: 15px;
+}
+.store-icon{
+    height: 60px;
+    background-position: center;
+    display: block;
+    width:100%;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+.store-icon.google-store{
+    background-image: url('./../images/google-play-badge.png');
+}
+.store-icon.apple-store{
+    background-image: url('./../images/apple-app-store.svg');
 }
 
 @media (max-width:767px) {
