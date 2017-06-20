@@ -2,6 +2,7 @@
     angular.module('app')
         .service('pollCaster', pollCaster)
         .service('pollReader', pollReader)
+        .service('pollMetaData', pollMetaData)
         .service('cookieService', cookieService)
         .service('fbAuthService', fbAuthService)
         .service('googleAuthService', googleAuthService)
@@ -113,6 +114,30 @@
                     page: page,
                     order: order
                 }
+            }).then(function (response) {
+                return response.data;
+            }, function (error) {
+                console.log(error);
+            });
+        };
+    }
+
+    pollMetaData.$inject = ['$http', 'APIBASE'];
+
+    function pollMetaData($http, APIBASE) {
+        var pollMetaData = this;
+        this.getPollComments = function (pollid) {
+            return $http.post(APIBASE + '?request=readPollComments', {
+                data: {id:pollid}
+            }).then(function (response) {
+                return response.data;
+            }, function (error) {
+                console.log(error);
+            });
+        };
+        this.changeuserlike = function (pollid, likeaction) {
+            return $http.post(APIBASE + '?request=changePollLikeStatus', {
+                data: {id:pollid,action:likeaction}
             }).then(function (response) {
                 return response.data;
             }, function (error) {

@@ -171,9 +171,9 @@
         };
     }
 
-    polllist.$inject = ['$scope', '$attrs', 'pollCaster', 'pollReader'];
+    polllist.$inject = ['$scope', '$attrs', 'pollCaster', 'pollReader', 'pollMetaData'];
 
-    function polllist($scope, $attrs, pollCaster, pollReader) {
+    function polllist($scope, $attrs, pollCaster, pollReader, pollMetaData) {
         var scope = this, configObj = {};
         this.list = [];
         this.pIndex=1;
@@ -223,6 +223,71 @@
             });
         };
         this.loadPolls();
+        this.likepoll = function (pollItem) {
+            var poll = pollItem;
+            if(pollItem.userlikescore == 1) {
+                pollMetaData.changeuserlike(pollItem.id, 'unlike').then(function(response){
+                    if(response.status) {
+                        poll.likecount -= 1;
+                        pollItem.userlikescore -= 1;
+                    } else {
+                        console.log(response.error);
+                    }
+                });
+            } else {
+                pollMetaData.changeuserlike(pollItem.id, 'like').then(function(response){
+                    if(response.status) {
+                        poll.likecount += 1;
+                        if(pollItem.userlikescore == -1) {
+                            poll.dislikecount -= 1;
+                            pollItem.userlikescore += 1;
+                        }
+                        pollItem.userlikescore += 1;
+                    } else {
+                        console.log(response.error);
+                    }
+                });
+            }
+        };
+        this.dislikepoll = function (pollItem) {
+            var poll = pollItem;
+            if(pollItem.userlikescore == -1) {
+                pollMetaData.changeuserlike(pollItem.id, 'unlike').then(function(response){
+                    if(response.status) {
+                        poll.dislikecount -= 1;
+                        pollItem.userlikescore += 1;
+                    } else {
+                        console.log(response.error);
+                    }
+                });
+            } else {
+                pollMetaData.changeuserlike(pollItem.id, 'dislike').then(function(response){
+                    if(response.status) {
+                        poll.dislikecount += 1;
+                        if(pollItem.userlikescore == 1) {
+                            poll.likecount -= 1;
+                            pollItem.userlikescore -= 1;
+                        }
+                        pollItem.userlikescore -= 1;
+                    } else {
+                        console.log(response.error);
+                    }
+                });
+            }
+        };
+        this.favpoll = function (pollItem) {
+            
+        };
+        this.getComments = function(item){
+            var pollitem = item;
+            pollMetaData.getPollComments(item.id).then(function(response){
+                if(response.status) {
+                    pollitem.comments = response.data;
+                } else {
+                    console.log(response.error);
+                }
+            });
+        }
     }
 
 })();
