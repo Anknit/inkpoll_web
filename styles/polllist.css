@@ -1,7 +1,7 @@
 .poll-item {
     background: #fff;
     box-shadow: 0px 0px 1px #cdcdcd;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
     border-radius: 3px;
 }
 
@@ -56,16 +56,66 @@
     font-weight: bold;
 }
 
-.poll-item-option .radio label.selected::after{
+.poll-item-option .radio label.selected::after {
     content: '\2714';
-} 
+}
 
 .poll-item-credits {
     padding: 10px 15px;
 }
-.poll-item-credits a{
+
+.poll-item-credits a {
     text-decoration: none;
 }
+
 .poll-item-share {
     padding: 10px 15px;
+}
+
+.poll-item-meta .btn-link {
+    color: #aaa;
+}
+.poll-item-meta .btn-link:hover{
+    color:#333;
+}
+.poll-item-meta .btn-link.btn-lg {
+    padding: 6px 12px;
+}
+.poll-item-meta .btn-link.btn-lg:focus {
+    outline: none;
+}
+
+.poll-item-meta .btn-link.active .glyphicon-arrow-up{
+    color:forestgreen;
+}
+.poll-item-meta .btn-link.active .glyphicon-arrow-down{
+    color:darkred;
+}
+.comment-input-container {
+    border: 1px solid #ccc;
+    padding: 5px 5px;
+}
+.comment-input-container textarea {
+    outline: none;
+    border: none;
+    resize: none;
+    box-shadow: none;
+    margin-bottom:5px;
+    padding:0px;
+}
+.comment-input-container textarea:focus{
+    outline:none;
+    box-shadow: none;
+}
+.post-button{
+    display: none;
+}
+.post-button .btn{
+    padding: 3px 15px;
+}
+.post-button:focus{
+    display: block;
+}
+.comment-input-container textarea:focus ~.post-button{
+    display: block;
 }

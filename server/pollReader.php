@@ -29,7 +29,7 @@
             
             $offset =  ($pageIndex - 1) * $count;
             
-            $query = 'Select pollitem.id, pollitem.userId, pollitem.anonymousvote, pollitem.pollQuestion as questionText, userinfo.id as userId, userinfo.name as createdby, pollresponses.optionId as userChoice, pollcategories.catName as pollcategory from pollitem left join userinfo on pollitem.userId = userinfo.id left join pollresponses on pollitem.id = pollresponses.pollId and pollresponses.userId = '.$userId.' left join pollcategories on pollitem.catId = pollcategories.catId';
+            $query = 'Select pollitem.id, pollitem.userId, pollitem.anonymousvote, pollitem.pollQuestion as questionText, userinfo.id as userId, userinfo.name as createdby, pollresponses.optionId as userChoice, pollcategories.catName as pollcategory, polllikes.likescore as userlikescore from pollitem left join userinfo on pollitem.userId = userinfo.id left join pollresponses on pollitem.id = pollresponses.pollId and pollresponses.userId = '.$userId.' left join pollcategories on pollitem.catId = pollcategories.catId left join polllikes on pollitem.id = polllikes.pollid and polllikes.userid = '.$userId;
             
             if(isset($readData['category'])) {
                 $query .= ' where pollitem.catId = '.$this->getCatId($readData['category']);
@@ -49,6 +49,14 @@
                         'clause' => 'pollId in ('.implode(array_keys($readPollQuestion), ",").')',
                         'order' => 'optionId asc'
                     ),'ASSOC','','optionId');
+                    $readpolllikes = DB_Query('SELECT likescore, pollid, COUNT(*) as count FROM pollapp.polllikes WHERE likescore IN (1, -1) and pollid IN ('.implode(array_keys($readPollQuestion), ",").') GROUP BY likescore, pollid ', 'ASSOC', '');
+                    for($i=0; $i< count($readpolllikes); $i++) {
+                        if($readpolllikes[$i]['likescore'] == 1) {
+                            $readPollQuestion[$readpolllikes[$i]['pollid']]['likecount'] = (int)$readpolllikes[$i]['count'];
+                        } else {
+                            $readPollQuestion[$readpolllikes[$i]['pollid']]['dislikecount'] = (int)$readpolllikes[$i]['count'];
+                        }
+                    }
                     if($readPollOptions) {
                         foreach($readPollOptions as $optionId => $data) {
                             if(!isset($readPollQuestion[$data['pollId']]['optionArr'])) {
@@ -58,6 +66,13 @@
                         }
                         $responseArray = array();
                         foreach($readPollQuestion as $key => $value) {
+                            $value['userlikescore'] = (empty($value['userlikescore']))?0:$value['userlikescore'];
+                            if(!isset($value['likecount'])) {
+                                $value['likecount'] = 0;
+                            }
+                            if(!isset($value['dislikecount'])) {
+                                $value['dislikecount'] = 0;
+                            }
                             $responseArray[] = $value;
                         }
                         $status = true;

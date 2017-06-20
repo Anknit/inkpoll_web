@@ -8,6 +8,7 @@ require_once __DIR__.'/voteCaster.php';
 require_once __DIR__.'/authMgr.php';
 require_once __DIR__.'/pollCategories.php';
 require_once __DIR__.'/pollReader.php';
+require_once __DIR__.'/pollMetaData.php';
     if(isset($_REQUEST['request'])) {
         $req = trim($_REQUEST['request']);
         if(validateRequest($req)){
@@ -49,6 +50,14 @@ function serveRequest ($request, $data = array()){
         case 'readPolls':
             $reqHandler = new PollReader();
             return $reqHandler->getPolls($data);
+            break;
+        case 'readPollComments':
+            $reqHandler = new PollMetaData();
+            return $reqHandler->getPollComments($data);
+            break;
+        case 'changePollLikeStatus':
+            $reqHandler = new PollMetaData();
+            return $reqHandler->changeUserLike($data);
             break;
         case 'userPolls':
             $reqHandler = new PollReader();
