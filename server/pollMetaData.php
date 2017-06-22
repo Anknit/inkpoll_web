@@ -36,6 +36,57 @@
                 )
             );
         }
+        public function savefavaction ($data){
+            $error = '';
+            $status = false;
+            if (isset($data['id']) && isset($data['action']) && !empty($data['id'])) {
+                $isfavactionpresent = $this->checkfavactionentry($data['id'],$_SESSION['userId']);
+                if($data['action'] == 'favorite'){
+                    $useraction = 1;
+                } else if ($data['action'] == 'unfavorite'){
+                    $useraction = 0 ;
+                } else {
+                    $error = 'Invalid Favorite action';
+                }
+                if ($error == ''){
+                    if($isfavactionpresent){
+                        $favEntry = DB_Update(array(
+                        'Table' => 'pollfavorites',
+                            'Fields' => array(
+                            'updatedon' => 'now()',
+                                'favaction' => $useraction
+                            ),
+                            'clause'=> 'userid = '.$_SESSION['userId'].' and pollid = '.$data['id']
+                        ));
+                    } else {
+                        $favEntry = DB_Insert(array(
+                        'Table' => 'pollfavorites',
+                            'Fields' => array(
+                            'pollid' => $data['id'],
+                                'userid' => $_SESSION['userId'],
+                                'favaction' => $useraction,
+                                'updatedon' => 'now()'
+                            )
+                        ));
+                    }
+                    if($favEntry) {
+                        $status = true;
+                        $data = $favEntry;
+                    } else {
+                        $error = 'Failed to save Favorites status in database';
+                    }
+                }
+            } else {
+                $error = 'Missing request arguments';
+            }
+            $resData = array('status' => $status);
+            if(!$status) {
+                $resData['error'] = $error;
+            } else {
+                $resData['data'] = $data;
+            }
+            return $resData;
+        }
         public function changeUserLike ($data) {
             $error = '';
             $status = false;
@@ -97,6 +148,18 @@
                 'clause'=>'userid = '.$userid.' and pollid = '.$pollid
             ),'ASSOC','');
             if(is_array($readEntry) && count($readEntry) == 1) {
+                $output = true;
+            }
+            return $output;
+        }
+        private function checkfavactionentry($pollid,$userid){
+            $output = false;
+            $readEntry = DB_Read(array(
+                'Table' => 'pollfavorites',
+                'Fields' => 'favaction',
+                'clause' => 'userid = '.$userid.' and pollid ='.$pollid 
+            ),'ASSOC','');
+            if(is_array($readEntry) && count($readEntry) == 1){
                 $output = true;
             }
             return $output;

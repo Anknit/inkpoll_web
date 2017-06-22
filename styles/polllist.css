@@ -53,7 +53,6 @@
 
 .poll-item-option .radio label.selected {
     color: dodgerblue;
-    font-weight: bold;
 }
 
 .poll-item-option .radio label.selected::after {
@@ -90,6 +89,9 @@
 }
 .poll-item-meta .btn-link.active .glyphicon-arrow-down{
     color:darkred;
+}
+.poll-item-meta .btn-link .glyphicon-star{
+    color: dodgerblue;
 }
 .comment-input-container {
     border: 1px solid #ccc;

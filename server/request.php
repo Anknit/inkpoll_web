@@ -59,6 +59,10 @@ function serveRequest ($request, $data = array()){
             $reqHandler = new PollMetaData();
             return $reqHandler->changeUserLike($data);
             break;
+        case 'changePollFavStatus':
+            $reqHandler = new PollMetaData();
+            return $reqHandler->savefavaction($data);
+            break;
         case 'userPolls':
             $reqHandler = new PollReader();
             return $reqHandler->getUserPolls($data);
@@ -66,6 +70,10 @@ function serveRequest ($request, $data = array()){
         case 'userVotePolls':
             $reqHandler = new PollReader();
             return $reqHandler->getUserVotePolls($data);
+            break;
+        case 'userFavPolls':
+            $reqHandler = new PollReader();
+            return $reqHandler->getUserFavPolls($data);
             break;
         case 'getCategories':
             $reqHandler = new PollCategories();

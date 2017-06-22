@@ -3,13 +3,14 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible">
-    <title>Feedd</title>
+    <title>Inkpoll</title>
     <base href="/feeddasm/" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="styles/style.css" />
     <link type="text/css" rel="stylesheet" href="styles/polllist.css" />
+    <link rel="icon" href="images/favicon.ico"/>
 </head>
 
 <body class="container-fluid">
@@ -25,7 +26,7 @@
                         <span class="icon-bar"></span>
                     </button>
                     <a class="navbar-brand" href="./">
-                        FEEDD
+                        <img class="brand-image" alt="Inkpoll" src="images/logo-v2-120.png" />
                     </a>
                 </div>
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -43,6 +44,7 @@
                         <button data-ng-if="!user.name" type="button" class="btn btn-info" data-ng-click="head.showAuthModal()">
                             Signin
                         </button>
+<!--
                         <div class="dropdown" data-ng-if="user.name" style="display:inline">
                             <button class="btn btn-link dropdown-toggle btn-xs" type="button" id="usernotifications" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="color:#fff;text-decoration:none;">
                                 <span class="glyphicon glyphicon-bell"></span>
@@ -55,6 +57,7 @@
                                 </li>
                             </ul>
                         </div>
+-->
                         <div class="dropdown" data-ng-if="user.name" style="display:inline">
                             <button class="btn btn-link dropdown-toggle" type="button" id="userdropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="color:#fff;text-decoration:none;">
                                 {{'Hi, ' + user.name.split(' ')[0] + ' '}}
@@ -85,7 +88,43 @@
     </header>
     <div id="fb-root"></div>
 
-    <div data-ng-view class="row" style="padding-top:20px;"></div>
+    <div class="row" style="padding-top:20px;">
+        <div class="col-xs-12 col-md-8">
+            <div class="row" data-ng-view ></div>
+        </div>
+        <div class="col-xs-12 col-md-4 side-banner-container">
+            <div class="row" style="margin:0px;">
+                <div class="col-xs-12 side-banner-section">
+                    <h4>Connect with Inkpoll</h4>
+                    <div class="fb-page" data-href="https://www.facebook.com/inkpoll" data-width="500" data-height="250" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 menu-links">
+                    <ul class="list-inline">
+                        <li>
+                            <a href="about">
+                                <span class="text-muted">About</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="privacy">
+                                <span class="text-muted">Privacy</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="terms">
+                                <span class="text-muted">Terms</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="copyright col-xs-12">
+                    <span class="text-muted"> Inkpoll &copy; 2017</span>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="modal fade" tabindex="-1" role="dialog" id="auth-modal">
         <div class="modal-dialog" role="document">
