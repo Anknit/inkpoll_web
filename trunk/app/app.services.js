@@ -120,6 +120,19 @@
                 console.log(error);
             });
         };
+        this.getUserFavPolls = function (userid, page, order) {
+            return $http.post(APIBASE + '?request=userFavPolls', {
+                data: {
+                    userid: userid,
+                    page: page,
+                    order: order
+                }
+            }).then(function (response) {
+                return response.data;
+            }, function (error) {
+                console.log(error);
+            });
+        };
     }
 
     pollMetaData.$inject = ['$http', 'APIBASE'];
@@ -144,6 +157,15 @@
                 console.log(error);
             });
         };
+        this.changeuserfav = function (pollid, favaction) {
+            return $http.post(APIBASE + '?request=changePollFavStatus', {
+                data: {id:pollid,action:favaction}
+            }).then(function (response) {
+                return response.data;
+            }, function (error) {
+                console.log(error);
+            });
+        }
     }
 
     fbAuthService.$inject = ['$rootScope', '$http', 'APIBASE', 'cookieService'];

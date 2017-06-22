@@ -12,6 +12,7 @@
                         <label data-ng-class="{'selected':item.userChoice == option.id}" auth-user-only>
                             <input type="radio" data-ng-model="item.userChoice" name="{{'optionsRadios_' + (item.id)}}" value="{{option.id}}" data-ng-change="plst.submitPollVote(item)">
                             {{option.optionText}}
+                            <div class="pull-right text-muted" data-ng-bind="option.optionVotes + ' votes'"></div>
                         </label>
                     </div>
                 </li>
@@ -26,7 +27,7 @@
                             <a class="btn btn-link" data-ng-href="{{'polls/' + item.id + '/' + item.questionText.split(' ').join('-')}}" data-ng-if="item.dislikecount > 0">
                                 <span data-ng-bind="item.dislikecount"></span> Dislike<span data-ng-if="item.dislikecount > 1">s</span>
                             </a>
-                            <a class="btn btn-link" data-ng-href="{{'polls/' + item.id + '/' + item.questionText.split(' ').join('-') + '@comments'}}">
+                            <a class="btn btn-link hide" data-ng-href="{{'polls/' + item.id + '/' + item.questionText.split(' ').join('-') + '@comments'}}">
                                 8 comments
                             </a>
                         </div>
@@ -54,7 +55,8 @@
                                 <span class="glyphicon glyphicon-arrow-down"></span>
                             </button>
                             <button class="btn btn-link btn-lg" auth-user-only data-ng-click="plst.favpoll(item)">
-                                <span class="glyphicon glyphicon-star-empty"></span>
+                                <span class="glyphicon glyphicon-star-empty" data-ng-if="item.userfavscore == 0"></span>
+                                <span class="glyphicon glyphicon-star" data-ng-if="item.userfavscore == 1"></span>
                             </button>
                         </div>
                     </div>
@@ -62,6 +64,7 @@
                         <img role="button" src="images/fb-share.png" fb-share data-ng-href="{{'polls/' + item.id + '/' + item.questionText.split(' ').join('-')}}" data-mobile-iframe="true" height="30px" />
                     </div>
                 </div>
+<!--
                 <div class="col-xs-12" data-ng-init="plst.getComments(item)">
                     <div class="col-xs-12">
                         <ul class="list-unstyled">
@@ -102,6 +105,7 @@
                         </ul>
                     </div>
                 </div>
+-->
             </div>
         </div>
     </div>

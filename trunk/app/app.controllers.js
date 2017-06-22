@@ -44,6 +44,13 @@
             totalPages: 1,
             list: []
         }
+        this.currentFavs = {
+            totalFavs: 0,
+            order: 'newest',
+            page: 1,
+            totalPages: 1,
+            list: []
+        }
         this.logout = function () {
             fbAuthService.logout();
             googleAuthService.signout();
@@ -71,8 +78,20 @@
                 }
             });
         };
-        this.getCurrentVotes();
+        this.getCurrentFavs = function () {
+            pollReader.getUserFavPolls(this.current.id, this.currentFavs.page, this.currentFavs.order).then(function (response) {
+                if (response.status) {
+                    scope.currentFavs.totalFavs = response.data.totalFavs;
+                    scope.currentFavs.totalPages = response.data.totalPages;
+                    scope.currentFavs.list = response.data.polllist;
+                } else {
+                    console.log(response.error);
+                }
+            });
+        };
         this.getCurrentPolls();
+        this.getCurrentVotes();
+        this.getCurrentFavs();
     }
 
     headerCtrl.$inject = ['pollCategories', 'fbAuthService', 'googleAuthService'];
@@ -276,7 +295,24 @@
             }
         };
         this.favpoll = function (pollItem) {
-            
+            var poll = pollItem;
+            if(pollItem.userfavscore == 1) {
+                pollMetaData.changeuserfav(pollItem.id, 'unfavorite').then(function(response){
+                    if(response.status) {
+                        pollItem.userfavscore -= 1;
+                    } else {
+                        console.log(response.error);
+                    }
+                });
+            } else {
+                pollMetaData.changeuserfav(pollItem.id, 'favorite').then(function(response){
+                    if(response.status) {
+                        pollItem.userfavscore += 1;
+                    } else {
+                        console.log(response.error);
+                    }
+                });
+            }
         };
         this.getComments = function(item){
             var pollitem = item;
