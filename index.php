@@ -1,4 +1,5 @@
 <?php
+    require_once __DIR__.'/server/OperateDB/DBMgrInterface.php';
     require_once __DIR__.'/ogtags.php';
 ?>
 <html data-ng-app="app" lang="en">
