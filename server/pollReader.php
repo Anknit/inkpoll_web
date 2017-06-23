@@ -49,8 +49,8 @@
                         'clause' => 'pollId in ('.implode(array_keys($readPollQuestion), ",").')',
                         'order' => 'optionId asc'
                     ),'ASSOC','','optionId');
-                    $readpolllikes = DB_Query('SELECT likescore, pollid, COUNT(*) as count FROM pollapp.polllikes WHERE likescore IN (1, -1) and pollid IN ('.implode(array_keys($readPollQuestion), ",").') GROUP BY likescore, pollid ', 'ASSOC', '');
-                    $readpollOptionVotes = DB_Query('SELECT optionid, pollid, COUNT(*) as count FROM pollapp.pollresponses WHERE pollid IN ('.implode(array_keys($readPollQuestion), ",").') GROUP BY optionid, pollid ', 'ASSOC', '', 'optionid');
+                    $readpolllikes = DB_Query('SELECT likescore, pollid, COUNT(*) as count FROM polllikes WHERE likescore IN (1, -1) and pollid IN ('.implode(array_keys($readPollQuestion), ",").') GROUP BY likescore, pollid ', 'ASSOC', '');
+                    $readpollOptionVotes = DB_Query('SELECT optionid, pollid, COUNT(*) as count FROM pollresponses WHERE pollid IN ('.implode(array_keys($readPollQuestion), ",").') GROUP BY optionid, pollid ', 'ASSOC', '', 'optionid');
                     for($i=0; $i< count($readpolllikes); $i++) {
                         if($readpolllikes[$i]['likescore'] == 1) {
                             $readPollQuestion[$readpolllikes[$i]['pollid']]['likecount'] = (int)$readpolllikes[$i]['count'];
