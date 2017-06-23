@@ -1,5 +1,5 @@
 <?php
-    require_once __DIR__.'/server/OperateDB/DBMgrInterface.php';
+    require_once __DIR__.'/server/OperateDB/DbMgrInterface.php';
     require_once __DIR__.'/ogtags.php';
 ?>
 <html data-ng-app="app" lang="en">
@@ -51,9 +51,9 @@
                         <button data-ng-if="!user.name" type="button" class="btn btn-info" data-ng-click="head.showAuthModal()">
                             Signin
                         </button>
-                        <button data-ng-if="user.name" role="button" class="btn btn-success" href="pollcreater">
+                        <a data-ng-if="user.name" role="button" class="btn btn-success" href="pollcreater">
                             <span class="glyphicon glyphicon-plus"></span>&nbsp;Create
-                        </button>
+                        </a>
                         <div class="pull-left">
                             <div class="dropdown" data-ng-if="user.name">
                                 <button class="btn btn-link dropdown-toggle" type="button" id="userdropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="color:#fff;text-decoration:none;">

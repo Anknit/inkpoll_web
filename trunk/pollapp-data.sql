@@ -45,6 +45,31 @@ INSERT INTO `pollcategories` VALUES (1,'Entertainment','For Entertainment',0,'1'
 UNLOCK TABLES;
 
 --
+-- Table structure for table `pollfavorites`
+--
+
+DROP TABLE IF EXISTS `pollfavorites`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pollfavorites` (
+  `pollid` int(11) DEFAULT NULL,
+  `userid` int(11) DEFAULT NULL,
+  `favaction` int(11) DEFAULT NULL,
+  `updatedon` varchar(45) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `pollfavorites`
+--
+
+LOCK TABLES `pollfavorites` WRITE;
+/*!40000 ALTER TABLE `pollfavorites` DISABLE KEYS */;
+INSERT INTO `pollfavorites` VALUES (18,5,1,'2017-06-22 02:53:52'),(17,5,1,'2017-06-22 02:54:02'),(15,5,1,'2017-06-22 02:54:05'),(16,5,0,'2017-06-22 02:54:08'),(18,6,1,'2017-06-22 21:55:04'),(17,6,1,'2017-06-22 21:55:15');
+/*!40000 ALTER TABLE `pollfavorites` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `pollitem`
 --
 
@@ -96,7 +121,7 @@ CREATE TABLE `polllikes` (
 
 LOCK TABLES `polllikes` WRITE;
 /*!40000 ALTER TABLE `polllikes` DISABLE KEYS */;
-INSERT INTO `polllikes` VALUES (18,5,1,'2017-06-21 00:28:19'),(17,5,-1,'2017-06-21 00:22:14'),(16,5,1,'2017-06-21 00:18:08'),(14,5,-1,'2017-06-21 00:12:57'),(18,6,-1,'2017-06-20 23:55:29'),(18,7,1,'2017-06-20 23:55:53'),(15,5,-1,'2017-06-21 00:16:46');
+INSERT INTO `polllikes` VALUES (18,5,1,'2017-06-22 02:54:40'),(17,5,-1,'2017-06-21 00:22:14'),(16,5,1,'2017-06-21 00:18:08'),(14,5,-1,'2017-06-21 00:12:57'),(18,6,-1,'2017-06-20 23:55:29'),(18,7,1,'2017-06-20 23:55:53'),(15,5,-1,'2017-06-21 00:16:46'),(14,6,1,'2017-06-23 19:53:04');
 /*!40000 ALTER TABLE `polllikes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -141,7 +166,7 @@ CREATE TABLE `pollresponses` (
   `createdon` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`resId`),
   UNIQUE KEY `resId_UNIQUE` (`resId`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -150,7 +175,7 @@ CREATE TABLE `pollresponses` (
 
 LOCK TABLES `pollresponses` WRITE;
 /*!40000 ALTER TABLE `pollresponses` DISABLE KEYS */;
-INSERT INTO `pollresponses` VALUES (1,1,2,1,'2017-06-15 00:01:15'),(3,2,6,1,'2017-06-15 00:01:15'),(4,4,10,1,'2017-06-15 00:01:15'),(5,3,8,1,'2017-06-15 00:01:15'),(6,12,37,1,'2017-06-15 00:01:15'),(7,10,31,1,'2017-06-15 00:01:15'),(8,11,34,1,'2017-06-15 00:01:15'),(9,13,39,1,'2017-06-15 00:01:15'),(10,14,42,1,'2017-06-15 00:01:15'),(11,5,14,1,'2017-06-15 00:01:15'),(12,17,50,1,'2017-06-15 00:01:15'),(13,17,51,6,'2017-06-15 00:01:15'),(14,18,54,6,'2017-06-15 00:01:15'),(15,18,53,6,'2017-06-15 00:01:15'),(16,16,47,6,NULL),(17,15,44,6,NULL),(18,7,20,5,NULL),(19,9,25,5,NULL);
+INSERT INTO `pollresponses` VALUES (1,1,2,1,'2017-06-15 00:01:15'),(3,2,6,1,'2017-06-15 00:01:15'),(4,4,10,1,'2017-06-15 00:01:15'),(5,3,8,1,'2017-06-15 00:01:15'),(6,12,37,1,'2017-06-15 00:01:15'),(7,10,31,1,'2017-06-15 00:01:15'),(8,11,34,1,'2017-06-15 00:01:15'),(9,13,39,1,'2017-06-15 00:01:15'),(10,14,42,1,'2017-06-15 00:01:15'),(11,5,14,1,'2017-06-15 00:01:15'),(12,17,50,1,'2017-06-15 00:01:15'),(13,17,51,6,'2017-06-15 00:01:15'),(14,18,54,6,'2017-06-15 00:01:15'),(15,18,53,6,'2017-06-15 00:01:15'),(16,16,47,6,NULL),(17,15,44,6,NULL),(18,7,20,5,NULL),(19,9,25,5,NULL),(20,1,2,6,NULL);
 /*!40000 ALTER TABLE `pollresponses` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -193,4 +218,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-06-21  0:47:23
+-- Dump completed on 2017-06-24  0:01:29
