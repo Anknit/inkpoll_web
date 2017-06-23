@@ -61,7 +61,17 @@
                         </div>
                     </div>
                     <div class="col-xs-12 col-md-6 text-right poll-item-share">
-                        <img role="button" src="images/fb-share.png" fb-share data-ng-href="{{'polls/' + item.id + '/' + item.questionText.split(' ').join('-')}}" data-mobile-iframe="true" height="30px" />
+                        <ul class="list-inline">
+                            <li>
+                                <img role="button" src="images/fb-share.png" fb-share data-ng-href="{{'polls/' + item.id + '/' + item.questionText.split(' ').join('-')}}" data-mobile-iframe="true" height="30px" />
+                            </li>
+                            <li>
+                                <a data-ng-href="{{'https://plus.google.com/share?url=http://localhost/feeddasm/polls/' + item.id + '/' + item.questionText.split(' ').join('-')}}" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">
+                                    <img src="images/gplus-share.png" alt="Share on Google+" height="30px;"/>
+                                </a>
+                            </li>
+                        </ul>
+                        
                     </div>
                 </div>
 <!--

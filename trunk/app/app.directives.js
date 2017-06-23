@@ -46,7 +46,7 @@
 /*
                         href: 'http://localhost/feeddasm/' + attrs.href
 */
-                        href: 'http://umaginesoft.com/heritageaviation/data/pollapp/feeddasm/'
+                        href: 'http://umaginesoft.com/heritageaviation/data/pollapp/feeddasm/' + attrs.href
                     }, function(response) {
                         console.log(response);
                     });

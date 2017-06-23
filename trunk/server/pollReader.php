@@ -256,5 +256,101 @@
             }
             return array('status' => $status, 'data' => $responseArray, 'error' => $error);
         }
+        public function getUserLikedPolls ($readData) {
+            $status = false;
+            $error = '';
+            $responseArray = array();
+            
+            $userId = $readData['userid'];
+            $pageIndex = $readData['page'];
+            $sortorder = $readData['order'];
+            $count = 50;
+            
+            $offset = ($pageIndex - 1) * $count;
+
+            $query = 'Select pollitem.id, pollitem.pollQuestion as questionText FROM pollitem right join polllikes on pollitem.id = polllikes.pollid where polllikes.likescore = 1 and polllikes.userid = '.$userId;
+            $query .= ' order by ';
+            switch($sortorder) {
+                case 'newest':
+                    $query .= 'polllikes.likedon desc';
+                    break;
+                case 'votes':
+                    $query .= 'polllikes.likedon desc';
+                    break;
+                case 'views':
+                    $query .= 'polllikes.likedon desc';
+                    break;
+                default:
+                    $query .= 'polllikes.likedon desc';
+                    break;
+            }
+            $query .= ' limit '.$offset.','.$count;
+            
+            $readUserPolls = DB_Query($query, 'ASSOC', '');
+            if(is_array($readUserPolls)) {
+                $responseArray['polllist'] = $readUserPolls;
+            } else {
+                $error = 'Failed to read polls from database';
+            }
+            $readTotalPolls = DB_Query('Select count(*) as total from pollitem right join polllikes on pollitem.id = polllikes.pollid where polllikes.likescore = "1" and polllikes.userid = '.$userId);
+            if(is_array($readTotalPolls)) {
+                $responseArray['totalLiked'] = $readTotalPolls[0]['total'];
+                $responseArray['totalPages'] = ceil(((int)$readTotalPolls[0]['total'])/$count);
+            } else {
+                $error = 'Failed to get total liked polls of user';
+            }
+            if($error == ''){
+                $status = true;
+            }
+            return array('status' => $status, 'data' => $responseArray, 'error' => $error);
+        }
+        public function getUserDislikedPolls ($readData) {
+            $status = false;
+            $error = '';
+            $responseArray = array();
+            
+            $userId = $readData['userid'];
+            $pageIndex = $readData['page'];
+            $sortorder = $readData['order'];
+            $count = 50;
+            
+            $offset = ($pageIndex - 1) * $count;
+
+            $query = 'Select pollitem.id, pollitem.pollQuestion as questionText FROM pollitem right join polllikes on pollitem.id = polllikes.pollid where polllikes.likescore = "-1" and polllikes.userid = '.$userId;
+            $query .= ' order by ';
+            switch($sortorder) {
+                case 'newest':
+                    $query .= 'polllikes.likedon desc';
+                    break;
+                case 'votes':
+                    $query .= 'polllikes.likedon desc';
+                    break;
+                case 'views':
+                    $query .= 'polllikes.likedon desc';
+                    break;
+                default:
+                    $query .= 'polllikes.likedon desc';
+                    break;
+            }
+            $query .= ' limit '.$offset.','.$count;
+            
+            $readUserPolls = DB_Query($query, 'ASSOC', '');
+            if(is_array($readUserPolls)) {
+                $responseArray['polllist'] = $readUserPolls;
+            } else {
+                $error = 'Failed to read polls from database';
+            }
+            $readTotalPolls = DB_Query('Select count(*) as total from pollitem right join polllikes on pollitem.id = polllikes.pollid where polllikes.likescore = "-1" and polllikes.userid = '.$userId);
+            if(is_array($readTotalPolls)) {
+                $responseArray['totalDisliked'] = $readTotalPolls[0]['total'];
+                $responseArray['totalPages'] = ceil(((int)$readTotalPolls[0]['total'])/$count);
+            } else {
+                $error = 'Failed to get total disliked polls of user';
+            }
+            if($error == ''){
+                $status = true;
+            }
+            return array('status' => $status, 'data' => $responseArray, 'error' => $error);
+        }
      } 
 ?>

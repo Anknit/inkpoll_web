@@ -24,11 +24,20 @@
             controllerAs: 'poll'
         }).when("/pollcreater", {
             templateUrl: 'views/poll-creater.html',
-            isAuth:true
+            isAuth: true
+        }).when("/privacy", {
+            templateUrl: 'views/privacy.html',
+            isAuth: false
+        }).when("/terms", {
+            templateUrl: 'views/terms.html',
+            isAuth: false
+        }).when("/about", {
+            templateUrl: 'views/about.html',
+            isAuth: false
         }).when("/users/:id/:name", {
             templateUrl: 'views/user-home.html',
-            isAuth:true,
-            controller:'userCtrl',
+            isAuth: true,
+            controller: 'userCtrl',
             controllerAs: 'User'
         }).otherwise({
             redirectTo: '/'
@@ -151,13 +160,17 @@
         }(document));
 
         $window.gapiAsyncInit = function () {
-            gapi.load('auth2', function(){
+            gapi.load('auth2', function () {
                 gapi.auth2.init({
                     client_id: '418125885627-j2a16gbm8m1i62qqe820fspdkvb7fqop.apps.googleusercontent.com'
                 });
             })
             gapi.signin2.render('google-signin', {
-                'scope': 'profile email',
+                scope: 'profile email',
+                width: 236,
+                height: 40,
+                longtitle: true,
+                theme: 'light',
                 'onsuccess': gAuth.signinSuccess,
                 'onfailure': gAuth.signinFailure
             });
