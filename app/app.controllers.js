@@ -51,6 +51,20 @@
             totalPages: 1,
             list: []
         }
+        this.currentLiked = {
+            totalLiked: 0,
+            order: 'newest',
+            page: 1,
+            totalPages: 1,
+            list: []
+        }
+        this.currentDisliked = {
+            totalDisliked: 0,
+            order: 'newest',
+            page: 1,
+            totalPages: 1,
+            list: []
+        }
         this.logout = function () {
             fbAuthService.logout();
             googleAuthService.signout();
@@ -89,9 +103,33 @@
                 }
             });
         };
+        this.getCurrentLiked = function () {
+            pollReader.getUserLikedPolls(this.current.id, this.currentLiked.page, this.currentLiked.order).then(function (response) {
+                if (response.status) {
+                    scope.currentLiked.totalLiked = response.data.totalLiked;
+                    scope.currentLiked.totalPages = response.data.totalPages;
+                    scope.currentLiked.list = response.data.polllist;
+                } else {
+                    console.log(response.error);
+                }
+            });
+        };
+        this.getCurrentDisliked = function () {
+            pollReader.getUserDislikedPolls(this.current.id, this.currentDisliked.page, this.currentDisliked.order).then(function (response) {
+                if (response.status) {
+                    scope.currentDisliked.totalDisliked = response.data.totalDisliked;
+                    scope.currentDisliked.totalPages = response.data.totalPages;
+                    scope.currentDisliked.list = response.data.polllist;
+                } else {
+                    console.log(response.error);
+                }
+            });
+        };
         this.getCurrentPolls();
         this.getCurrentVotes();
         this.getCurrentFavs();
+        this.getCurrentLiked();
+        this.getCurrentDisliked();
     }
 
     headerCtrl.$inject = ['pollCategories', 'fbAuthService', 'googleAuthService'];

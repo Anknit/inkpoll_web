@@ -75,6 +75,14 @@ function serveRequest ($request, $data = array()){
             $reqHandler = new PollReader();
             return $reqHandler->getUserFavPolls($data);
             break;
+        case 'userLikedPolls':
+            $reqHandler = new PollReader();
+            return $reqHandler->getUserLikedPolls($data);
+            break;
+        case 'userDislikedPolls':
+            $reqHandler = new PollReader();
+            return $reqHandler->getUserDislikedPolls($data);
+            break;
         case 'getCategories':
             $reqHandler = new PollCategories();
             return $reqHandler->getCategories();

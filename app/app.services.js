@@ -133,6 +133,32 @@
                 console.log(error);
             });
         };
+        this.getUserLikedPolls = function (userid, page, order) {
+            return $http.post(APIBASE + '?request=userLikedPolls', {
+                data: {
+                    userid: userid,
+                    page: page,
+                    order: order
+                }
+            }).then(function (response) {
+                return response.data;
+            }, function (error) {
+                console.log(error);
+            });
+        };
+        this.getUserDislikedPolls = function (userid, page, order) {
+            return $http.post(APIBASE + '?request=userDislikedPolls', {
+                data: {
+                    userid: userid,
+                    page: page,
+                    order: order
+                }
+            }).then(function (response) {
+                return response.data;
+            }, function (error) {
+                console.log(error);
+            });
+        };
     }
 
     pollMetaData.$inject = ['$http', 'APIBASE'];

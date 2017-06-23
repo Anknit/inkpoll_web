@@ -6,6 +6,7 @@ body {
 
 .navbar-theme{
     background-color:rgba(29, 29, 97, 0.85);
+    border: none;
 }
 nav.navbar-theme .navbar-nav>li>a{
     color:#bbb;
@@ -15,6 +16,13 @@ nav.navbar-theme .navbar-nav>li>a{
 nav.navbar-theme .navbar-brand{
     color:#fff;
 }
+.navbar-theme .navbar-toggle, .navbar-theme .navbar-toggle:focus, .navbar-theme .navbar-toggle:hover {
+    background: #fff;
+}
+.navbar-theme .navbar-collapse, .navbar-theme .navbar-form {
+    border:none;
+}
+
 .navbar-brand .brand-image{
     height:40px;
     margin-top:-10px;
@@ -61,6 +69,21 @@ nav.navbar-theme .navbar-nav>li>a:hover, nav.navbar-theme .navbar-nav>li>a:focus
 }
 .store-icon.apple-store{
     background-image: url('./../images/apple-app-store.svg');
+}
+.content-container {
+    text-align:justify;
+    font-size:1.2em;
+}
+.content-container p{
+    margin-bottom:25px;
+}
+
+.content-container li{
+    margin-bottom:10px;
+}
+
+.content-container h4{
+    text-decoration:underline;
 }
 
 @media (max-width:767px) {
