@@ -1,6 +1,4 @@
 <?php
-    require_once __DIR__.'/Facebook/autoload.php';
-
     class AuthMgr {
         public function __construct() {
             
@@ -17,20 +15,34 @@
                 $authResponse = $this->verifyAuth($data);
                 if($authResponse['status']) {
                     $responseArray = $authResponse['data'];
-                    $userExist = $this->checkDbUserExist($responseArray['userid'], $data['vendor']);
+                    $userExist = $this->checkDbUserExist($responseArray['email'], $data['vendor']);
                     if($userExist['status']) {
-                        if(!$userExist['data']['exist']) {
-                            $insertUser = $this->insertUserDB($responseArray, $data['vendor']);
-                            if($insertUser['status']) {
-                                $responseArray['id'] = $insertUser['data']['newuserid'];
-                                $responseArray['usertype'] = $insertUser['data']['newusertype'];
-                                $status = true;
+                        if($data['vendor'] == 'EMAIL') {
+                            if($userExist['data']['exist']) {
+                                $verifyPswd = $this->verifyUserPassword($responseArray['email'], $data['password']);
+                                if($verifyPswd['status']) {
+                                    $responseArray = $userExist['data']['userData'];
+                                    $status = true;
+                                } else {
+                                    $error = $verifyPswd['error'];
+                                }
                             } else {
-                                $error = 'Failed to insert New User in database. '.$insertUser['error'];
+                                $error = 'User is not registered';
                             }
                         } else {
-                            $responseArray = $userExist['data']['userData'];
-                            $status = true;
+                            if(!$userExist['data']['exist']) {
+                                $insertUser = $this->insertUserDB($responseArray, $data['vendor']);
+                                if($insertUser['status']) {
+                                    $responseArray['id'] = $insertUser['data']['newuserid'];
+                                    $responseArray['usertype'] = $insertUser['data']['newusertype'];
+                                    $status = true;
+                                } else {
+                                    $error = 'Failed to insert New User in database. '.$insertUser['error'];
+                                }
+                            } else {
+                                $responseArray = $userExist['data']['userData'];
+                                $status = true;
+                            }
                         }
                         if($status){
                             $this->setUserSession($responseArray);
@@ -54,18 +66,22 @@
             return $resData;
         }
         
-        private function checkDbUserExist ($userId, $vendor) {
+        private function checkDbUserExist ($email, $vendor) {
             $response = array('status' => false, 'data' => array(), 'error' => '');
             $userData = DB_Read(array(
                 'Table' => 'userinfo',
-                'Fields'=> 'id,name,email,usertype',
-                'clause'=> 'userid = '.$userId. ' and authvendor = "'.$vendor.'"'
+                'Fields'=> 'id,name,email,usertype, authvendor',
+                'clause'=> 'email = "'.$email.'"'
             ),'ASSOC','');
             if(is_array($userData)) {
-                $response['status'] = true;
                 if(count($userData) == 1) {
-                    $response['data']['exist'] = true;
-                    $response['data']['userData'] = $userData[0];
+                    if($userData[0]['authvendor'] == $vendor) {
+                        $response['status'] = true;
+                        $response['data']['exist'] = true;
+                        $response['data']['userData'] = $userData[0];
+                    } else {
+                        $response['error'] = 'User is already registerd with '.$userData[0]['authvendor'].' account';
+                    }
                 } else {
                     $response['data']['exist'] = false;
                 }
@@ -125,6 +141,8 @@
             $status = false;
             $error = '';
             $responseArray = array();
+            require_once __DIR__.'/Facebook/autoload.php';
+            
             $fb = new Facebook\Facebook([
                   'app_id' => '1356379634397148',
                   'app_secret' => '3ed4818e4459b38e3b00595fa0acb21c',
@@ -206,6 +224,22 @@
             return $resData;
         }
         
+        private function verifyEmailAuth($authData) {
+            $status = true;
+            $error = '';
+            
+            $responseArray = array('userid' => $authData['email']);
+            $responseArray = array('email' => $authData['email']);
+            
+            $resData = array('status' => $status);
+            if(!$status) {
+                $resData['error'] = $error;
+            } else {
+                $resData['data'] = $responseArray;
+            }
+            return $resData;
+        }
+        
         private function verifyAuth($data) {
             $status = false;
             $error = '';
@@ -218,6 +252,8 @@
                 }
             } else if($data['vendor'] == 'FACEBOOK') {
                 $authResponse = $this->verifyFbAuth();
+            } else if($data['vendor'] == 'EMAIL') {
+                $authResponse = $this->verifyEmailAuth($data['authData']);
             } else {
                 $error = 'Unknown auth vendor';
             }
@@ -262,6 +298,25 @@
             $_SESSION['userName'] = $data['name'];
             $_SESSION['userEmail'] = $data['email'];
             $_SESSION['userType'] = $data['usertype'];
+        }
+        
+        private function verifyUserPassword($email, $password) {
+            $response = array('status' => false, 'data' => array(), 'error' => '');
+            $userData = DB_Read(array(
+                'Table' => 'userinfo',
+                'Fields'=> 'password',
+                'clause'=> 'email = "'.$email.'"'
+            ),'ASSOC','');
+            if(is_array($userData)) {
+                if($userData[0]['password'] == md5($password)) {
+                    $response['status'] = true;
+                } else {
+                    $response['error'] = 'Incorrect password';
+                }
+            } else {
+                $response['error'] = 'Failed to read from database';
+            }
+            return $response;
         }
     }
 ?>

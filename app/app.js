@@ -169,7 +169,7 @@
                 scope: 'profile email',
                 width: 236,
                 height: 40,
-                longtitle: true,
+                longtitle: false,
                 theme: 'light',
                 'onsuccess': gAuth.signinSuccess,
                 'onfailure': gAuth.signinFailure

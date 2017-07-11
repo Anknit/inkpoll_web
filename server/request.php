@@ -95,6 +95,18 @@ function serveRequest ($request, $data = array()){
             $reqHandler = new AuthMgr();
             return $reqHandler->login($data);
             break;
+        case 'signup':
+            $reqHandler = new AuthMgr();
+            return $reqHandler->signup($data);
+            break;
+        case 'forgotpswd':
+            $reqHandler = new AuthMgr();
+            return $reqHandler->forgotpswd($data);
+            break;
+        case 'resetpswd':
+            $reqHandler = new AuthMgr();
+            return $reqHandler->resetpswd($data);
+            break;
         case 'logout':
             $reqHandler = new AuthMgr();
             return $reqHandler->logout();
