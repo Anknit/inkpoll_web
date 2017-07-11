@@ -132,12 +132,72 @@
         this.getCurrentDisliked();
     }
 
-    headerCtrl.$inject = ['pollCategories', 'fbAuthService', 'googleAuthService'];
+    headerCtrl.$inject = ['pollCategories', 'fbAuthService', 'googleAuthService', 'emailAuthService', '$rootScope'];
 
-    function headerCtrl(pollCategories, fbAuthService, googleAuthService) {
+    function headerCtrl(pollCategories, fbAuthService, googleAuthService, emailAuthService, $rootScope) {
         var scope = this;
         this.pollCatArr = [];
-        this.showAuthModal = function () {
+        this.authmode = 'login';
+        this.authvars = {
+            login: {
+                email: '',
+                password:'',
+                remember:true
+            },
+            signup: {
+                email:''
+            },
+            forgot: {
+                email:''
+            }
+        };
+        this.authaction = {
+            login: function() {
+                if(scope.authvars.login.email.trim() != '' && scope.authvars.login.password.trim()) {
+                    emailAuthService.login(scope.authvars.login.email.trim(),scope.authvars.login.password.trim(),scope.authvars.login.remember).then(function(response){
+                        if(response.status) {
+                            if($rootScope.redirectUrl != '') {
+                                location.href = $rootScope.redirectUrl;
+                            } else {
+                                location.reload();
+                            }
+                        } else {
+                            alert(response.error);
+                        }
+                    });
+                } else {
+                    alert('Please enter valid login credentials');
+                }
+            },
+            forgotpswd: function(){
+                if(scope.authvars.forgot.email.trim() != '') {
+                    emailAuthService.forgotpswd(scope.authvars.forgot.email.trim()).then(function(response){
+                        if(response.status) {
+                            alert('Check your email address for password reset instructions');
+                        } else {
+                            alert(response.error);
+                        }
+                    });
+                } else {
+                    alert('Please enter valid email address');
+                }
+            },
+            signup: function() {
+                if(scope.authvars.signup.email.trim() != '') {
+                    emailAuthService.forgotpswd(scope.authvars.signup.email.trim()).then(function(response){
+                        if(response.status) {
+                            alert('Check your email address for account activation link');
+                        } else {
+                            alert(response.error);
+                        }
+                    });
+                } else {
+                    alert('Please enter valid email address');
+                }
+            }
+        };
+        this.showAuthModal = function (mode) {
+            scope.authmode = mode;
             jQuery('#auth-modal').modal('show');
         };
         pollCategories.getCategories().then(function (response) {
