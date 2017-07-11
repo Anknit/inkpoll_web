@@ -6,6 +6,9 @@
                     <h4 data-ng-bind="item.questionText"></h4>
                 </a>
             </div>
+            <div data-ng-if="item.imageurl && item.imageurl != ''" class="poll-image-container">
+                <img data-ng-src="{{item.imageurl}}" />
+            </div>
             <ul class="poll-item-option-container">
                 <li class="poll-item-option" data-ng-repeat="option in item.optionArr track by $index">
                     <div class="radio">
@@ -74,16 +77,15 @@
                         
                     </div>
                 </div>
-<!--
                 <div class="col-xs-12" data-ng-init="plst.getComments(item)">
                     <div class="col-xs-12">
                         <ul class="list-unstyled">
                             <li>
                                 <div class="comment-input-container">
                                     <div auth-user-only>
-                                        <textarea class="form-control" placeholder="Write a comment" data-ng-model="plst.newcomment"></textarea>
+                                        <textarea class="form-control" placeholder="Write a comment" data-ng-model="item.newcomment"></textarea>
                                         <div class="text-right post-button">
-                                            <button type="button" class="btn btn-info" data-ng-click="plst.addcomment(item)">Post</button>
+                                            <button type="button" class="btn btn-info" data-ng-click="plst.addcomment(item, 0)">Post</button>
                                         </div>
                                     </div>
                                 </div>
@@ -94,7 +96,25 @@
                                         <a data-ng-href="{{'user/' + comment.userid + '/' + comment.username.split(' ').join('-')}}">
                                             <span data-ng-bind="comment.username"></span>
                                         </a>
-                                        <span data-ng-bind="comment.commentText"></span>
+                                        <span data-ng-bind="comment.commenttext"></span>
+                                        <div class="row hide">
+                                            <div class="col-xs-12">
+                                                <a class="inline-btn-link">
+                                                    <span class="text-muted">Reply</span>
+                                                </a>
+                                                <a class="inline-btn-link">
+                                                    <span class="like-action-btn">
+                                                        <span class="glyphicon glyphicon-arrow-up"></span>
+                                                    </span>
+                                                </a>
+                                                <a class="inline-btn-link">
+                                                    <span class="like-action-btn">
+                                                        <span class="glyphicon glyphicon-arrow-down"></span>
+                                                    </span>
+                                                </a>
+                                            </div>
+                                        </div>
+<!--
                                         <div class="col-xs-12">
                                             <ul class="list-unstyled">
                                                 <li data-ng-repeat="reply in comment.childComments" style="padding-top:5px; padding-bottom:5px;">
@@ -109,13 +129,20 @@
                                                 </li>
                                             </ul>
                                         </div>
+-->
                                     </div>
                                 </div>
+                            </li>
+                            <li data-ng-if="plst.pollId == 0">
+                                <a data-ng-href="{{'polls/' + item.id + '/' + item.questionText.split(' ').join('-')}}" data-ng-if="item.comments && item.comments.length >= 4">
+                                    <span class="text-muted">
+                                        See more comments
+                                    </span>
+                                </a>
                             </li>
                         </ul>
                     </div>
                 </div>
--->
             </div>
         </div>
     </div>

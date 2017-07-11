@@ -6,35 +6,68 @@
         public function __destruct(){
             
         }
-        public function getPollComments () {
-            return array(
-                'status'=>true,
-                'data'=>array(
-                    array(
-                        'userid'=> '6',
-                        'username'=> 'Ankit Agarwal',
-                        'commentid'=> '1',
-                        'commentText'=> 'This is a fake comment',
-                        'parentComment'=> '0'
-                    ),
-                    array(
-                        'userid'=> '7',
-                        'username'=> 'Robert Downey',
-                        'commentid'=> '2',
-                        'commentText'=> 'Is this cool',
-                        'parentComment'=> '0',
-                        'childComments' => array(
-                            array(
-                                'userid'=> '8',
-                                'username'=> 'Jake smith',
-                                'commentid'=> '3',
-                                'commentText'=> 'This is something not cool',
-                                'parentComment'=> '2'
-                            )
-                        )
+        public function getPollComments ($data) {
+            $error = '';
+            $status = false;
+            if(isset($data['id'])) {
+                $start = 0;
+                $count = 4;
+                $query = 'Select pollcomments.*, userinfo.name as username from pollcomments left join userinfo on pollcomments.userid = userinfo.id where pollcomments.pollid = '.$data['id'].' order by pollcomments.updatedon desc';
+                if(isset($data['startindex'])) {
+                    $start = $data['startindex'];
+                }
+                if(isset($data['count'])) {
+                    $count = $data['count'];
+                }
+                $query .= ' limit '.$start.', '.$count;
+                $readComments = DB_Query($query, 'ASSOC', '');
+                if(is_array($readComments)) {
+                    $status = true;
+                    $data = $readComments;
+                } else {
+                    $error = 'Failed to read comments';
+                }
+            } else {
+                $error = 'Missing request arguments';
+            }
+            $resData = array('status' => $status);
+            if(!$status) {
+                $resData['error'] = $error;
+            } else {
+                $resData['data'] = $data;
+            }
+            return $resData;
+        }
+        public function addComment ($data) {
+            $error = '';
+            $status = false;
+            if (isset($data['id']) && isset($data['text']) && isset($data['parentid']) && !empty(trim($data['text']))) {
+                $insertComment = DB_Insert(array(
+                    'Table' => 'pollcomments',
+                    'Fields'=> array(
+                        'pollid' => $data['id'],
+                        'commenttext' => trim($data['text']),
+                        'updatedon' => 'now()',
+                        'userid' => $_SESSION['userId'],
+                        'parentcommentid' => $data['parentid']
                     )
-                )
-            );
+                ));
+                if($insertComment) {
+                    $status = true;
+                    $data = array('id' => $insertComment, 'userid' => $_SESSION['userId'], 'commenttext' => trim($data['text']), 'username' => $_SESSION['userName'], 'parentcommentid' => $data['parentid']);
+                } else {
+                    $error = 'Failed to insert comment in database';
+                }
+            } else {
+                $error = 'Missing request arguments';
+            }
+            $resData = array('status' => $status);
+            if(!$status) {
+                $resData['error'] = $error;
+            } else {
+                $resData['data'] = $data;
+            }
+            return $resData;
         }
         public function savefavaction ($data){
             $error = '';

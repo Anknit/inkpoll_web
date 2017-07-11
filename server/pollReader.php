@@ -29,7 +29,7 @@
             
             $offset =  ($pageIndex - 1) * $count;
             
-            $query = 'Select pollitem.id, pollitem.userId, pollitem.anonymousvote, pollitem.pollQuestion as questionText, userinfo.id as userId, userinfo.name as createdby, pollresponses.optionId as userChoice, pollcategories.catName as pollcategory, polllikes.likescore as userlikescore, pollfavorites.favaction as userfavscore from pollitem left join userinfo on pollitem.userId = userinfo.id left join pollresponses on pollitem.id = pollresponses.pollId and pollresponses.userId = '.$userId.' left join pollcategories on pollitem.catId = pollcategories.catId left join polllikes on pollitem.id = polllikes.pollid and polllikes.userid = '.$userId.' left join pollfavorites on pollitem.id = pollfavorites.pollid and pollfavorites.userid = '.$userId;
+            $query = 'Select pollitem.id, pollitem.userId, pollitem.imageurl, pollitem.anonymousvote, pollitem.pollQuestion as questionText, userinfo.id as userId, userinfo.name as createdby, pollresponses.optionId as userChoice, pollcategories.catName as pollcategory, polllikes.likescore as userlikescore, pollfavorites.favaction as userfavscore from pollitem left join userinfo on pollitem.userId = userinfo.id left join pollresponses on pollitem.id = pollresponses.pollId and pollresponses.userId = '.$userId.' left join pollcategories on pollitem.catId = pollcategories.catId left join polllikes on pollitem.id = polllikes.pollid and polllikes.userid = '.$userId.' left join pollfavorites on pollitem.id = pollfavorites.pollid and pollfavorites.userid = '.$userId;
             
             if(isset($readData['category'])) {
                 $query .= ' where pollitem.catId = '.$this->getCatId($readData['category']);

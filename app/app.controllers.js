@@ -24,7 +24,7 @@
         this.pollName = $routeParams.name;
     }
 
-    userCtrl.$inject = ['$routeParams', 'pollReader','fbAuthService', 'googleAuthService'];
+    userCtrl.$inject = ['$routeParams', 'pollReader', 'fbAuthService', 'googleAuthService'];
 
     function userCtrl($routeParams, pollReader, fbAuthService, googleAuthService) {
         var scope = this;
@@ -157,6 +157,8 @@
     function categoryPolls($routeParams) {
         var scope = this;
         this.category = $routeParams.category;
+        angular.element('.cat-list-banner').find('a[href="polls/'+this.category+'"]')[0].classList.add('active');
+        angular.element('.cat-nav-bar').find('a[href="polls/'+this.category+'"]')[0].classList.add('active');
     }
 
     categoryHome.$inject = ['pollCategories'];
@@ -176,6 +178,7 @@
     function creator(pollEditor, pollCategories) {
         var scope = this;
         this.category = {};
+        this.pollimageurlinput = '';
         resetPollEditor();
         pollCategories.getCategories().then(function (response) {
             if (response.status) {
@@ -188,6 +191,15 @@
             if (scope.poll.question.trim() == '') {
                 alert('Enter poll question');
                 return false;
+            }
+            if(scope.pollimageurl != '') {
+                scope.poll.pollImage = true;
+                if(scope.pollimageurlinput && scope.pollimageurlinput != '') {
+                    scope.poll.pollType = 'url';
+                } else {
+                    scope.poll.pollType = 'upload';
+                }
+                scope.poll.image = scope.pollimageurl;
             }
             for (var i = 0; i < scope.poll.optionArr.length; i++) {
                 if (scope.poll.optionArr[i].trim() == '') {
@@ -202,6 +214,22 @@
                 }
             });
         };
+        this.clearpollimage = function () {
+            scope.pollimageurl = '';
+            scope.pollimageurlinput = '';
+            angular.element("input[type='file']").val(null);
+        };
+        this.attachImageUrl = function () {
+            if(checkURL(scope.pollimageurlinput)) {
+                scope.pollimageurl = scope.pollimageurlinput;
+            } else {
+                alert('Enter valid image file path');
+            }
+        };
+
+        function checkURL(url) {
+            return (url.match(/\.(jpeg|jpg|gif|png)$/) != null);
+        }
         this.addoption = function () {
             scope.poll.optionArr.push('');
         };
@@ -225,40 +253,42 @@
                 optionArr: ['', '', ''],
                 anonvote: false
             };
+            scope.imageup
         };
     }
 
     polllist.$inject = ['$scope', '$attrs', 'pollCaster', 'pollReader', 'pollMetaData'];
 
     function polllist($scope, $attrs, pollCaster, pollReader, pollMetaData) {
-        var scope = this, configObj = {};
+        var scope = this,
+            configObj = {};
         this.list = [];
-        this.pIndex=1;
+        this.pIndex = 1;
         this.category = '';
         this.pollId = 0;
         this.listCompleted = false;
-        if($attrs.type == 'category-polls') {
+        if ($attrs.type == 'category-polls') {
             this.category = $scope.catPoll.category;
-        } else if($attrs.type == 'single-poll') {
+        } else if ($attrs.type == 'single-poll') {
             this.pollId = $scope.poll.pollId;
         }
-        this.loadPolls = function() {
-            if(this.category != '') {
+        this.loadPolls = function () {
+            if (this.category != '') {
                 configObj['category'] = this.category;
-            } else if(this.pollId != 0) {
+            } else if (this.pollId != 0) {
                 configObj['pollid'] = this.pollId;
             }
             configObj['index'] = this.pIndex;
             pollReader.readPolls(configObj).then(function (response) {
                 if (response.status) {
                     scope.list = scope.list.concat(response.data);
-                    if(response.data.length == 0) {
+                    if (response.data.length == 0) {
                         scope.listCompleted = true;
                     }
                 }
             });
         };
-        this.loadmore = function() {
+        this.loadmore = function () {
             this.pIndex++;
             this.loadPolls();
         };
@@ -282,9 +312,9 @@
         this.loadPolls();
         this.likepoll = function (pollItem) {
             var poll = pollItem;
-            if(pollItem.userlikescore == 1) {
-                pollMetaData.changeuserlike(pollItem.id, 'unlike').then(function(response){
-                    if(response.status) {
+            if (pollItem.userlikescore == 1) {
+                pollMetaData.changeuserlike(pollItem.id, 'unlike').then(function (response) {
+                    if (response.status) {
                         poll.likecount -= 1;
                         pollItem.userlikescore -= 1;
                     } else {
@@ -292,10 +322,10 @@
                     }
                 });
             } else {
-                pollMetaData.changeuserlike(pollItem.id, 'like').then(function(response){
-                    if(response.status) {
+                pollMetaData.changeuserlike(pollItem.id, 'like').then(function (response) {
+                    if (response.status) {
                         poll.likecount += 1;
-                        if(pollItem.userlikescore == -1) {
+                        if (pollItem.userlikescore == -1) {
                             poll.dislikecount -= 1;
                             pollItem.userlikescore += 1;
                         }
@@ -308,9 +338,9 @@
         };
         this.dislikepoll = function (pollItem) {
             var poll = pollItem;
-            if(pollItem.userlikescore == -1) {
-                pollMetaData.changeuserlike(pollItem.id, 'unlike').then(function(response){
-                    if(response.status) {
+            if (pollItem.userlikescore == -1) {
+                pollMetaData.changeuserlike(pollItem.id, 'unlike').then(function (response) {
+                    if (response.status) {
                         poll.dislikecount -= 1;
                         pollItem.userlikescore += 1;
                     } else {
@@ -318,10 +348,10 @@
                     }
                 });
             } else {
-                pollMetaData.changeuserlike(pollItem.id, 'dislike').then(function(response){
-                    if(response.status) {
+                pollMetaData.changeuserlike(pollItem.id, 'dislike').then(function (response) {
+                    if (response.status) {
                         poll.dislikecount += 1;
-                        if(pollItem.userlikescore == 1) {
+                        if (pollItem.userlikescore == 1) {
                             poll.likecount -= 1;
                             pollItem.userlikescore -= 1;
                         }
@@ -334,17 +364,17 @@
         };
         this.favpoll = function (pollItem) {
             var poll = pollItem;
-            if(pollItem.userfavscore == 1) {
-                pollMetaData.changeuserfav(pollItem.id, 'unfavorite').then(function(response){
-                    if(response.status) {
+            if (pollItem.userfavscore == 1) {
+                pollMetaData.changeuserfav(pollItem.id, 'unfavorite').then(function (response) {
+                    if (response.status) {
                         pollItem.userfavscore -= 1;
                     } else {
                         console.log(response.error);
                     }
                 });
             } else {
-                pollMetaData.changeuserfav(pollItem.id, 'favorite').then(function(response){
-                    if(response.status) {
+                pollMetaData.changeuserfav(pollItem.id, 'favorite').then(function (response) {
+                    if (response.status) {
                         pollItem.userfavscore += 1;
                     } else {
                         console.log(response.error);
@@ -352,11 +382,26 @@
                 });
             }
         };
-        this.getComments = function(item){
-            var pollitem = item;
-            pollMetaData.getPollComments(item.id).then(function(response){
-                if(response.status) {
+        this.getComments = function (item) {
+            var pollitem = item,
+                count = 4;
+            if (this.pollId != 0) {
+                count = 50;
+            }
+            pollMetaData.getPollComments(item.id, count).then(function (response) {
+                if (response.status) {
                     pollitem.comments = response.data;
+                } else {
+                    console.log(response.error);
+                }
+            });
+        };
+        this.addcomment = function (item, parent) {
+            var pollitem = item;
+            pollMetaData.addPollComment(item.id, item.newcomment, parent).then(function (response) {
+                if (response.status) {
+                    item.newcomment = '';
+                    pollitem.comments.splice(0, 0, response.data);
                 } else {
                     console.log(response.error);
                 }

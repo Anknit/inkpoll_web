@@ -55,6 +55,10 @@ function serveRequest ($request, $data = array()){
             $reqHandler = new PollMetaData();
             return $reqHandler->getPollComments($data);
             break;
+        case 'addPollComment':
+            $reqHandler = new PollMetaData();
+            return $reqHandler->addComment($data);
+            break;
         case 'changePollLikeStatus':
             $reqHandler = new PollMetaData();
             return $reqHandler->changeUserLike($data);
