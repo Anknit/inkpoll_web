@@ -35,6 +35,40 @@ CREATE TABLE `pollcategories` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `pollcomments`
+--
+
+DROP TABLE IF EXISTS `pollcomments`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pollcomments` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `pollid` int(11) DEFAULT NULL,
+  `commenttext` varchar(500) DEFAULT NULL,
+  `userid` int(11) DEFAULT NULL,
+  `parentcommentid` int(11) DEFAULT NULL,
+  `updatedon` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pollfavorites`
+--
+
+DROP TABLE IF EXISTS `pollfavorites`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pollfavorites` (
+  `pollid` int(11) DEFAULT NULL,
+  `userid` int(11) DEFAULT NULL,
+  `favaction` int(11) DEFAULT NULL,
+  `updatedon` varchar(45) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `pollitem`
 --
 
@@ -50,9 +84,10 @@ CREATE TABLE `pollitem` (
   `status` int(11) DEFAULT NULL,
   `createdon` varchar(45) DEFAULT NULL,
   `updatedon` varchar(45) DEFAULT NULL,
+  `imageurl` varchar(500) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -83,7 +118,7 @@ CREATE TABLE `polloptions` (
   `optionText` text,
   PRIMARY KEY (`optionId`),
   UNIQUE KEY `optionid_UNIQUE` (`optionId`)
-) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=122 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -101,7 +136,7 @@ CREATE TABLE `pollresponses` (
   `createdon` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`resId`),
   UNIQUE KEY `resId_UNIQUE` (`resId`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -133,4 +168,4 @@ CREATE TABLE `userinfo` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-06-21  0:47:43
+-- Dump completed on 2017-07-11 22:05:42
