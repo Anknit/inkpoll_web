@@ -74,50 +74,75 @@
 .poll-item-meta .btn-link {
     color: #aaa;
 }
-.poll-item-meta .btn-link:hover{
-    color:#333;
+
+.poll-item-meta .btn-link:hover {
+    color: #333;
 }
+
 .poll-item-meta .btn-link.btn-lg {
     padding: 6px 12px;
 }
+
 .poll-item-meta .btn-link.btn-lg:focus {
     outline: none;
 }
 
-.poll-item-meta .btn-link.active .glyphicon-arrow-up{
-    color:forestgreen;
+.poll-item-meta .btn-link.active .glyphicon-arrow-up {
+    color: forestgreen;
 }
-.poll-item-meta .btn-link.active .glyphicon-arrow-down{
-    color:darkred;
+
+.poll-item-meta .btn-link.active .glyphicon-arrow-down {
+    color: darkred;
 }
-.poll-item-meta .btn-link .glyphicon-star{
+
+.poll-item-meta .btn-link .glyphicon-star {
     color: dodgerblue;
 }
+
 .comment-input-container {
     border: 1px solid #ccc;
     padding: 5px 5px;
 }
+
 .comment-input-container textarea {
     outline: none;
     border: none;
     resize: none;
     box-shadow: none;
-    margin-bottom:5px;
-    padding:0px;
+    margin-bottom: 5px;
+    padding: 0px;
 }
-.comment-input-container textarea:focus{
-    outline:none;
+
+.comment-input-container textarea:focus {
+    outline: none;
     box-shadow: none;
 }
-.post-button{
+
+.post-button {
     display: none;
 }
-.post-button .btn{
+
+.post-button .btn {
     padding: 3px 15px;
 }
-.post-button:focus{
+
+.post-button:focus {
     display: block;
 }
-.comment-input-container textarea:focus ~.post-button{
+
+.post-button:active {
     display: block;
+}
+
+.comment-input-container textarea:focus~.post-button {
+    display: block;
+}
+
+.poll-image-container {
+    max-height: 250px;
+    text-align: center;
+}
+.poll-image-container img {
+    height: 100%;
+    max-width: 100%;
 }

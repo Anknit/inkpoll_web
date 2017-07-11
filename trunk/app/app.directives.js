@@ -2,6 +2,7 @@
     angular.module('app')
         .directive('authUserOnly', authUserOnly)
         .directive('fbShare', fbShare)
+        .directive("fileSelect", fileSelect)
         .directive('pollList', pollList);
 
     authUserOnly.$inject = ['$rootScope'];
@@ -9,9 +10,9 @@
     function authUserOnly($rootScope) {
         var DDO = {
             restrict: 'AC',
-            link: function(scope, elem, attr) {
+            link: function (scope, elem, attr) {
                 elem[0].onclick = function () {
-                    if(!$rootScope.user.name) {
+                    if (!$rootScope.user.name) {
                         jQuery('#auth-modal').modal('show');
                         event.preventDefault();
                         event.stopPropagation();
@@ -35,19 +36,20 @@
     }
 
     fbShare.$inject = [];
+
     function fbShare() {
         return {
             restrict: 'A',
-            link: function(scope, element, attr) {
+            link: function (scope, element, attr) {
                 var attrs = attr;
-                element.on('click', function() {
+                element.on('click', function () {
                     FB.ui({
                         method: 'share',
-/*
-                        href: 'http://localhost/feeddasm/' + attrs.href
-*/
+                        /*
+                                                href: 'http://localhost/feeddasm/' + attrs.href
+                        */
                         href: 'http://umaginesoft.com/heritageaviation/data/pollapp/feeddasm/' + attrs.href
-                    }, function(response) {
+                    }, function (response) {
                         console.log(response);
                     });
                 });
@@ -55,4 +57,25 @@
         };
     }
 
+    fileSelect.$inject = [];
+
+    function fileSelect() {
+        return {
+            scope: {
+                fileread: "="
+            },
+            link: function (scope, el) {
+                el.bind("change", function (e) {
+                    var file = (e.srcElement || e.target).files[0];
+                    var reader = new FileReader();
+                    reader.onload = function (event) {
+                        scope.$apply(function(){
+                            scope.fileread = event.target.result;
+                        })
+                    }
+                    reader.readAsDataURL(file);
+                });
+            }
+        }
+    }
 })();

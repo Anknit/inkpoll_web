@@ -22,7 +22,7 @@
 
 <body class="container-fluid">
     <header class="row" data-ng-controller="headerCtrl as head">
-        <nav class="navbar navbar-default navbar-fixed-top navbar-theme">
+        <nav class="navbar navbar-inverse navbar-fixed-top navbar-theme">
             <div class="container-fluid">
                 <!-- Brand and toggle get grouped for better mobile display -->
                 <div class="navbar-header">
@@ -37,7 +37,7 @@
                     </a>
                 </div>
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                    <ul class="nav navbar-nav hidden-xs">
+                    <ul class="nav navbar-nav hidden-xs cat-nav-bar">
                         <li data-ng-repeat="item in head.pollCatArr">
                             <a data-ng-href="{{'polls/' + item.catName}}" data-ng-bind="item.catName"></a>
                         </li>
@@ -48,8 +48,11 @@
 -->
                     </ul>
                     <form class="navbar-form navbar-right">
-                        <button data-ng-if="!user.name" type="button" class="btn btn-info" data-ng-click="head.showAuthModal()">
-                            Signin
+                        <button data-ng-if="!user.name" type="button" class="btn btn-link" data-ng-click="head.showAuthModal()">
+                            Login
+                        </button>
+                        <button data-ng-if="!user.name" type="button" class="btn btn-warning" data-ng-click="head.showAuthModal()">
+                            Sign up
                         </button>
                         <a data-ng-if="user.name" role="button" class="btn btn-success" href="pollcreater">
                             <span class="glyphicon glyphicon-plus"></span>&nbsp;Create

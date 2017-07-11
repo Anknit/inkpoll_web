@@ -14,14 +14,38 @@
     function pollEditor($http, APIBASE) {
         var pollEditor = this;
         this.addNewPoll = function (pollData) {
-            return $http.post(APIBASE + '?request=newpoll', {
-                data: pollData
+            var fd = new FormData();
+            if (pollData.pollType == 'upload') {
+                var imgBlob = dataURItoBlob(pollData.image);
+                fd.append('imagefile', imgBlob);
+            } else {
+                fd.append('imagefile', pollData.image)
+            }
+            delete pollData.image;
+            fd.append('data', angular.toJson(pollData));
+            return $http.post(APIBASE + '?request=newpoll', fd, {
+                transformRequest: angular.identity,
+                headers: {
+                    'Content-Type': undefined
+                }
             }).then(function (response) {
                 return response.data;
             }, function (error) {
                 console.log(error);
             });
         };
+
+        function dataURItoBlob(dataURI) {
+            var binary = atob(dataURI.split(',')[1]);
+            var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+            var array = [];
+            for (var i = 0; i < binary.length; i++) {
+                array.push(binary.charCodeAt(i));
+            }
+            return new Blob([new Uint8Array(array)], {
+                type: mimeString
+            });
+        }
     }
 
     cookieService.$inject = [];
@@ -165,9 +189,25 @@
 
     function pollMetaData($http, APIBASE) {
         var pollMetaData = this;
-        this.getPollComments = function (pollid) {
+        this.getPollComments = function (pollid, count) {
             return $http.post(APIBASE + '?request=readPollComments', {
-                data: {id:pollid}
+                data: {
+                    id: pollid,
+                    count: count
+                }
+            }).then(function (response) {
+                return response.data;
+            }, function (error) {
+                console.log(error);
+            });
+        };
+        this.addPollComment = function (pollid, comment, parent) {
+            return $http.post(APIBASE + '?request=addPollComment', {
+                data: {
+                    id: pollid,
+                    text: comment,
+                    parentid: parent
+                }
             }).then(function (response) {
                 return response.data;
             }, function (error) {
@@ -176,7 +216,10 @@
         };
         this.changeuserlike = function (pollid, likeaction) {
             return $http.post(APIBASE + '?request=changePollLikeStatus', {
-                data: {id:pollid,action:likeaction}
+                data: {
+                    id: pollid,
+                    action: likeaction
+                }
             }).then(function (response) {
                 return response.data;
             }, function (error) {
@@ -185,7 +228,10 @@
         };
         this.changeuserfav = function (pollid, favaction) {
             return $http.post(APIBASE + '?request=changePollFavStatus', {
-                data: {id:pollid,action:favaction}
+                data: {
+                    id: pollid,
+                    action: favaction
+                }
             }).then(function (response) {
                 return response.data;
             }, function (error) {

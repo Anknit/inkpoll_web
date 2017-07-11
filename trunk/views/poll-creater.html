@@ -6,6 +6,30 @@
                 <textarea class="form-control" data-ng-model="crt.poll.question" placeholder="Write your poll question here ..." rows="4" required></textarea>
             </div>
             <div class="form-group">
+                <label class="control-label">Image (optional)</label>
+                <input type="file" data-ng-hide="crt.pollimageupload" value="Upload image" data-ng-model="crt.poll.uploadedfile" data-file-select accept="image/png, image/jpeg, image/jpg, image/gif" data-fileread="crt.pollimageurl" />
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" data-ng-model="crt.pollimageupload" data-ng-change="crt.clearpollimage()" />
+                        Image URL
+                    </label>
+                </div>
+                <div class="input-group" data-ng-hide="!crt.pollimageupload" >
+                    <input type="url" class="form-control" placeholder="Paste image url (http://)" data-ng-model="$parent.pollimageurlinput"/>
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" data-ng-click="crt.attachImageUrl()">Attach Image</button>
+                    </span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="preview-poll-image" data-ng-if="crt.pollimageurl" >
+                    <img data-ng-src="{{crt.pollimageurl}}" />
+                    <span>
+                        <button type="button" class="btn btn-link" data-ng-click="crt.clearpollimage()">Remove Image</button>
+                    </span>
+                </div>
+            </div>
+            <div class="form-group">
                 <label class="control-label">Category</label>
                 <select class="form-control" data-ng-model="crt.category" data-ng-options="item as item.catName for item in crt.pollCatArr track by item.catId"></select>
             </div>
