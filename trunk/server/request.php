@@ -61,6 +61,10 @@ function serveRequest ($request, $data = array()){
             $reqHandler = new PollMetaData();
             return $reqHandler->addComment($data);
             break;
+        case 'deleteComment':
+            $reqHandler = new PollMetaData();
+            return $reqHandler->deleteComment($data);
+            break;
         case 'changePollLikeStatus':
             $reqHandler = new PollMetaData();
             return $reqHandler->changeUserLike($data);
@@ -88,6 +92,10 @@ function serveRequest ($request, $data = array()){
         case 'userDislikedPolls':
             $reqHandler = new PollReader();
             return $reqHandler->getUserDislikedPolls($data);
+            break;
+        case 'deletePoll':
+            $reqHandler = new PollReader();
+            return $reqHandler->deletePoll($data);
             break;
         case 'getCategories':
             $reqHandler = new PollCategories();

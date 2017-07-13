@@ -69,6 +69,36 @@
             }
             return $resData;
         }
+        public function deleteComment ($data) {
+            $status = false;
+            $error = '';
+            $responseArray = array();
+            
+            $commentId = $data['id'];
+
+            $query = 'Select pollcomments.userid from pollcomments';
+            $query .= ' where pollcomments.id = '.$commentId;
+            $readUserComment = DB_Query($query, 'ASSOC', '');
+            if(is_array($readUserComment)) {
+                if($readUserComment[0]['userid'] == $_SESSION['userId']) {
+                    $deleteComment = DB_Delete(array(
+                        'Table' => 'pollcomments',
+                        'clause'=> 'id = '.$commentId
+                    ));
+                    if(!$deleteComment){
+                        $error = 'Failed to delete comment';
+                    }
+                } else {
+                    $error = 'You do not have permission to delete this comment';
+                }
+            } else {
+                $error = 'Comment does not exist';
+            }
+            if($error == ''){
+                $status = true;
+            }
+            return array('status' => $status, 'data' => $responseArray, 'error' => $error);
+        }
         public function savefavaction ($data){
             $error = '';
             $status = false;

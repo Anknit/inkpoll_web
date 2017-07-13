@@ -24,9 +24,9 @@
         this.pollName = $routeParams.name;
     }
 
-    userCtrl.$inject = ['$routeParams', 'pollReader', 'fbAuthService', 'googleAuthService'];
+    userCtrl.$inject = ['$routeParams', 'pollReader', 'fbAuthService', 'googleAuthService', '$rootScope'];
 
-    function userCtrl($routeParams, pollReader, fbAuthService, googleAuthService) {
+    function userCtrl($routeParams, pollReader, fbAuthService, googleAuthService, $rootScope) {
         var scope = this;
         this.current = {};
         this.current.id = $routeParams.id;
@@ -130,6 +130,19 @@
         this.getCurrentFavs();
         this.getCurrentLiked();
         this.getCurrentDisliked();
+        this.deletePoll = function(pollItem, index) {
+            var pollIndex = index;
+            if(scope.current.id == $rootScope.user.id) {
+                pollReader.deletePoll(pollItem).then(function(response){
+                    if(response.status) {
+                        scope.currentPolls.list.splice(pollIndex,1);
+                        scope.currentPolls.totalPolls--;
+                    } else {
+                        console.log(response.error);
+                    }
+                });
+            }
+        };
     }
 
     headerCtrl.$inject = ['pollCategories', 'fbAuthService', 'googleAuthService', 'emailAuthService', '$rootScope'];
@@ -469,7 +482,20 @@
                     console.log(response.error);
                 }
             });
-        }
+        };
+        this.deleteComment = function(item, comment, index) {
+            var commIndex = index,
+                pollitem = item;
+            if(comment.userid == $scope.$parent.user.id) {
+                pollMetaData.deleteComment(comment).then(function(response){
+                    if(response.status) {
+                        pollitem.comments.splice(commIndex,1);
+                    } else {
+                        console.log(response.error);
+                    }
+                });
+            }
+        };
     }
 
 })();

@@ -186,6 +186,15 @@
                 console.log(error);
             });
         };
+        this.deletePoll = function (pollData) {
+            return $http.post(APIBASE + '?request=deletePoll', {
+                data: pollData
+            }).then(function (response) {
+                return response.data;
+            }, function (error) {
+                console.log(error);
+            });
+        };
     }
 
     pollMetaData.$inject = ['$http', 'APIBASE'];
@@ -240,7 +249,16 @@
             }, function (error) {
                 console.log(error);
             });
-        }
+        };
+        this.deleteComment = function (commmentData) {
+            return $http.post(APIBASE + '?request=deleteComment', {
+                data: commmentData
+            }).then(function (response) {
+                return response.data;
+            }, function (error) {
+                console.log(error);
+            });
+        };
     }
 
     fbAuthService.$inject = ['$rootScope', '$http', 'APIBASE', 'cookieService'];

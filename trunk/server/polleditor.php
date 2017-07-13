@@ -16,7 +16,7 @@
                     'pollQuestion' => $pollData['question'],
                     'userId' => $userId,
                     'catId' => $pollData['category'],
-                    'status' => POLL_PENDING,
+                    'status' => POLL_APPROVED,
                     'anonymousvote' => (int)($pollData['anonvote'] == true),
                     'createdon' => 'now()',
                     'updatedon' => 'now()'
