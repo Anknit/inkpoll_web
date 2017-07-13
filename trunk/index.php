@@ -1,4 +1,5 @@
 <?php
+    session_start();
     require_once __DIR__.'/server/OperateDB/DbMgrInterface.php';
     require_once __DIR__.'/ogtags.php';
 ?>
@@ -60,7 +61,7 @@
                             <div class="pull-left">
                                 <div class="dropdown" data-ng-if="user.name">
                                     <button class="btn btn-link dropdown-toggle" type="button" id="userdropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="color:#fff;text-decoration:none;">
-                                    {{'Hi, ' + user.name.split(' ')[0] + ' '}}
+                                    <span data-ng-bind="'Hi, ' + user.name.split(' ')[0] + ' '"></span>
                                     <span class="caret"></span>
                                 </button>
                                     <ul class="dropdown-menu" aria-labelledby="userdropdown">
@@ -152,7 +153,7 @@
                                         <div class="form">
                                             <div class="form-group">
                                                 <label class="control-label">Email</label>
-                                                <input type="email" class="form-control" placeholder="Email address" data-ng-model="head.authvars.login.email" />
+                                                <input type="email" class="form-control" placeholder="Email address" data-ng-model="head.authvars.signup.email" />
                                             </div>
                                             <div class="form-group">
                                                 <button type="button" class="btn btn-info" data-ng-click="head.authaction.signup()">Signup</button>
@@ -236,7 +237,21 @@
                 </div>
             </div>
         </div>
-
+        <script>
+        <?php
+            if(isset($_SESSION['userId'])) {
+                $responseArray = array(
+                    'id' => $_SESSION['userId'],
+                    'name' => $_SESSION['userName'],
+                    'email' => $_SESSION['userEmail'],
+                    'type' => $_SESSION['userType']
+                );
+        ?>
+            var userSessData = <?php echo json_encode($responseArray); ?>
+        <?php
+            }
+        ?>
+        </script>
         <script>
             /*
                                                                                                                                         (function(d, s, id) {

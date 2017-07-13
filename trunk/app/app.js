@@ -196,6 +196,9 @@
             angular.element('.cat-list-banner').find('a.active').removeClass('active');
             angular.element('.cat-nav-bar').find('a.active').removeClass('active');
         })
+        if(typeof (userSessData) != "undefined" && userSessData) {
+            $rootScope.user = userSessData;
+        }
     }
 
 })();

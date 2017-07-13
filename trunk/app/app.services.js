@@ -16,13 +16,15 @@
         var pollEditor = this;
         this.addNewPoll = function (pollData) {
             var fd = new FormData();
-            if (pollData.pollType == 'upload') {
-                var imgBlob = dataURItoBlob(pollData.image);
-                fd.append('imagefile', imgBlob);
-            } else {
-                fd.append('imagefile', pollData.image)
+            if (pollData.image && typeof (pollData.image) != "undefined") {
+                if (pollData.pollType == 'upload') {
+                    var imgBlob = dataURItoBlob(pollData.image);
+                    fd.append('imagefile', imgBlob);
+                } else {
+                    fd.append('imagefile', pollData.image)
+                }
+                delete pollData.image;
             }
-            delete pollData.image;
             fd.append('data', angular.toJson(pollData));
             return $http.post(APIBASE + '?request=newpoll', fd, {
                 transformRequest: angular.identity,
@@ -321,7 +323,13 @@
                         if (response.status) {
                             cookieService.setCookie("sessionStatus", "active", 365);
                             cookieService.setCookie("authvendor", "FACEBOOK", 365);
-                            location.reload();
+                            $rootScope.user = {
+                                email: response.data.userEmail,
+                                id: response.data.userId,
+                                type: response.data.userType,
+                                name: response.data.userName
+                            };
+                            $rootScope.$broadcast('userloggedin');
                         } else {
                             alert(response.error);
                         }
@@ -346,7 +354,6 @@
             });
 
         };
-
         this.logout = function () {
 
             var _self = this;
@@ -389,7 +396,14 @@
                     if (response.status) {
                         cookieService.setCookie("sessionStatus", "active", 365);
                         cookieService.setCookie("authvendor", "GOOGLE", 365);
-                        location.reload();
+                        $rootScope.user = {
+                            email: response.data.userEmail,
+                            id: response.data.userId,
+                            type: response.data.userType,
+                            name: response.data.userName
+                        };
+                        $rootScope.$broadcast('userloggedin');
+                        //                        location.reload();
                     } else {
                         console.log(response.error);
                     }
@@ -442,17 +456,18 @@
             }
         };
     }
-    
+
     emailAuthService.$inject = ['$rootScope', '$http', 'APIBASE', 'cookieService'];
+
     function emailAuthService($rootScope, $http, APIBASE, cookieService) {
-        this.login = function(email, password, remember) {
+        this.login = function (email, password, remember) {
             return $http.post(APIBASE + '?request=login', {
                 data: {
                     vendor: 'EMAIL',
                     authData: {
-                        email:email,
-                        password:password,
-                        remember:remember
+                        email: email,
+                        password: password,
+                        remember: remember
                     }
                 }
             }).then(function (response) {
@@ -466,27 +481,29 @@
                 console.log(error);
             });
         };
-        this.logout = function() {
-            $http.post(APIBASE + '?request=logout', {
-                data: {}
-            }).then(function (response) {
-                response = response.data;
-                if (response.status) {
-                    cookieService.setCookie("sessionStatus", "inactive", -1);
-                    $rootScope.user = this.user = {};
-                    location.reload();
-                } else {
-                    alert(response.error);
-                }
-            }, function (error) {
-                console.log(error);
-            });
+        this.logout = function () {
+            if (cookieService.getCookie("authvendor") == "EMAIL") {
+                $http.post(APIBASE + '?request=logout', {
+                    data: {}
+                }).then(function (response) {
+                    response = response.data;
+                    if (response.status) {
+                        cookieService.setCookie("sessionStatus", "inactive", -1);
+                        $rootScope.user = this.user = {};
+                        location.reload();
+                    } else {
+                        alert(response.error);
+                    }
+                }, function (error) {
+                    console.log(error);
+                });
+            }
         };
-        this.forgotpswd = function(email) {
+        this.forgotpswd = function (email) {
             return $http.post(APIBASE + '?request=forgotpswd', {
                 data: {
                     authData: {
-                        email:email,
+                        email: email,
                     }
                 }
             }).then(function (response) {
@@ -495,11 +512,11 @@
                 console.log(error);
             });
         };
-        this.signup = function(email) {
+        this.signup = function (email) {
             return $http.post(APIBASE + '?request=signup', {
                 data: {
                     authData: {
-                        email:email,
+                        email: email,
                     }
                 }
             }).then(function (response) {

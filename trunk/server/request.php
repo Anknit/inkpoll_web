@@ -1,8 +1,10 @@
 <?php
 date_default_timezone_set('Asia/Kolkata');
 session_start();
-require_once __DIR__.'/OperateDB/DbMgrInterface.php';
 require_once __DIR__.'/definitions.php';
+require_once __DIR__.'/OperateDB/DbMgrInterface.php';
+require_once __DIR__.'/Mail/MailMgr.php';
+require_once __DIR__.'/mailMgr.php';
 require_once __DIR__.'/polleditor.php';
 require_once __DIR__.'/voteCaster.php';
 require_once __DIR__.'/authMgr.php';

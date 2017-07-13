@@ -184,7 +184,7 @@
             },
             signup: function() {
                 if(scope.authvars.signup.email.trim() != '') {
-                    emailAuthService.forgotpswd(scope.authvars.signup.email.trim()).then(function(response){
+                    emailAuthService.signup(scope.authvars.signup.email.trim()).then(function(response){
                         if(response.status) {
                             alert('Check your email address for account activation link');
                         } else {
@@ -208,8 +208,11 @@
         this.logout = function () {
             fbAuthService.logout();
             googleAuthService.signout();
+            emailAuthService.logout();
         };
-
+        $rootScope.$on('userloggedin',function(){
+            jQuery('#auth-modal').modal('hide');
+        });
     }
 
     categoryPolls.$inject = ['$routeParams'];
