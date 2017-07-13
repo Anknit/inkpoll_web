@@ -7,6 +7,12 @@ define("CATS_DELETED", 4);
 define("USER_NORMAL", 1);
 define("USER_ADMIN", 2);
 
+define("USER_UNVERIFIED",1);
+define("USER_ACTIVE",2);
+define("USER_INACTIVE",3);
+define("USER_DELETED",4);
+define("USER_BLOCKED",5);
+
 define("POLL_DRAFT", 1);
 define("POLL_PENDING", 2);
 define("POLL_APPROVED", 3);

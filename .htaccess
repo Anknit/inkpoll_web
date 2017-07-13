@@ -1,8 +1,16 @@
 Options +FollowSymlinks
 RewriteEngine On
 RewriteBase /feeddasm/
-#RewriteRule .* https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_URI} !.*\.(css|js|html|png|jpg|jpeg|gif|txt)
-RewriteRule (.*) ?%{QUERY_STRING} [L]
+RewriteRule ^accounts/verify/(.*) server/register.php?verifyaccount=$1 [QSA,L,END]
+RewriteRule ^accounts/reset/(.*) server/resetpswd.php?resetaccount=$1 [QSA,L,END]
+RewriteRule ^accounts/register server/completeregistration.php [L,END]
+RewriteRule ^accounts/changepswd server/changepassword.php [L,END]
+
+RewriteCond %{REQUEST_URI} !.*\.(css|js|html|png|jpg|jpeg|gif|txt|woff|eot)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*) ?%{QUERY_STRING} [NC,L]
+#RewriteRule ^(.*)$ index.html [QSA,L]
