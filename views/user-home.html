@@ -63,6 +63,9 @@
                                     <a data-ng-href="{{'polls/' + item.id + '/' + item.questionText.split(' ').join('-')}}">
                                         {{item.questionText}}
                                     </a>
+                                    <div data-ng-click="User.deletePoll(item, $index);" role="button" data-ng-if="user.id == User.current.id">
+                                        <span class="text-danger">Delete</span>
+                                    </div>
                                 </li>
                             </ul>
                         </div>

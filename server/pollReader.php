@@ -30,12 +30,12 @@
             $offset =  ($pageIndex - 1) * $count;
             
             $query = 'Select pollitem.id, pollitem.userId, pollitem.imageurl, pollitem.anonymousvote, pollitem.pollQuestion as questionText, userinfo.id as userId, userinfo.name as createdby, pollresponses.optionId as userChoice, pollcategories.catName as pollcategory, polllikes.likescore as userlikescore, pollfavorites.favaction as userfavscore from pollitem left join userinfo on pollitem.userId = userinfo.id left join pollresponses on pollitem.id = pollresponses.pollId and pollresponses.userId = '.$userId.' left join pollcategories on pollitem.catId = pollcategories.catId left join polllikes on pollitem.id = polllikes.pollid and polllikes.userid = '.$userId.' left join pollfavorites on pollitem.id = pollfavorites.pollid and pollfavorites.userid = '.$userId;
-            
+            $query .= ' where pollitem.status = '.POLL_APPROVED;
             if(isset($readData['category'])) {
-                $query .= ' where pollitem.catId = '.$this->getCatId($readData['category']);
+                $query .= ' and pollitem.catId = '.$this->getCatId($readData['category']);
             }
             if(isset($readData['pollid'])) {
-                $query .= ' where pollitem.id = '.$readData['pollid'];
+                $query .= ' and pollitem.id = '.$readData['pollid'];
             }
             
             $query  .= ' order by pollitem.id desc limit '.$offset.','.$count;
@@ -124,7 +124,7 @@
             $offset = ($pageIndex - 1) * $count;
 
             $query = 'Select pollitem.id, pollitem.pollQuestion as questionText from pollitem';
-            $query .= ' where pollitem.userId = '.$userId;
+            $query .= ' where pollitem.status = '.POLL_APPROVED.' and pollitem.userId = '.$userId;
             $query .= ' order by ';
             switch($sortorder) {
                 case 'newest':
@@ -148,7 +148,7 @@
             } else {
                 $error = 'Failed to read polls from database';
             }
-            $readTotalPolls = DB_Query('Select count(*) as total from pollitem where userId ='.$userId);
+            $readTotalPolls = DB_Query('Select count(*) as total from pollitem where status = '.POLL_APPROVED.' and userId ='.$userId);
             if(is_array($readTotalPolls)) {
                 $responseArray['totalPolls'] = $readTotalPolls[0]['total'];
                 $responseArray['totalPages'] = ceil(((int)$readTotalPolls[0]['total'])/$count);
@@ -172,7 +172,7 @@
             
             $offset = ($pageIndex - 1) * $count;
 
-            $query = 'Select pollitem.id, pollitem.pollQuestion as questionText FROM pollitem right join pollresponses on pollitem.id = pollresponses.pollId where pollresponses.userId = '.$userId;
+            $query = 'Select pollitem.id, pollitem.pollQuestion as questionText FROM pollitem right join pollresponses on pollitem.id = pollresponses.pollId where pollitem.status = '.POLL_APPROVED.' and pollresponses.userId = '.$userId;
             $query .= ' order by ';
             switch($sortorder) {
                 case 'newest':
@@ -196,7 +196,7 @@
             } else {
                 $error = 'Failed to read polls from database';
             }
-            $readTotalPolls = DB_Query('Select count(*) as total from pollitem right join pollresponses on pollitem.id = pollresponses.pollId where pollresponses.userId = '.$userId);
+            $readTotalPolls = DB_Query('Select count(*) as total from pollitem right join pollresponses on pollitem.id = pollresponses.pollId where pollitem.status = '.POLL_APPROVED.' and pollresponses.userId = '.$userId);
             if(is_array($readTotalPolls)) {
                 $responseArray['totalVotes'] = $readTotalPolls[0]['total'];
                 $responseArray['totalPages'] = ceil(((int)$readTotalPolls[0]['total'])/$count);
@@ -220,7 +220,7 @@
             
             $offset = ($pageIndex - 1) * $count;
 
-            $query = 'Select pollitem.id, pollitem.pollQuestion as questionText FROM pollitem right join pollfavorites on pollitem.id = pollfavorites.pollid where pollfavorites.userid = '.$userId;
+            $query = 'Select pollitem.id, pollitem.pollQuestion as questionText FROM pollitem right join pollfavorites on pollitem.id = pollfavorites.pollid where pollitem.status = '.POLL_APPROVED.' and pollfavorites.userid = '.$userId;
             $query .= ' order by ';
             switch($sortorder) {
                 case 'newest':
@@ -244,7 +244,7 @@
             } else {
                 $error = 'Failed to read polls from database';
             }
-            $readTotalPolls = DB_Query('Select count(*) as total from pollitem right join pollfavorites on pollitem.id = pollfavorites.pollid where pollfavorites.userid = '.$userId);
+            $readTotalPolls = DB_Query('Select count(*) as total from pollitem right join pollfavorites on pollitem.id = pollfavorites.pollid where pollitem.status = '.POLL_APPROVED.' and pollfavorites.userid = '.$userId);
             if(is_array($readTotalPolls)) {
                 $responseArray['totalFavs'] = $readTotalPolls[0]['total'];
                 $responseArray['totalPages'] = ceil(((int)$readTotalPolls[0]['total'])/$count);
@@ -268,7 +268,7 @@
             
             $offset = ($pageIndex - 1) * $count;
 
-            $query = 'Select pollitem.id, pollitem.pollQuestion as questionText FROM pollitem right join polllikes on pollitem.id = polllikes.pollid where polllikes.likescore = 1 and polllikes.userid = '.$userId;
+            $query = 'Select pollitem.id, pollitem.pollQuestion as questionText FROM pollitem right join polllikes on pollitem.id = polllikes.pollid where pollitem.status = '.POLL_APPROVED.' and polllikes.likescore = 1 and polllikes.userid = '.$userId;
             $query .= ' order by ';
             switch($sortorder) {
                 case 'newest':
@@ -292,7 +292,7 @@
             } else {
                 $error = 'Failed to read polls from database';
             }
-            $readTotalPolls = DB_Query('Select count(*) as total from pollitem right join polllikes on pollitem.id = polllikes.pollid where polllikes.likescore = "1" and polllikes.userid = '.$userId);
+            $readTotalPolls = DB_Query('Select count(*) as total from pollitem right join polllikes on pollitem.id = polllikes.pollid where pollitem.status = '.POLL_APPROVED.' and polllikes.likescore = "1" and polllikes.userid = '.$userId);
             if(is_array($readTotalPolls)) {
                 $responseArray['totalLiked'] = $readTotalPolls[0]['total'];
                 $responseArray['totalPages'] = ceil(((int)$readTotalPolls[0]['total'])/$count);
@@ -316,7 +316,7 @@
             
             $offset = ($pageIndex - 1) * $count;
 
-            $query = 'Select pollitem.id, pollitem.pollQuestion as questionText FROM pollitem right join polllikes on pollitem.id = polllikes.pollid where polllikes.likescore = "-1" and polllikes.userid = '.$userId;
+            $query = 'Select pollitem.id, pollitem.pollQuestion as questionText FROM pollitem right join polllikes on pollitem.id = polllikes.pollid where pollitem.status = '.POLL_APPROVED.' and polllikes.likescore = "-1" and polllikes.userid = '.$userId;
             $query .= ' order by ';
             switch($sortorder) {
                 case 'newest':
@@ -340,12 +340,43 @@
             } else {
                 $error = 'Failed to read polls from database';
             }
-            $readTotalPolls = DB_Query('Select count(*) as total from pollitem right join polllikes on pollitem.id = polllikes.pollid where polllikes.likescore = "-1" and polllikes.userid = '.$userId);
+            $readTotalPolls = DB_Query('Select count(*) as total from pollitem right join polllikes on pollitem.id = polllikes.pollid where pollitem.status = '.POLL_APPROVED.' and polllikes.likescore = "-1" and polllikes.userid = '.$userId);
             if(is_array($readTotalPolls)) {
                 $responseArray['totalDisliked'] = $readTotalPolls[0]['total'];
                 $responseArray['totalPages'] = ceil(((int)$readTotalPolls[0]['total'])/$count);
             } else {
                 $error = 'Failed to get total disliked polls of user';
+            }
+            if($error == ''){
+                $status = true;
+            }
+            return array('status' => $status, 'data' => $responseArray, 'error' => $error);
+        }
+        public function deletePoll($pollData) {
+            $status = false;
+            $error = '';
+            $responseArray = array();
+            
+            $pollId = $pollData['id'];
+
+            $query = 'Select pollitem.userId from pollitem';
+            $query .= ' where pollitem.id = '.$pollId;
+            $readUserPolls = DB_Query($query, 'ASSOC', '');
+            if(is_array($readUserPolls)) {
+                if($readUserPolls[0]['userId'] == $_SESSION['userId']) {
+                    $deletePoll = DB_Update(array(
+                        'Table' => 'pollitem',
+                        'Fields'=> array('status' => POLL_DELETED),
+                        'clause'=> 'id = '.$pollId
+                    ));
+                    if(!$deletePoll){
+                        $error = 'Failed to delete poll';
+                    }
+                } else {
+                    $error = 'You do not have permission to delete this poll';
+                }
+            } else {
+                $error = 'Poll does not exist';
             }
             if($error == ''){
                 $status = true;

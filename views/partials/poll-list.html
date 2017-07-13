@@ -70,11 +70,11 @@
                             </li>
                             <li>
                                 <a data-ng-href="{{'https://plus.google.com/share?url=http://localhost/feeddasm/polls/' + item.id + '/' + item.questionText.split(' ').join('-')}}" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">
-                                    <img src="images/gplus-share.png" alt="Share on Google+" height="30px;"/>
+                                    <img src="images/gplus-share.png" alt="Share on Google+" height="30px;" />
                                 </a>
                             </li>
                         </ul>
-                        
+
                     </div>
                 </div>
                 <div class="col-xs-12" data-ng-init="plst.getComments(item)">
@@ -97,6 +97,10 @@
                                             <span data-ng-bind="comment.username"></span>
                                         </a>
                                         <span data-ng-bind="comment.commenttext"></span>
+                                        <div data-ng-click="plst.deleteComment(item, comment, $index);" role="button" data-ng-if="user.id == comment.userid">
+                                            <small class="text-danger">Delete</small>
+                                        </div>
+
                                         <div class="row hide">
                                             <div class="col-xs-12">
                                                 <a class="inline-btn-link">
@@ -114,7 +118,7 @@
                                                 </a>
                                             </div>
                                         </div>
-<!--
+                                        <!--
                                         <div class="col-xs-12">
                                             <ul class="list-unstyled">
                                                 <li data-ng-repeat="reply in comment.childComments" style="padding-top:5px; padding-bottom:5px;">
