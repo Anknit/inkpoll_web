@@ -4,6 +4,7 @@
     angular.module('app', ['ngRoute'])
         .config(appConfig)
         .constant('APIBASE', './server/request.php')
+        .filter('pollurlfilter', pollurlfilter)
         .run(['$rootScope', '$window', 'fbAuthService', 'googleAuthService', runMethod]);
 
     function appConfig($httpProvider, $routeProvider, $locationProvider) {
@@ -193,12 +194,17 @@
 
         }(document));
         $rootScope.$on('$routeChangeStart', function () {
-            angular.element('.cat-list-banner').find('a.active').removeClass('active');
-            angular.element('.cat-nav-bar').find('a.active').removeClass('active');
+            $rootScope.activeCat = '';
         })
         if(typeof (userSessData) != "undefined" && userSessData) {
             $rootScope.user = userSessData;
         }
     }
-
+    
+    function pollurlfilter() {
+        return function(item) {
+            var url = 'polls/' + item.id + '/' + item.questionText.split(' ').join('-');
+            return encodeURIComponent(url);
+        };
+    }
 })();

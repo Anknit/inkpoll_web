@@ -1,14 +1,14 @@
 <?php
 function getogtags () {
-    $categoryPage = '#^/feeddasm/polls/(?P<category>[A-Za-z0-9-]+)$#';
-    $pollPage = '#^/feeddasm/polls/(?P<id>[0-9]+)/(?P<pollname>[A-Za-z0-9-]+)$#';
+    $categoryPage = 'polls/(?P<category>[A-Za-z0-9-]+)$#';
+    $pollPage = 'polls/(?P<id>[0-9]+)/(?P<pollname>[\s\S]+)$#';
     $path = $_SERVER['REQUEST_URI'];
     
 /*
     $url = 'http://umaginesoft.com';
     $urlsuffix = '/heritageaviation/data/pollapp/feeddasm/';
-
 */
+
     $url = 'http://localhost';
     $urlsuffix = '/feeddasm/';
 /*
@@ -16,10 +16,14 @@ function getogtags () {
     $url = 'http://inkpoll.com';
     $urlsuffix = '/';
 */
+
+    $categoryPage = '#^'.$urlsuffix.$categoryPage;
+    $pollPage = '#^'.$urlsuffix.$pollPage;
     
     $title = 'Inkpoll';
     $description = 'Create polls, give your opinion and share with the community';
-    $image = $url.$urlsuffix.'images/logo-v3.png';
+    $imagebase = $url.$urlsuffix;
+    $image = $imagebase.'images/logo-v3.png';
     $url .= $path;
     $type = 'website';
     
@@ -46,11 +50,18 @@ function getogtags () {
         $pollName = $matches['pollname'];
         $readPollData = DB_Read(array(
             'Table'=>'pollitem',
-            'Fields'=>'pollQuestion',
+            'Fields'=>'pollQuestion, imageurl',
             'clause'=>'id='.$pollId
         ),'ASSOC','');
         if(is_array($readPollData)){
             $pollTitle = $readPollData[0]['pollQuestion'];
+            if($readPollData[0]['imageurl'] != '' || $readPollData[0]['imageurl'] != null) {
+                $image = '';
+                if(!strpos($readPollData[0]['imageurl'], '://')) {
+                    $image = $imagebase; 
+                }
+                $image .= $readPollData[0]['imageurl'];
+            }
             $type = 'article';
             $title = $pollTitle;
             $description = 'What is your opinion. '.$pollTitle;
@@ -59,14 +70,14 @@ function getogtags () {
         $pageType = 'Home';
     }
     function renderMetaTags($url, $title, $description, $image, $type) {
-        echo '<meta property="og:url" content="'.$url.'" />';
-        echo '<meta property="og:type" content="'.$type.'" />';
-        echo '<meta property="og:title" content="'.$title.'" />';
-        echo '<meta property="og:description" content="'.$description.'" />';
-        echo '<meta property="og:image" content="'.$image.'" />';
-        echo '<meta name="title" content="'.$title.'" />';
-        echo '<meta name="description" content="'.$description.'" />';
-        echo '<meta name="keywords" content="polls, opinion, share opinion, create polls, share polls" />';
+        echo "<meta property='og:url' content='".$url."' />";
+        echo "<meta property='og:type' content='".$type."' />";
+        echo "<meta property='og:title' content='".$title."' />";
+        echo "<meta property='og:description' content='".$description."' />";
+        echo "<meta property='og:image' content='".$image."' />";
+        echo "<meta name='title' content='".$title."' />";
+        echo "<meta name='description' content='".$description."' />";
+        echo "<meta name='keywords' content='polls, opinion, share opinion, create polls, share polls' />";
     }
     renderMetaTags($url, $title, $description, $image, $type);
     

@@ -60,7 +60,7 @@
                         <div>
                             <ul class="list-group">
                                 <li class="list-group-item" data-ng-repeat="item in User.currentPolls.list">
-                                    <a data-ng-href="{{'polls/' + item.id + '/' + item.questionText.split(' ').join('-')}}">
+                                    <a data-ng-href="{{item | pollurlfilter}}">
                                         {{item.questionText}}
                                     </a>
                                     <div data-ng-click="User.deletePoll(item, $index);" role="button" data-ng-if="user.id == User.current.id">
@@ -108,7 +108,7 @@
                         <div>
                             <ul class="list-group">
                                 <li class="list-group-item" data-ng-repeat="item in User.currentVotes.list">
-                                    <a data-ng-href="{{'polls/' + item.id + '/' + item.questionText.split(' ').join('-')}}">
+                                    <a data-ng-href="{{item | pollurlfilter}}">
                                         {{item.questionText}}
                                     </a>
                                 </li>
@@ -130,7 +130,7 @@
                         <div>
                             <ul class="list-group">
                                 <li class="list-group-item" data-ng-repeat="item in User.currentFavs.list">
-                                    <a data-ng-href="{{'polls/' + item.id + '/' + item.questionText.split(' ').join('-')}}">
+                                    <a data-ng-href="{{item | pollurlfilter}}">
                                         {{item.questionText}}
                                     </a>
                                 </li>
@@ -152,7 +152,7 @@
                         <div>
                             <ul class="list-group">
                                 <li class="list-group-item" data-ng-repeat="item in User.currentLiked.list">
-                                    <a data-ng-href="{{'polls/' + item.id + '/' + item.questionText.split(' ').join('-')}}">
+                                    <a data-ng-href="{{item | pollurlfilter}}">
                                         {{item.questionText}}
                                     </a>
                                 </li>
@@ -174,7 +174,7 @@
                         <div>
                             <ul class="list-group">
                                 <li class="list-group-item" data-ng-repeat="item in User.currentDisliked.list">
-                                    <a data-ng-href="{{'polls/' + item.id + '/' + item.questionText.split(' ').join('-')}}">
+                                    <a data-ng-href="{{item | pollurlfilter}}">
                                         {{item.questionText}}
                                     </a>
                                 </li>

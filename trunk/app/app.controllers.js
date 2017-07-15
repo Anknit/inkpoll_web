@@ -228,13 +228,12 @@
         });
     }
 
-    categoryPolls.$inject = ['$routeParams'];
+    categoryPolls.$inject = ['$routeParams', '$rootScope'];
 
-    function categoryPolls($routeParams) {
+    function categoryPolls($routeParams, $rootScope) {
         var scope = this;
         this.category = $routeParams.category;
-        angular.element('.cat-list-banner').find('a[href="polls/'+this.category+'"]')[0].classList.add('active');
-        angular.element('.cat-nav-bar').find('a[href="polls/'+this.category+'"]')[0].classList.add('active');
+        $rootScope.activeCat = this.category;
     }
 
     categoryHome.$inject = ['pollCategories'];

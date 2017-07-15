@@ -2,7 +2,7 @@
     <div class="col-xs-12">
         <div class="poll-item" data-ng-init="item.alreadyVoted = !!item.userChoice">
             <div class="poll-item-question">
-                <a data-ng-href="{{'polls/' + item.id + '/' + item.questionText.split(' ').join('-')}}">
+                <a data-ng-href="{{item | pollurlfilter}}">
                     <h4 data-ng-bind="item.questionText"></h4>
                 </a>
             </div>
@@ -24,13 +24,13 @@
                 <div class="col-xs-12">
                     <div class="col-xs-12 col-md-6">
                         <div class="poll-item-meta row">
-                            <a class="btn btn-link" data-ng-href="{{'polls/' + item.id + '/' + item.questionText.split(' ').join('-')}}" data-ng-if="item.likecount > 0">
+                            <a class="btn btn-link" data-ng-href="{{item | pollurlfilter}}" data-ng-if="item.likecount > 0">
                                 <span data-ng-bind="item.likecount"></span> Like<span data-ng-if="item.likecount > 1">s</span>
                             </a>
-                            <a class="btn btn-link" data-ng-href="{{'polls/' + item.id + '/' + item.questionText.split(' ').join('-')}}" data-ng-if="item.dislikecount > 0">
+                            <a class="btn btn-link" data-ng-href="{{item | pollurlfilter}}" data-ng-if="item.dislikecount > 0">
                                 <span data-ng-bind="item.dislikecount"></span> Dislike<span data-ng-if="item.dislikecount > 1">s</span>
                             </a>
-                            <a class="btn btn-link hide" data-ng-href="{{'polls/' + item.id + '/' + item.questionText.split(' ').join('-') + '@comments'}}">
+                            <a class="btn btn-link hide" data-ng-href="{{(item | pollurlfilter) + '@comments'}}">
                                 8 comments
                             </a>
                         </div>
@@ -66,10 +66,10 @@
                     <div class="col-xs-12 col-md-6 text-right poll-item-share">
                         <ul class="list-inline">
                             <li>
-                                <img role="button" src="images/fb-share.png" fb-share data-ng-href="{{'polls/' + item.id + '/' + item.questionText.split(' ').join('-')}}" data-mobile-iframe="true" height="30px" />
+                                <img role="button" src="images/fb-share.png" fb-share data-ng-href="{{item | pollurlfilter}}" data-mobile-iframe="true" height="30px" />
                             </li>
                             <li>
-                                <a data-ng-href="{{'https://plus.google.com/share?url=http://localhost/feeddasm/polls/' + item.id + '/' + item.questionText.split(' ').join('-')}}" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">
+                                <a data-ng-href="{{'https://plus.google.com/share?url=http://localhost/feeddasm/' + (item | pollurlfilter)}}" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">
                                     <img src="images/gplus-share.png" alt="Share on Google+" height="30px;" />
                                 </a>
                             </li>
@@ -138,7 +138,7 @@
                                 </div>
                             </li>
                             <li data-ng-if="plst.pollId == 0">
-                                <a data-ng-href="{{'polls/' + item.id + '/' + item.questionText.split(' ').join('-')}}" data-ng-if="item.comments && item.comments.length >= 4">
+                                <a data-ng-href="{{item | pollurlfilter}}" data-ng-if="item.comments && item.comments.length >= 4">
                                     <span class="text-muted">
                                         See more comments
                                     </span>
