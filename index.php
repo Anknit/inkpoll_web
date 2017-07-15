@@ -40,7 +40,7 @@
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul class="nav navbar-nav hidden-xs cat-nav-bar">
                             <li data-ng-repeat="item in head.pollCatArr">
-                                <a data-ng-href="{{'polls/' + item.catName}}" data-ng-bind="item.catName"></a>
+                                <a data-ng-href="{{'polls/' + item.catName}}" data-ng-bind="item.catName" data-ng-class="{'active':activeCat == item.catName}"></a>
                             </li>
                             <!--
                         <li><a href="./">Home</a></li>
@@ -80,7 +80,7 @@
             <div class="visible-xs col-xs-12 cat-list-banner">
                 <ul class="list-inline">
                     <li data-ng-repeat="item in head.pollCatArr">
-                        <a data-ng-href="{{'polls/' + item.catName}}" data-ng-bind="item.catName"></a>
+                        <a data-ng-href="{{'polls/' + item.catName}}" data-ng-bind="item.catName" data-ng-class="{'active':activeCat == item.catName}"></a>
                     </li>
                 </ul>
             </div>
