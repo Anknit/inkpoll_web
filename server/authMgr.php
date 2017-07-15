@@ -12,7 +12,7 @@
             $responseArray = array();
             if(isset($data['authData']) && isset($data['authData']['email']) && trim($data['authData']['email']) != '') {
                 $data['email'] = $data['authData']['email'];
-                $checkUserExist = $this->checkDbUserExist($data['email']);
+                $checkUserExist = $this->checkDbUserExist('email', $data['email']);
                 if($checkUserExist['status']) {
                     if(!$checkUserExist['data']['exist']) {
                         $insertUser = $this->insertUserDB($data, 'EMAIL');
@@ -58,71 +58,87 @@
                 $authResponse = $this->verifyAuth($data);
                 if($authResponse['status']) {
                     $responseArray = $authResponse['data'];
-                    $userExist = $this->checkDbUserExist($responseArray['email']);
-                    if($userExist['status']) {
-                        if($data['vendor'] == 'EMAIL') {
-                            if($userExist['data']['exist']) {
-                                if($userExist['data']['userData']['userstatus'] == USER_ACTIVE) {
-                                    $verifyPswd = $this->verifyUserPassword($responseArray['email'], $data['authData']['password']);
-                                    if($verifyPswd['status']) {
-                                        $responseArray = $userExist['data']['userData'];
-                                        if($data['authData']['remember']) {
-                                            $sessionRemember = true;
+                    if(isset($responseArray['email']) && ($responseArray['email'] != '' || $responseArray['email'] != null)) {
+                        $checkField = 'email';
+                        $checkValue = $responseArray['email'];
+                    } else {
+                        if($data['vendor'] == 'GOOGLE') {
+                            $checkField = 'googleuserid';
+                            $checkValue = $responseArray['userid'];
+                        } else if($data['vendor'] == 'FACEBOOK') {
+                            $checkField = 'facebookuserid';
+                            $checkValue = $responseArray['userid'];
+                        } else {
+                            $error = 'Invalid user';
+                        }
+                    }
+                    if($error == '') {
+                        $userExist = $this->checkDbUserExist($checkField, $checkValue);
+                        if($userExist['status']) {
+                            if($data['vendor'] == 'EMAIL') {
+                                if($userExist['data']['exist']) {
+                                    if($userExist['data']['userData']['userstatus'] == USER_ACTIVE) {
+                                        $verifyPswd = $this->verifyUserPassword($responseArray['email'], $data['authData']['password']);
+                                        if($verifyPswd['status']) {
+                                            $responseArray = $userExist['data']['userData'];
+                                            if($data['authData']['remember']) {
+                                                $sessionRemember = true;
+                                            }
+                                            $status = true;
+                                        } else {
+                                            $error = $verifyPswd['error'];
                                         }
+                                    } else {
+                                        $error = 'User account is not active';
+                                    }
+                                } else {
+                                    $error = 'User is not registered';
+                                }
+                            } else {
+                                if(!$userExist['data']['exist']) {
+                                    $insertUser = $this->insertUserDB($responseArray, $data['vendor']);
+                                    if($insertUser['status']) {
+                                        $responseArray['id'] = $insertUser['data']['newuserid'];
+                                        $responseArray['usertype'] = $insertUser['data']['newusertype'];
                                         $status = true;
                                     } else {
-                                        $error = $verifyPswd['error'];
+                                        $error = 'Failed to insert New User in database. '.$insertUser['error'];
                                     }
                                 } else {
-                                    $error = 'User account is not active';
+                                    if($userExist['data']['userData']['userstatus'] == USER_ACTIVE || $userExist['data']['userData']['userstatus'] == USER_UNVERIFIED) {
+                                        $addUserId = false;
+                                        $updateData = array();
+                                        if($data['vendor'] == 'GOOGLE' && ($userExist['data']['userData']['googleuserid'] == '' || $userExist['data']['userData']['googleuserid'] == null)) {
+                                            $addUserId = true;
+                                            $updateData['googleuserid'] = $authResponse['data']['userid'];
+                                        } else if($data['vendor'] == 'FACEBOOK' && ($userExist['data']['userData']['facebookuserid'] == '' || $userExist['data']['userData']['facebookuserid'] == null)) {
+                                            $addUserId = true;
+                                            $updateData['facebookuserid'] = $authResponse['data']['userid'];
+                                        }
+                                        if($addUserId) {
+                                            if($userExist['data']['userData']['userstatus'] == USER_UNVERIFIED){
+                                                $updateData['userstatus'] = USER_ACTIVE;
+                                            }
+                                            DB_Update(array(
+                                                'Table' => 'userinfo',
+                                                'Fields'=> $updateData,
+                                                'clause'=> 'id = '.$userExist['data']['userData']['id']
+                                            ));
+                                        }
+                                        $responseArray = $userExist['data']['userData'];
+                                        $status = true;
+                                    } else {
+                                        $error = 'User account is not active';
+                                    }
                                 }
-                            } else {
-                                $error = 'User is not registered';
+                            }
+                            if($status){
+                                $this->setUserSession($responseArray, $sessionRemember);
+                                $responseArray = $this->getUserData()['data'];
                             }
                         } else {
-                            if(!$userExist['data']['exist']) {
-                                $insertUser = $this->insertUserDB($responseArray, $data['vendor']);
-                                if($insertUser['status']) {
-                                    $responseArray['id'] = $insertUser['data']['newuserid'];
-                                    $responseArray['usertype'] = $insertUser['data']['newusertype'];
-                                    $status = true;
-                                } else {
-                                    $error = 'Failed to insert New User in database. '.$insertUser['error'];
-                                }
-                            } else {
-                                if($userExist['data']['userData']['userstatus'] == USER_ACTIVE || $userExist['data']['userData']['userstatus'] == USER_UNVERIFIED) {
-                                    $addUserId = false;
-                                    $updateData = array();
-                                    if($data['vendor'] == 'GOOGLE' && ($userExist['data']['userData']['googleuserid'] == '' || $userExist['data']['userData']['googleuserid'] == null)) {
-                                        $addUserId = true;
-                                        $updateData['googleuserid'] = $authResponse['data']['userid'];
-                                    } else if($data['vendor'] == 'FACEBOOK' && ($userExist['data']['userData']['facebookuserid'] == '' || $userExist['data']['userData']['facebookuserid'] == null)) {
-                                        $addUserId = true;
-                                        $updateData['facebookuserid'] = $authResponse['data']['userid'];
-                                    }
-                                    if($addUserId) {
-                                        if($userExist['data']['userData']['userstatus'] == USER_UNVERIFIED){
-                                            $updateData['userstatus'] = USER_ACTIVE;
-                                        }
-                                        DB_Update(array(
-                                            'Table' => 'userinfo',
-                                            'Fields'=> $updateData,
-                                            'clause'=> 'id = '.$userExist['data']['userData']['id']
-                                        ));
-                                    }
-                                    $responseArray = $userExist['data']['userData'];
-                                    $status = true;
-                                } else {
-                                    $error = 'User account is not active';
-                                }
-                            }
+                            $error = 'Failed to check user existence. '.$userExist['error'];
                         }
-                        if($status){
-                            $this->setUserSession($responseArray, $sessionRemember);
-                            $responseArray = $this->getUserData()['data'];
-                        }
-                    } else {
-                        $error = 'Failed to check user existence. '.$userExist['error'];
                     }
                 } else {
                     $error = 'Authentication failed. '.$authResponse['error'];
@@ -167,7 +183,7 @@
             $responseArray = array();
             if(isset($data['authData']) && isset($data['authData']['email']) && trim($data['authData']['email']) != '') {
                 $email = $data['authData']['email'];
-                $checkUserExist = $this->checkDbUserExist($email);
+                $checkUserExist = $this->checkDbUserExist('email',$email);
                 if($checkUserExist['status']) {
                     if($checkUserExist['data']['exist']) {
                         if($checkUserExist['data']['userData']['userstatus'] == USER_ACTIVE) {
@@ -225,12 +241,12 @@
             return $resData;
         }
         
-        private function checkDbUserExist ($email) {
+        private function checkDbUserExist ($field, $value) {
             $response = array('status' => false, 'data' => array(), 'error' => '');
             $userData = DB_Read(array(
                 'Table' => 'userinfo',
-                'Fields'=> 'id,name,email,usertype,userstatus',
-                'clause'=> 'email = "'.$email.'"'
+                'Fields'=> 'id,name,email,usertype,userstatus,googleuserid,facebookuserid',
+                'clause'=> $field.' = "'.$value.'"'
             ),'ASSOC','');
             if(is_array($userData)) {
                 $response['status'] = true;

@@ -63,6 +63,9 @@
                             if(!isset($readPollQuestion[$data['pollId']]['optionArr'])) {
                                 $readPollQuestion[$data['pollId']]['optionArr'] = array();
                             }
+                            if(!isset($readpollOptionVotes[$optionId])){
+                                $readpollOptionVotes[$optionId] = array('count' => 0);
+                            }
                             $readPollQuestion[$data['pollId']]['optionArr'][] = array('id'=>$optionId, 'optionText' => $data['optionText'], 'optionVotes' => (($readpollOptionVotes[$optionId]['count'])?$readpollOptionVotes[$optionId]['count']:0));
                         }
                         $responseArray = array();
