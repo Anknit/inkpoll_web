@@ -8,6 +8,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible">
+        <meta name="theme-color" content="#222">
         <title>Inkpoll</title>
         <base href="/feeddasm/" />
         <?php
