@@ -4,11 +4,11 @@
         public function __construct () {
             $this->mailConfig = array(
                 'smtpAuth' => 'true',
-                'smtpHostName'	=>	'mail.veneratech.com',
-                'smtpPort'		=>	'25',
-                'smtpUsername'	=>	'rajarshi@veneratech.com',
-                'smtpPassword'	=>	'#Roger',
-                'sender'		=>	'Administrator'
+                'smtpHostName'	=>	'ssl://smtp.gmail.com',
+                'smtpPort'		=>	'465',
+                'smtpUsername'	=>	'team.inkpoll@gmail.com',
+                'smtpPassword'	=>	'inkpoll@123',
+                'sender'		=>	'team.inkpoll@gmail.com'
             );
             $this->baseUrl = "http://localhost/feeddasm";
             $this->error = 0;
