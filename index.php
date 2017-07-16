@@ -33,7 +33,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                        <a class="navbar-brand" href="./">
+                        <a class="navbar-brand" href="./" target="_self">
                             <img class="brand-image" alt="Inkpoll" src="images/logo-v2-120.png" />
                         </a>
                     </div>
@@ -253,20 +253,14 @@
         ?>
         </script>
         <script>
-            /*
-                                                                                                                                        (function(d, s, id) {
-                                                                                                                                            var js, fjs = d.getElementsByTagName(s)[0];
-                                                                                                                                            if (d.getElementById(id)) return;
-                                                                                                                                            js = d.createElement(s);
-                                                                                                                                            js.id = id;
-                                                                                                                                            js.src = "//connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v2.9&appId=1356379634397148";
-                                                                                                                                            fjs.parentNode.insertBefore(js, fjs);
-                                                                                                                                        }(document, 'script', 'facebook-jssdk'));
+              (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
-                                                                                                                                */
-
+                  ga('create', 'UA-63332438-2', 'auto');
+                  ga('send', 'pageview');
         </script>
-
         <script type="application/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script type="application/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
         <script type="application/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-route.min.js"></script>

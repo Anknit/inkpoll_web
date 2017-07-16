@@ -5,7 +5,7 @@
         .config(appConfig)
         .constant('APIBASE', './server/request.php')
         .filter('pollurlfilter', pollurlfilter)
-        .run(['$rootScope', '$window', 'fbAuthService', 'googleAuthService', runMethod]);
+        .run(['$rootScope', '$location', '$window', 'fbAuthService', 'googleAuthService', runMethod]);
 
     function appConfig($httpProvider, $routeProvider, $locationProvider) {
         $routeProvider.when("/", {
@@ -94,7 +94,7 @@
         }];
     }
 
-    function runMethod($rootScope, $window, sAuth, gAuth) {
+    function runMethod($rootScope, $location, $window, sAuth, gAuth) {
         $rootScope.user = {};
         $window.fbAsyncInit = function () {
             FB.init({
@@ -203,8 +203,8 @@
     
     function pollurlfilter() {
         return function(item) {
-            var url = 'polls/' + item.id + '/' + item.questionText.split(' ').join('-');
-            return encodeURIComponent(url);
+            var url = 'polls/' + item.id + '/' + encodeURIComponent(item.questionText.split(' ').join('-'));
+            return url;
         };
     }
 })();
