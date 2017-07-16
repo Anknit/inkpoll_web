@@ -121,7 +121,9 @@
 .post-button {
     display: none;
 }
-
+.poll-item-share-img{
+    height:30px;
+}
 .post-button .btn {
     padding: 3px 15px;
 }

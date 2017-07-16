@@ -58,6 +58,9 @@
                             <!-- /.container-fluid -->
                         </nav>
                         <div>
+                            <div class="col-xs-12 text-center" data-ng-show="User.currentPolls.showLoading" ng-cloak>
+                                <div class="loader"></div>
+                            </div>
                             <ul class="list-group">
                                 <li class="list-group-item" data-ng-repeat="item in User.currentPolls.list">
                                     <a data-ng-href="{{item | pollurlfilter}}">
@@ -106,6 +109,9 @@
                             <!-- /.container-fluid -->
                         </nav>
                         <div>
+                            <div class="col-xs-12 text-center" data-ng-show="User.currentVotes.showLoading" ng-cloak>
+                                <div class="loader"></div>
+                            </div>
                             <ul class="list-group">
                                 <li class="list-group-item" data-ng-repeat="item in User.currentVotes.list">
                                     <a data-ng-href="{{item | pollurlfilter}}">
@@ -128,6 +134,9 @@
                             </div>
                         </nav>
                         <div>
+                            <div class="col-xs-12 text-center" data-ng-show="User.currentFavs.showLoading" ng-cloak>
+                                <div class="loader"></div>
+                            </div>
                             <ul class="list-group">
                                 <li class="list-group-item" data-ng-repeat="item in User.currentFavs.list">
                                     <a data-ng-href="{{item | pollurlfilter}}">
@@ -150,6 +159,9 @@
                             </div>
                         </nav>
                         <div>
+                            <div class="col-xs-12 text-center" data-ng-show="User.currentLiked.showLoading" ng-cloak>
+                                <div class="loader"></div>
+                            </div>
                             <ul class="list-group">
                                 <li class="list-group-item" data-ng-repeat="item in User.currentLiked.list">
                                     <a data-ng-href="{{item | pollurlfilter}}">
@@ -172,6 +184,9 @@
                             </div>
                         </nav>
                         <div>
+                            <div class="col-xs-12 text-center" data-ng-show="User.currentDisliked.showLoading" ng-cloak>
+                                <div class="loader"></div>
+                            </div>
                             <ul class="list-group">
                                 <li class="list-group-item" data-ng-repeat="item in User.currentDisliked.list">
                                     <a data-ng-href="{{item | pollurlfilter}}">

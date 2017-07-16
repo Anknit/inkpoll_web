@@ -36,20 +36,20 @@
             <div class="form-group ng-cloack" data-ng-repeat="(i, option) in crt.poll.optionArr track by $index">
                 <div class="input-group">
                     <div class="input-group-btn">
-                        <button type="button" class="btn btn-default" data-ng-disabled="$first" data-ng-click="crt.moveoption($index,'up')">
+                        <button type="button" class="btn btn-default no-outline" data-ng-disabled="$first" data-ng-click="crt.moveoption($index,'up',$event)">
                             <span class="glyphicon glyphicon-arrow-up"></span>
-                            &nbsp;Up
+                            &nbsp;<span class="hidden-xs">Up</span>
                         </button>
-                        <button type="button" class="btn btn-default" data-ng-disabled="$last" data-ng-click="crt.moveoption($index,'down')">
+                        <button type="button" class="btn btn-default no-outline" data-ng-disabled="$last" data-ng-click="crt.moveoption($index,'down',$event)">
                             <span class="glyphicon glyphicon-arrow-down"></span>
-                            &nbsp;Down
+                            &nbsp;<span class="hidden-xs">Down</span>
                         </button>
                     </div>
                     <input type="text" class="form-control" placeholder="{{'Option ' + ($index + 1)}}" data-ng-model="crt.poll.optionArr[i]" />
                     <div class="input-group-btn">
-                        <button type="button" class="btn btn-default" data-ng-click="crt.removeoption($index)" data-ng-disabled="crt.poll.optionArr.length <3">
+                        <button type="button" class="btn btn-default no-outline" data-ng-click="crt.removeoption($index,$event)" data-ng-disabled="crt.poll.optionArr.length <3">
                             <span class="glyphicon glyphicon-remove"></span>
-                            &nbsp;Remove
+                            &nbsp;<span class="hidden-xs">Remove</span>
                         </button>
                     </div>
                 </div>
