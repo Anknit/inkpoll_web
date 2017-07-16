@@ -376,9 +376,10 @@
                 pollItemId: pollItem.id,
                 voteOption: pollItem.userChoice
             }
+            var poll = pollItem;
             pollCaster.castVote(voteData).then(function (response) {
                 if (response.status) {
-                    alert('Success');
+                    poll.optionArr = response.data.optionArr;
                 } else {
                     alert(response.error);
                 }

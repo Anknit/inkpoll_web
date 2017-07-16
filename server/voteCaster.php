@@ -1,7 +1,7 @@
 <?php
-    class VoteCaster {
+    class VoteCaster extends PollReader {
         public function __constuct(){
-            
+            parent::__construct();
         }
         public function __destruct(){
             
@@ -69,11 +69,15 @@
                     $error = 'You have voted for an invalid option';
                 }
             }
-            $resData = array('status' => $status);
+            $resData = array('status' => $status,'data'=>array());
             if(!$status) {
                 $resData['error'] = $error;
             } else {
-                $resData['data'] = array('voteid' => $insertVote);
+                $readPollData = array('count'=>1,'pollid'=>$voteData["pollItemId"]);
+                $updatedPollData = $this->getPolls($readPollData);
+                if($updatedPollData['status']) {
+                    $resData['data'] = array('optionArr' => $updatedPollData['data'][0]['optionArr']);
+                }
             }
             return $resData;
         }

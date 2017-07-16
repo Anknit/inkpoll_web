@@ -48,7 +48,7 @@
                         /*
                                                 href: 'http://localhost/feeddasm/' + attrs.href
                         */
-                        href: 'http://umaginesoft.com/heritageaviation/data/pollapp/feeddasm/' + attrs.href
+                        href: 'https://inkpoll.com/' + attrs.href
                     }, function (response) {
                         console.log(response);
                     });
