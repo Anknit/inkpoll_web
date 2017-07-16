@@ -35,6 +35,7 @@
             order: 'newest',
             page: 1,
             totalPages: 1,
+            showLoading:true,
             list: []
         }
         this.currentVotes = {
@@ -42,6 +43,7 @@
             order: 'newest',
             page: 1,
             totalPages: 1,
+            showLoading:true,
             list: []
         }
         this.currentFavs = {
@@ -49,6 +51,7 @@
             order: 'newest',
             page: 1,
             totalPages: 1,
+            showLoading:true,
             list: []
         }
         this.currentLiked = {
@@ -56,6 +59,7 @@
             order: 'newest',
             page: 1,
             totalPages: 1,
+            showLoading:true,
             list: []
         }
         this.currentDisliked = {
@@ -63,6 +67,7 @@
             order: 'newest',
             page: 1,
             totalPages: 1,
+            showLoading:true,
             list: []
         }
         this.logout = function () {
@@ -71,7 +76,9 @@
         };
 
         this.getCurrentPolls = function () {
+            this.currentPolls.showLoading = true;
             pollReader.getUserPolls(this.current.id, this.currentPolls.page, this.currentPolls.order).then(function (response) {
+                scope.currentPolls.showLoading = false;
                 if (response.status) {
                     scope.currentPolls.totalPolls = response.data.totalPolls;
                     scope.currentPolls.totalPages = response.data.totalPages;
@@ -82,7 +89,9 @@
             });
         };
         this.getCurrentVotes = function () {
+            this.currentVotes.showLoading = true;
             pollReader.getUserVotePolls(this.current.id, this.currentVotes.page, this.currentVotes.order).then(function (response) {
+                scope.currentVotes.showLoading = false;
                 if (response.status) {
                     scope.currentVotes.totalVotes = response.data.totalVotes;
                     scope.currentVotes.totalPages = response.data.totalPages;
@@ -93,7 +102,9 @@
             });
         };
         this.getCurrentFavs = function () {
+            this.currentFavs.showLoading = true;
             pollReader.getUserFavPolls(this.current.id, this.currentFavs.page, this.currentFavs.order).then(function (response) {
+                scope.currentFavs.showLoading = false;
                 if (response.status) {
                     scope.currentFavs.totalFavs = response.data.totalFavs;
                     scope.currentFavs.totalPages = response.data.totalPages;
@@ -104,7 +115,9 @@
             });
         };
         this.getCurrentLiked = function () {
+            this.currentLiked.showLoading = true;
             pollReader.getUserLikedPolls(this.current.id, this.currentLiked.page, this.currentLiked.order).then(function (response) {
+                scope.currentLiked.showLoading = false;
                 if (response.status) {
                     scope.currentLiked.totalLiked = response.data.totalLiked;
                     scope.currentLiked.totalPages = response.data.totalPages;
@@ -115,7 +128,9 @@
             });
         };
         this.getCurrentDisliked = function () {
+            this.currentDisliked.showLoading = true;
             pollReader.getUserDislikedPolls(this.current.id, this.currentDisliked.page, this.currentDisliked.order).then(function (response) {
+                scope.currentDisliked.showLoading = false;
                 if (response.status) {
                     scope.currentDisliked.totalDisliked = response.data.totalDisliked;
                     scope.currentDisliked.totalPages = response.data.totalPages;
@@ -225,6 +240,9 @@
         };
         $rootScope.$on('userloggedin',function(){
             jQuery('#auth-modal').modal('hide');
+            if($('#main-navbar')){
+                $('#main-navbar').collapse('hide');
+            }
         });
     }
 
@@ -248,10 +266,11 @@
         });
     }
 
-    creator.$inject = ['pollEditor', 'pollCategories'];
+    creator.$inject = ['pollEditor', 'pollCategories', '$rootScope'];
 
-    function creator(pollEditor, pollCategories) {
+    function creator(pollEditor, pollCategories, $rootScope) {
         var scope = this;
+        $rootScope.hideAboutDesc = true;
         this.category = {};
         this.pollimageurlinput = '';
         resetPollEditor();
@@ -308,7 +327,7 @@
         this.addoption = function () {
             scope.poll.optionArr.push('');
         };
-        this.moveoption = function (index, direction) {
+        this.moveoption = function (index, direction, event) {
             var pos = index;
             if (direction == 'down') {
                 pos++;
@@ -316,9 +335,11 @@
                 pos--;
             }
             scope.poll.optionArr.splice(pos, 0, scope.poll.optionArr.splice(index, 1)[0]);
+            event.currentTarget.blur();
         };
-        this.removeoption = function (index) {
+        this.removeoption = function (index, event) {
             scope.poll.optionArr.splice(index, 1);
+            event.currentTarget.blur();
         };
 
         function resetPollEditor() {
@@ -338,6 +359,7 @@
         var scope = this,
             configObj = {};
         this.list = [];
+        this.showLoading = false;
         this.pIndex = 1;
         this.category = '';
         this.pollId = 0;
@@ -348,6 +370,7 @@
             this.pollId = $scope.poll.pollId;
         }
         this.loadPolls = function () {
+            scope.showLoading = true;
             if (this.category != '') {
                 configObj['category'] = this.category;
             } else if (this.pollId != 0) {
@@ -355,6 +378,7 @@
             }
             configObj['index'] = this.pIndex;
             pollReader.readPolls(configObj).then(function (response) {
+                scope.showLoading = false;
                 if (response.status) {
                     scope.list = scope.list.concat(response.data);
                     if (response.data.length == 0) {

@@ -27,7 +27,7 @@
                 <div class="container-fluid">
                     <!-- Brand and toggle get grouped for better mobile display -->
                     <div class="navbar-header">
-                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar" aria-expanded="false">
                         <span class="sr-only">Toggle navigation</span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
@@ -37,7 +37,7 @@
                             <img class="brand-image" alt="Inkpoll" src="images/logo-v2-120.png" />
                         </a>
                     </div>
-                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <div class="collapse navbar-collapse" id="main-navbar">
                         <ul class="nav navbar-nav hidden-xs cat-nav-bar">
                             <li data-ng-repeat="item in head.pollCatArr">
                                 <a data-ng-href="{{'polls/' + item.catName}}" data-ng-bind="item.catName" data-ng-class="{'active':activeCat == item.catName}"></a>
@@ -61,10 +61,10 @@
                             <div class="pull-left">
                                 <div class="dropdown" data-ng-if="user.name">
                                     <button class="btn btn-link dropdown-toggle" type="button" id="userdropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="color:#fff;text-decoration:none;">
-                                    <span data-ng-bind="'Hi, ' + user.name.split(' ')[0] + ' '"></span>
-                                    <span class="caret"></span>
-                                </button>
-                                    <ul class="dropdown-menu" aria-labelledby="userdropdown">
+                                        <span data-ng-bind="'Hi, ' + user.name.split(' ')[0] + ' '"></span>
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="userdropdown" style="position:relative; float:none;">
                                         <li><a data-ng-href="{{'users/' + user.id +'/' + user.name.split(' ').join('-')}}">My Profile</a></li>
                                         <li role="separator" class="divider"></li>
                                         <li><a role="button" data-ng-click="head.logout()">Logout</a></li>
@@ -205,6 +205,17 @@
                 <div class="row" data-ng-view></div>
             </div>
             <div class="col-xs-12 col-md-4 side-banner-container">
+                <div class="row" style="margin:0px;" data-ng-hide="hideAboutDesc" data-ng-cloak>
+                    <div class="col-xs-12 side-banner-section">
+                        <p class="home-description text-justified">
+                            Inkpoll is a community-powered platform, where you can vote for interesting polls or can create a poll and share it with your friends.
+                        </p>
+                        <h4>
+                            Have something interesting to ask, create your own poll in seconds.
+                        </h4>
+                        <a auth-user-only class="btn btn-success text-center" href="pollcreater">Create Poll</a>
+                    </div>
+                </div>
                 <div class="row" style="margin:0px;">
                     <div class="col-xs-12 side-banner-section">
                         <h4>Connect with Inkpoll</h4>
@@ -238,7 +249,7 @@
             </div>
         </div>
         <script>
-        <?php
+            <?php
             if(isset($_SESSION['userId'])) {
                 $responseArray = array(
                     'id' => $_SESSION['userId'],
@@ -248,10 +259,12 @@
                 );
         ?>
             var userSessData = <?php echo json_encode($responseArray); ?>
-        <?php
+            <?php
             }
         ?>
+
         </script>
+        <!--
         <script>
               (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
                   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -261,6 +274,7 @@
                   ga('create', 'UA-63332438-2', 'auto');
                   ga('send', 'pageview');
         </script>
+-->
         <script type="application/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script type="application/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
         <script type="application/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-route.min.js"></script>

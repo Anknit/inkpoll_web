@@ -193,8 +193,22 @@
             ref.parentNode.insertBefore(js, ref);
 
         }(document));
-        $rootScope.$on('$routeChangeStart', function () {
+        $rootScope.$on('$routeChangeStart', function (scope, nextPath, currPath) {
+            if(typeof(nextPath.$$route.isAuth) != "undefined") {
+                if(nextPath.$$route.isAuth && typeof($rootScope.user.name) == "undefined") {
+                    $location.path('/');
+                }
+            }
+            if($('#main-navbar')){
+                $('#main-navbar').collapse('hide');
+            }
             $rootScope.activeCat = '';
+            $rootScope.hideAboutDesc = false;
+            $window.document.body.scrollTop = 0;
+/*
+            ga('set', 'page', $location.path());
+            ga('send', 'pageview');            
+*/
         })
         if(typeof (userSessData) != "undefined" && userSessData) {
             $rootScope.user = userSessData;
