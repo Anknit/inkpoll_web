@@ -93,7 +93,7 @@
                             <li data-ng-repeat="comment in item.comments" style="padding-top:5px;padding-bottom:5px;">
                                 <div class="row">
                                     <div class="col-xs-12">
-                                        <a data-ng-href="{{'user/' + comment.userid + '/' + comment.username.split(' ').join('-')}}">
+                                        <a data-ng-href="{{'users/' + comment.userid + '/' + comment.username.split(' ').join('-')}}">
                                             <span data-ng-bind="comment.username"></span>
                                         </a>
                                         <span data-ng-bind="comment.commenttext"></span>

@@ -272,21 +272,6 @@
                 if (res.status === 'connected') {
                     cookieService.setCookie("sessionStatus", "active", 365);
                     cookieService.setCookie("authvendor", "FACEBOOK", 365);
-
-                    /*
-                     The user is already logged,
-                     is possible retrieve his personal info
-                    */
-                    /*
-                                        _self.getUserInfo();
-                    */
-
-                    /*
-                     This is also the point where you should create a
-                     session for the current user.
-                     For this purpose you can use the data inside the
-                     res.authResponse object.
-                    */
                     $http.post(APIBASE + '?request=userdata', {
                         data: res.authResponse
                     }).then(function (response) {
@@ -300,7 +285,8 @@
                             };
                         } else {
                             cookieService.setCookie("sessionStatus", "inactive", -1);
-                            //    alert(response.error);
+                            FB.logout(function(res){
+                            });
                         }
                     }, function (error) {
                         console.log(error);
@@ -308,29 +294,12 @@
 
                 } else {
                     _self.logout();
-
-                    /*
-                     The user is not logged to the app, or into Facebook:
-                     destroy the session on the server.
-                    */
                 }
 
             });
             FB.Event.subscribe('auth.login', function (res) {
                 if (res.status === 'connected') {
-
-                    /*
-                     The user is already logged,
-                     is possible retrieve his personal info
-                    */
                     _self.getUserInfo();
-
-                    /*
-                     This is also the point where you should create a
-                     session for the current user.
-                     For this purpose you can use the data inside the
-                     res.authResponse object.
-                    */
                     $http.post(APIBASE + '?request=login', {
                         data: {
                             vendor: 'FACEBOOK',
@@ -421,7 +390,6 @@
                             name: response.data.userName
                         };
                         $rootScope.$broadcast('userloggedin');
-                        //                        location.reload();
                     } else {
                         console.log(response.error);
                     }
@@ -442,7 +410,7 @@
                         };
                     } else {
                         cookieService.setCookie("sessionStatus", "inactive", -1);
-                        //    alert(response.error);
+                        auth2.signOut().then(function(){});
                     }
                 }, function (error) {
                     console.log(error);

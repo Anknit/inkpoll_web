@@ -205,4 +205,8 @@ nav.navbar-theme .navbar-brand:focus {
     body {
         margin-top: 100px;
     }
+    .relative-dropdown {
+        position:relative;
+        float:none;
+    }
 }

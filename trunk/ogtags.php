@@ -75,6 +75,11 @@ function getogtags () {
         echo "<meta property='og:title' content='".$title."' />";
         echo "<meta property='og:description' content='".$description."' />";
         echo "<meta property='og:image' content='".$image."' />";
+        echo "<meta property='twitter:url' content='".$url."' />";
+        echo "<meta property='twitter:card' content='summary_large_image' />";
+        echo "<meta property='twitter:title' content='".$title."' />";
+        echo "<meta property='twitter:description' content='".$description."' />";
+        echo "<meta property='twitter:image' content='".$image."' />";
         echo "<meta name='title' content='".$title."' />";
         echo "<meta name='description' content='".$description."' />";
         echo "<meta name='keywords' content='polls, opinion, share opinion, create polls, share polls' />";
