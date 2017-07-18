@@ -285,8 +285,6 @@
                             };
                         } else {
                             cookieService.setCookie("sessionStatus", "inactive", -1);
-                            FB.logout(function(res){
-                            });
                         }
                     }, function (error) {
                         console.log(error);
