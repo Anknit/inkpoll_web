@@ -65,7 +65,7 @@
                                         <span data-ng-bind="'Hi, ' + user.name.split(' ')[0] + ' '"></span>
                                         <span class="caret"></span>
                                     </button>
-                                    <ul class="dropdown-menu" aria-labelledby="userdropdown" style="position:relative; float:none;">
+                                    <ul class="dropdown-menu relative-dropdown" aria-labelledby="userdropdown">
                                         <li><a data-ng-href="{{'users/' + user.id +'/' + user.name.split(' ').join('-')}}">My Profile</a></li>
                                         <li role="separator" class="divider"></li>
                                         <li><a role="button" data-ng-click="head.logout()">Logout</a></li>
