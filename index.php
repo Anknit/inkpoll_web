@@ -207,6 +207,15 @@
             </div>
             <div class="col-xs-12 col-md-4 side-banner-container">
                 <div class="row" style="margin:0px;" data-ng-hide="hideAboutDesc" data-ng-cloak>
+                    <div class="fb-video"  data-controls="false" data-href="https://www.facebook.com/inkpoll/videos/1379191825521488/" data-width="500" data-show-text="false">
+                        <blockquote cite="https://www.facebook.com/inkpoll/videos/1379191825521488/" class="fb-xfbml-parse-ignore">
+                            <a href="https://www.facebook.com/inkpoll/videos/1379191825521488/">About Inkpoll</a>
+                            <p>
+                            </p>
+                            Posted by <a href="https://www.facebook.com/inkpoll/">Inkpoll</a> on Tuesday, 18 July 2017</blockquote>
+                    </div>
+                </div>
+                <div class="row" style="margin:0px;" data-ng-hide="hideAboutDesc" data-ng-cloak>
                     <div class="col-xs-12 side-banner-section">
                         <p class="home-description text-justified">
                             Inkpoll is a community-powered platform, where you can vote for interesting polls or can create a poll and share it with your friends.
