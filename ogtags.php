@@ -4,18 +4,8 @@ function getogtags () {
     $pollPage = 'polls/(?P<id>[0-9]+)/(?P<pollname>[\s\S]+)$#';
     $path = $_SERVER['REQUEST_URI'];
     
-/*
-    $url = 'http://umaginesoft.com';
-    $urlsuffix = '/heritageaviation/data/pollapp/feeddasm/';
-*/
-
-    $url = 'http://localhost';
-    $urlsuffix = '/feeddasm/';
-/*
-    
-    $url = 'http://inkpoll.com';
-    $urlsuffix = '/';
-*/
+    $url = root_path;
+    $urlsuffix = base_href;
 
     $categoryPage = '#^'.$urlsuffix.$categoryPage;
     $pollPage = '#^'.$urlsuffix.$pollPage;
@@ -70,19 +60,19 @@ function getogtags () {
         $pageType = 'Home';
     }
     function renderMetaTags($url, $title, $description, $image, $type) {
-        echo "<meta property='og:url' content='".$url."' />";
-        echo "<meta property='og:type' content='".$type."' />";
-        echo "<meta property='og:title' content='".$title."' />";
-        echo "<meta property='og:description' content='".$description."' />";
-        echo "<meta property='og:image' content='".$image."' />";
-        echo "<meta property='twitter:url' content='".$url."' />";
-        echo "<meta property='twitter:card' content='summary_large_image' />";
-        echo "<meta property='twitter:title' content='".$title."' />";
-        echo "<meta property='twitter:description' content='".$description."' />";
-        echo "<meta property='twitter:image' content='".$image."' />";
-        echo "<meta name='title' content='".$title."' />";
-        echo "<meta name='description' content='".$description."' />";
-        echo "<meta name='keywords' content='polls, opinion, share opinion, create polls, share polls' />";
+        echo "<meta property=\"og:url\" content=\"".$url."\" />";
+        echo "<meta property=\"og:type\" content=\"".$type."\" />";
+        echo "<meta property=\"og:title\" content=\"".htmlspecialchars($title)."\" />";
+        echo "<meta property=\"og:description\" content=\"".htmlspecialchars($description)."\" />";
+        echo "<meta property=\"og:image\" content=\"".$image."\" />";
+        echo "<meta property=\"twitter:url\" content=\"".$url."\" />";
+        echo "<meta property=\"twitter:card\" content=\"summary_large_image\" />";
+        echo "<meta property=\"twitter:title\" content=\"".htmlspecialchars($title)."\" />";
+        echo "<meta property=\"twitter:description\" content=\"".htmlspecialchars($description)."\" />";
+        echo "<meta property=\"twitter:image\" content=\"".$image."\" />";
+        echo "<meta name=\"title\" content=\"".htmlspecialchars($title)."\" />";
+        echo "<meta name=\"description\" content=\"".htmlspecialchars($description)."\" />";
+        echo "<meta name=\"keywords\" content=\"polls, opinion, share opinion, create polls, share polls\" />";
     }
     renderMetaTags($url, $title, $description, $image, $type);
     

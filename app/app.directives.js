@@ -45,9 +45,6 @@
                 element.on('click', function () {
                     FB.ui({
                         method: 'share',
-                        /*
-                                                href: 'http://localhost/feeddasm/' + attrs.href
-                        */
                         href: 'https://inkpoll.com/' + attrs.href
                     }, function (response) {
                         console.log(response);

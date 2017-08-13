@@ -1,6 +1,14 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-xs-12 bg-default">
+            <div class="home-poll-type-container form-group">
+                <button class="btn btn-material btn-default" data-ng-class="{'btn-material-active': Home.sortOrder == 'trending'}" data-ng-click="Home.pollSort('trending');">
+                    <span class="glyphicon glyphicon-fire"></span>&nbsp;Trending
+                </button>
+                <button class="btn btn-material btn-default" data-ng-class="{'btn-material-active': Home.sortOrder == 'newest'}" data-ng-click="Home.pollSort('newest');">
+                    <span class="glyphicon glyphicon-time"></span>&nbsp;Newest
+                </button>
+            </div>
             <poll-list data-type="home" data-cat="all"></poll-list>
         </div>
     </div>

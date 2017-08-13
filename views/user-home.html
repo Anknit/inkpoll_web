@@ -1,203 +1,63 @@
-<div>
-    <div class="col-xs-12">
-        <h4>Activity</h4>
-        <div class="row">
-            <div class="col-xs-12">
-                <ul class="nav nav-tabs" role="tablist">
-                    <li role="presentation" class="active">
-                        <a data-target="#polls" aria-controls="polls" role="button" data-toggle="tab">Polls</a>
-                    </li>
-                    <li role="presentation">
-                        <a data-target="#votes" aria-controls="votes" role="button" data-toggle="tab">Votes</a>
-                    </li>
-                    <li role="presentation">
-                        <a data-target="#favorites" aria-controls="favorites" role="button" data-toggle="tab">Favorites</a>
-                    </li>
-                    <li role="presentation">
-                        <a data-target="#liked" aria-controls="liked" role="button" data-toggle="tab">Liked</a>
-                    </li>
-                    <li role="presentation">
-                        <a data-target="#disliked" aria-controls="disliked" role="button" data-toggle="tab">Disliked</a>
-                    </li>
-                </ul>
-
-                <!-- Tab panes -->
-                <div class="tab-content">
-                    <div role="tabpanel" class="tab-pane fade in active" id="polls">
-                        <div>&nbsp;</div>
-                        <nav class="navbar navbar-default">
-                            <div class="container-fluid">
-                                <div class="navbar-header">
-<!--
-                                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#activity-polls-navbar-collapse" aria-expanded="false" style="margin-top:12px;">
-                                        <span class="sr-only">Toggle navigation</span>
-                                        <span class="caret"></span>
-                                    </button>
--->
-                                    <a class="navbar-brand">
-                                        {{User.currentPolls.totalPolls + ' Polls'}}
-                                    </a>
-                                </div>
-<!--
-                                <div class="collapse navbar-collapse" id="activity-polls-navbar-collapse">
-                                    <ul class="nav navbar-nav navbar-right">
-                                        <li class="active">
-                                            <a>Newest</a>
-                                        </li>
-                                        <li>
-                                            <a>Views</a>
-                                        </li>
-                                        <li>
-                                            <a>Votes</a>
-                                        </li>
-                                    </ul>
-                                </div>
--->
-                            </div>
-                            <!-- /.navbar-collapse -->
-                            <!-- /.container-fluid -->
-                        </nav>
-                        <div>
-                            <div class="col-xs-12 text-center" data-ng-show="User.currentPolls.showLoading" ng-cloak>
-                                <div class="loader"></div>
-                            </div>
-                            <ul class="list-group">
-                                <li class="list-group-item" data-ng-repeat="item in User.currentPolls.list">
-                                    <a data-ng-href="{{item | pollurlfilter}}">
-                                        {{item.questionText}}
-                                    </a>
-                                    <div data-ng-click="User.deletePoll(item, $index);" role="button" data-ng-if="user.id == User.current.id">
-                                        <span class="text-danger">Delete</span>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div role="tabpanel" class="tab-pane fade" id="votes">
-                        <div>&nbsp;</div>
-                        <nav class="navbar navbar-default">
-                            <div class="container-fluid">
-                                <!-- Brand and toggle get grouped for better mobile display -->
-                                <div class="navbar-header">
-<!--
-                                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#activity-votes-navbar-collapse" aria-expanded="false" style="margin-top:12px;">
-                                        <span class="sr-only">Toggle navigation</span>
-                                        <span class="caret"></span>
-                                    </button>
--->
-                                    <a class="navbar-brand">
-                                        {{User.currentVotes.totalVotes + ' Votes'}}
-                                    </a>
-                                </div>
-<!--
-                                <div class="collapse navbar-collapse" id="activity-votes-navbar-collapse">
-                                    <ul class="nav navbar-nav navbar-right">
-                                        <li class="active">
-                                            <a>Newest</a>
-                                        </li>
-                                        <li>
-                                            <a>Views</a>
-                                        </li>
-                                        <li>
-                                            <a>Votes</a>
-                                        </li>
-                                    </ul>
-                                </div>
--->
-                            </div>
-                            <!-- /.navbar-collapse -->
-                            <!-- /.container-fluid -->
-                        </nav>
-                        <div>
-                            <div class="col-xs-12 text-center" data-ng-show="User.currentVotes.showLoading" ng-cloak>
-                                <div class="loader"></div>
-                            </div>
-                            <ul class="list-group">
-                                <li class="list-group-item" data-ng-repeat="item in User.currentVotes.list">
-                                    <a data-ng-href="{{item | pollurlfilter}}">
-                                        {{item.questionText}}
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div role="tabpanel" class="tab-pane fade" id="favorites">
-                        <div>&nbsp;</div>
-                        <nav class="navbar navbar-default">
-                            <div class="container-fluid">
-                                <!-- Brand and toggle get grouped for better mobile display -->
-                                <div class="navbar-header">
-                                    <a class="navbar-brand">
-                                        {{User.currentFavs.totalFavs + ' Favorites'}}
-                                    </a>
-                                </div>
-                            </div>
-                        </nav>
-                        <div>
-                            <div class="col-xs-12 text-center" data-ng-show="User.currentFavs.showLoading" ng-cloak>
-                                <div class="loader"></div>
-                            </div>
-                            <ul class="list-group">
-                                <li class="list-group-item" data-ng-repeat="item in User.currentFavs.list">
-                                    <a data-ng-href="{{item | pollurlfilter}}">
-                                        {{item.questionText}}
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div role="tabpanel" class="tab-pane fade" id="liked">
-                        <div>&nbsp;</div>
-                        <nav class="navbar navbar-default">
-                            <div class="container-fluid">
-                                <!-- Brand and toggle get grouped for better mobile display -->
-                                <div class="navbar-header">
-                                    <a class="navbar-brand">
-                                        {{User.currentLiked.totalLiked + ' Liked'}}
-                                    </a>
-                                </div>
-                            </div>
-                        </nav>
-                        <div>
-                            <div class="col-xs-12 text-center" data-ng-show="User.currentLiked.showLoading" ng-cloak>
-                                <div class="loader"></div>
-                            </div>
-                            <ul class="list-group">
-                                <li class="list-group-item" data-ng-repeat="item in User.currentLiked.list">
-                                    <a data-ng-href="{{item | pollurlfilter}}">
-                                        {{item.questionText}}
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div role="tabpanel" class="tab-pane fade" id="disliked">
-                        <div>&nbsp;</div>
-                        <nav class="navbar navbar-default">
-                            <div class="container-fluid">
-                                <!-- Brand and toggle get grouped for better mobile display -->
-                                <div class="navbar-header">
-                                    <a class="navbar-brand">
-                                        {{User.currentDisliked.totalDisliked + ' Disliked'}}
-                                    </a>
-                                </div>
-                            </div>
-                        </nav>
-                        <div>
-                            <div class="col-xs-12 text-center" data-ng-show="User.currentDisliked.showLoading" ng-cloak>
-                                <div class="loader"></div>
-                            </div>
-                            <ul class="list-group">
-                                <li class="list-group-item" data-ng-repeat="item in User.currentDisliked.list">
-                                    <a data-ng-href="{{item | pollurlfilter}}">
-                                        {{item.questionText}}
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+<div class="container-fluid">
+    <h3>Profile Details</h3>
+    <div class="row">
+        <div class="col-xs-12 col-md-4">
+            
+        </div>
+        <div class="col-xs-12 col-md-8">
+            <form class="form" novalidate name="profileForm">
+                <div class="form-group" data-ng-class="{'has-error': (profileForm.fullname.$invalid && !profileForm.fullname.$pristine)}">
+                    <label class="control-label">
+                        Name <span class="glyphicon glyphicon-info-sign" role="button" title="Please provide your full name here"></span>
+                    </label>
+                    <input type="text" class="form-control" name="fullname" data-ng-model="User.Profile.Name" placeholder="Your full name" required data-ng-maxlength="100" />
+                    <p ng-show="profileForm.fullname.$invalid && !profileForm.fullname.$pristine" class="help-block">Your full name is required.</p>
                 </div>
-            </div>
+                <div class="form-group" data-ng-class="{'has-error': (profileForm.email.$invalid && !profileForm.email.$pristine)}">
+                    <label class="control-label">
+                        Email address <span class="glyphicon glyphicon-info-sign" role="button" title="Please provide your email address here"></span>
+                    </label>
+                    <input type="email" class="form-control" name="email" data-ng-model="User.Profile.Email" placeholder="Your email address" required data-ng-maxlength="100" data-ng-disabled="User.Profile.emailExist" />
+                    <p ng-show="profileForm.email.$invalid" class="help-block">Please provide a valid email address.</p>
+                </div>
+<!--
+                <div class="form-group" data-ng-class="{'has-error': (profileForm.username.$invalid && !profileForm.username.$pristine)}">
+                    <label class="control-label">
+                        Username <span class="glyphicon glyphicon-info-sign" role="button" title="Username can contain alphanumeric characters only. Min-length:4, Max-length:20"></span>
+                    </label>
+                    <input type="text" class="form-control" name="username" data-ng-model="User.Profile.Username" placeholder="Enter a username" required data-ng-maxlength="20" data-ng-minlength="4" data-ng-pattern="User.usernameRegex" />
+                    <p ng-show="profileForm.username.$invalid && !profileForm.usernamename.$pristine" class="help-block">Choose a username of alphanumeric characters. Min length - 4. Max length - 20.</p>
+                </div>
+-->
+                <div class="form-group" data-ng-class="{'has-error': (profileForm.age.$invalid && !profileForm.age.$pristine)}">
+                    <label class="control-label">
+                        Age <span class="glyphicon glyphicon-info-sign" role="button" title="Please provide your age here"></span>
+                    </label>
+                    <input type="number" class="form-control" name="age" data-ng-model="User.Profile.Age" placeholder="Your Age" max="100" min="3" />
+                    <p ng-show="profileForm.age.$invalid && !profileForm.age.$pristine" class="help-block">Please enter a valid age.</p>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">
+                        Gender <span class="glyphicon glyphicon-info-sign" role="button" title="Please select your gender"></span>
+                    </label>
+                    <select class="form-control" name="gender" data-ng-model="User.Profile.Gender">
+                        <option value="">Please select</option>
+                        <option value="Male">Male</option>
+                        <option value="Male">Female</option>
+                        <option value="Male">Other</option>
+                    </select>
+                </div>
+                <div class="form-group" data-ng-class="{'has-error': (profileForm.country.$invalid && !profileForm.country.$pristine)}">
+                    <label class="control-label">
+                        Country <span class="glyphicon glyphicon-info-sign" role="button" title="Please enter your country"></span>
+                    </label>
+                    <input type="text" class="form-control" name="country" data-ng-model="User.Profile.Country" placeholder="Your Country" data-ng-maxlength="100" data-ng-minlength="3" />
+                    <p ng-show="profileForm.country.$invalid && !profileForm.country.$pristine" class="help-block">Please enter a valid country name.</p>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-success" data-ng-click="Profile.submitProfile(profileForm.$valid)">Save</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

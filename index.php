@@ -1,5 +1,6 @@
 <?php
     session_start();
+    require_once __DIR__.'/config.php';
     require_once __DIR__.'/server/OperateDB/DbMgrInterface.php';
     require_once __DIR__.'/ogtags.php';
 ?>
@@ -9,11 +10,13 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible">
         <meta name="theme-color" content="#222">
-        <title>Inkpoll</title>
-        <base href="/feeddasm/" />
+        <title>
+            <?php echo $title; ?>
+        </title>
+        <base href="<?php echo base_href;?>" />
         <?php
-    getogtags();
-    ?>
+            getogtags();
+        ?>
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
             <link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
             <link href="https://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet">
@@ -67,6 +70,7 @@
                                     </button>
                                     <ul class="dropdown-menu relative-dropdown" aria-labelledby="userdropdown">
                                         <li><a data-ng-href="{{'users/' + user.id +'/' + user.name.split(' ').join('-')}}">My Profile</a></li>
+                                        <li><a data-ng-href="{{'activity/' + user.id +'/' + user.name.split(' ').join('-')}}">My Activity</a></li>
                                         <li role="separator" class="divider"></li>
                                         <li><a role="button" data-ng-click="head.logout()">Logout</a></li>
                                     </ul>
@@ -101,7 +105,7 @@
                                     <h4 data-ng-show="head.authmode== 'signup'">Signup with social account</h4>
                                     <div class="row">
                                         <div class="col-xs-12 col-md-6 form-group">
-                                            <div class="fb-login-button" data-display="popup" data-size="large" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false"></div>
+                                            <div class="fb-login-button" data-display="popup" data-size="large" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false" data-scope="email, user_likes, user_friends"></div>
                                         </div>
                                         <div class="col-xs-12 col-md-6 form-group">
                                             <div id="google-signin"></div>
@@ -205,16 +209,21 @@
             <div class="col-xs-12 col-md-8">
                 <div class="row" data-ng-view></div>
             </div>
-            <div class="col-xs-12 col-md-4 side-banner-container">
+            <div class="col-xs-12 col-md-4">
                 <div class="row" style="margin:0px;" data-ng-hide="hideAboutDesc" data-ng-cloak>
-                    <div class="fb-video"  data-controls="false" data-href="https://www.facebook.com/inkpoll/videos/1379191825521488/" data-width="500" data-show-text="false">
-                        <blockquote cite="https://www.facebook.com/inkpoll/videos/1379191825521488/" class="fb-xfbml-parse-ignore">
-                            <a href="https://www.facebook.com/inkpoll/videos/1379191825521488/">About Inkpoll</a>
-                            <p>
-                            </p>
-                            Posted by <a href="https://www.facebook.com/inkpoll/">Inkpoll</a> on Tuesday, 18 July 2017</blockquote>
+                    <div class="col-xs-12 side-banner-section">
+                        <div class="fb-video" data-controls="false" data-href="https://www.facebook.com/inkpoll/videos/1379191825521488/" data-width="500" data-show-text="false">
+                            <blockquote cite="https://www.facebook.com/inkpoll/videos/1379191825521488/" class="fb-xfbml-parse-ignore">
+                                <a href="https://www.facebook.com/inkpoll/videos/1379191825521488/" style="display:none;">About Inkpoll</a>
+                                <p>
+                                </p>
+                                <a href="https://www.facebook.com/inkpoll/" style="display:none;">Inkpoll</a>
+                            </blockquote>
+                        </div>
                     </div>
                 </div>
+            </div>
+            <div class="col-xs-12 col-md-4 side-banner-container">
                 <div class="row" style="margin:0px;" data-ng-hide="hideAboutDesc" data-ng-cloak>
                     <div class="col-xs-12 side-banner-section">
                         <p class="home-description text-justified">
@@ -274,25 +283,37 @@
         ?>
 
         </script>
-        <!--
-        <script>
-              (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-                  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-                  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-                  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+        <?php
+        if($mode == 'prod') {
+        ?>
+            <script>
+                (function(i, s, o, g, r, a, m) {
+                    i['GoogleAnalyticsObject'] = r;
+                    i[r] = i[r] || function() {
+                        (i[r].q = i[r].q || []).push(arguments)
+                    }, i[r].l = 1 * new Date();
+                    a = s.createElement(o),
+                        m = s.getElementsByTagName(o)[0];
+                    a.async = 1;
+                    a.src = g;
+                    m.parentNode.insertBefore(a, m)
+                })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
 
-                  ga('create', 'UA-63332438-2', 'auto');
-                  ga('send', 'pageview');
-        </script>
--->
-        <script type="application/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-        <script type="application/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
-        <script type="application/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-route.min.js"></script>
-        <script type="application/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-        <script type="application/javascript" src="app/app.js"></script>
-        <script type="application/javascript" src="app/app.controllers.js"></script>
-        <script type="application/javascript" src="app/app.services.js"></script>
-        <script type="application/javascript" src="app/app.directives.js"></script>
+                ga('create', 'UA-63332438-2', 'auto');
+                ga('send', 'pageview');
+
+            </script>
+            <?php
+        }
+        ?>
+                <script type="application/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+                <script type="application/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+                <script type="application/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-route.min.js"></script>
+                <script type="application/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+                <script type="application/javascript" src="app/app.js"></script>
+                <script type="application/javascript" src="app/app.controllers.js"></script>
+                <script type="application/javascript" src="app/app.services.js"></script>
+                <script type="application/javascript" src="app/app.directives.js"></script>
     </body>
 
     </html>

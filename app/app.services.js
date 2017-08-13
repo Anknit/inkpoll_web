@@ -8,6 +8,7 @@
         .service('googleAuthService', googleAuthService)
         .service('emailAuthService', emailAuthService)
         .service('pollCategories', pollCategories)
+        .service('UserProfileService', UserProfileService)
         .service('pollEditor', pollEditor);
 
     pollEditor.$inject = ['$http', 'APIBASE'];
@@ -351,7 +352,7 @@
                         if (response.status) {
                             cookieService.setCookie("sessionStatus", "inactive", -1);
                             $rootScope.user = this.user = {};
-                            location.reload();
+                            location.href = './';
                         } else {
                             alert(response.error);
                         }
@@ -429,7 +430,7 @@
                         if (response.status) {
                             cookieService.setCookie("sessionStatus", "inactive", -1);
                             $rootScope.user = this.user = {};
-                            location.reload();
+                            location.href = './';
                         } else {
                             alert(response.error);
                         }
@@ -474,7 +475,7 @@
                     if (response.status) {
                         cookieService.setCookie("sessionStatus", "inactive", -1);
                         $rootScope.user = this.user = {};
-                        location.reload();
+                        location.href = './';
                     } else {
                         alert(response.error);
                     }
@@ -506,6 +507,26 @@
             }).then(function (response) {
                 return response.data;
             }, function (error) {
+                console.log(error);
+            });
+        };
+    }
+    
+    UserProfileService.$inject = ['$rootScope', '$http', 'APIBASE'];
+    
+    function UserProfileService($rootScope, $http, APIBASE) {
+        var _self = this;
+        this.getProfileData = function () {
+            return $http.get(APIBASE + '?request=getUserProfileData', '').then(function(response){
+                return response.data;
+            },function(error){
+                console.log(error);
+            });
+        };
+        this.updateProfileData = function (data) {
+            return $http.post(APIBASE + '?request=updateUserProfileData', {data:data}, '').then(function(response){
+                return response.data;
+            },function(error){
                 console.log(error);
             });
         };

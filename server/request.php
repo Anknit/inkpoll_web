@@ -11,6 +11,7 @@ require_once __DIR__.'/pollCategories.php';
 require_once __DIR__.'/pollReader.php';
 require_once __DIR__.'/voteCaster.php';
 require_once __DIR__.'/pollMetaData.php';
+require_once __DIR__.'/profileMgr.php';
     if(isset($_REQUEST['request'])) {
         $req = trim($_REQUEST['request']);
         if(validateRequest($req)){
@@ -124,6 +125,10 @@ function serveRequest ($request, $data = array()){
         case 'userdata':
             $reqHandler = new AuthMgr();
             return $reqHandler->getUserData();
+            break;
+        case 'getUserProfileData':
+            $reqHandler = new ProfileMgr();
+            return $reqHandler->getProfileData();
             break;
         default:
             break;
