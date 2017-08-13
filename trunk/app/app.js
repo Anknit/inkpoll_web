@@ -10,7 +10,8 @@
     function appConfig($httpProvider, $routeProvider, $locationProvider) {
         $routeProvider.when("/", {
             templateUrl: 'views/home.html',
-            controller: 'home'
+            controller: 'home',
+            controllerAs: 'Home'
         }).when("/categories", {
             templateUrl: 'views/category-home.html',
             controller: 'categoryHome',
@@ -40,6 +41,11 @@
             isAuth: true,
             controller: 'userCtrl',
             controllerAs: 'User'
+        }).when("/activity/:id/:name", {
+            templateUrl: 'views/user-activity.html',
+            isAuth: true,
+            controller: 'activityCtrl',
+            controllerAs: 'Activity'
         }).otherwise({
             redirectTo: '/'
         });

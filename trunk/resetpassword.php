@@ -1,12 +1,12 @@
 <?php
+require_once __DIR__.'/config.php';
 ?>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible">
-    <title>Inkpoll</title>
-    <base href="/feeddasm/" />
+    <title>Reset Password | Inkpoll</title>
+    <base href="<?php echo base_href; ?>" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet">
@@ -69,6 +69,15 @@
             </div>
         </div>
         <div class="col-xs-12 col-md-4 side-banner-container">
+            <div class="row" style="margin:0px;" data-ng-hide="hideAboutDesc" data-ng-cloak>
+                <div class="fb-video" data-controls="false" data-href="https://www.facebook.com/inkpoll/videos/1379191825521488/" data-width="500" data-show-text="false">
+                    <blockquote cite="https://www.facebook.com/inkpoll/videos/1379191825521488/" class="fb-xfbml-parse-ignore">
+                        <a href="https://www.facebook.com/inkpoll/videos/1379191825521488/" style="display:none;">About Inkpoll</a>
+                        <p>
+                        </p>
+                        <a href="https://www.facebook.com/inkpoll/" style="display:none;">Inkpoll</a></blockquote>
+                </div>
+            </div>
             <div class="row" style="margin:0px;">
                 <div class="col-xs-12 side-banner-section">
                     <h4>Connect with Inkpoll</h4>

@@ -4,6 +4,7 @@
         .controller('headerCtrl', headerCtrl)
         .controller('categoryHome', categoryHome)
         .controller('userCtrl', userCtrl)
+        .controller('activityCtrl', activityCtrl)
         .controller('pollPage', pollPage)
         .controller('categoryPolls', categoryPolls)
         .controller('creator', creator)
@@ -13,7 +14,12 @@
 
     function home() {
         var scope = this;
-
+        this.sortOrder = 'trending';
+        this.pollSort = function (order) {
+            if (scope.sortOrder != order) {
+                scope.sortOrder = order;
+            }
+        };
     }
 
     pollPage.$inject = ['$routeParams'];
@@ -24,9 +30,52 @@
         this.pollName = $routeParams.name;
     }
 
-    userCtrl.$inject = ['$routeParams', 'pollReader', 'fbAuthService', 'googleAuthService', '$rootScope'];
+    userCtrl.$inject = ['$routeParams', '$rootScope', '$location', 'UserProfileService'];
 
-    function userCtrl($routeParams, pollReader, fbAuthService, googleAuthService, $rootScope) {
+    function userCtrl($routeParams, $rootScope, $location, UserProfileService) {
+        var scope = this;
+        this.current = {};
+        this.current.id = $routeParams.id;
+        if (this.current.id != $rootScope.user.id) {
+            $location.path('/');
+        }
+        this.Profile = {
+            emailExist: false
+        };
+        UserProfileService.getProfileData().then(function(response){
+            if(response.status){
+                var data = response.data;
+                scope.Profile.Name = data.profileData.name;
+                scope.Profile.Email = data.profileData.email;
+                scope.Profile.Age = data.profileData.age;
+                scope.Profile.Gender = data.profileData.gender;
+                scope.Profile.Country = data.profileData.country;
+                if(data.profileData.email != '') {
+                    scope.Profile.emailExist = true;
+                }
+            } else {
+                console.log(response.error);
+            }
+        });
+/*
+        this.usernameRegex = '\\w+$';
+*/
+        this.submitProfile = function (isValid) {
+            if(isValid) {
+                UserProfileService.updateProfileData(scope.Profile).then(function(response){
+                    if(response.status) {
+                        alert('Profile updated successfully');
+                    } else {
+                        console.log(response.error);
+                    }
+                });
+            }
+        };
+    }
+
+    activityCtrl.$inject = ['$routeParams', 'pollReader', '$rootScope'];
+
+    function activityCtrl($routeParams, pollReader, $rootScope) {
         var scope = this;
         this.current = {};
         this.current.id = $routeParams.id;
@@ -35,7 +84,7 @@
             order: 'newest',
             page: 1,
             totalPages: 1,
-            showLoading:true,
+            showLoading: true,
             list: []
         }
         this.currentVotes = {
@@ -43,7 +92,7 @@
             order: 'newest',
             page: 1,
             totalPages: 1,
-            showLoading:true,
+            showLoading: true,
             list: []
         }
         this.currentFavs = {
@@ -51,7 +100,7 @@
             order: 'newest',
             page: 1,
             totalPages: 1,
-            showLoading:true,
+            showLoading: true,
             list: []
         }
         this.currentLiked = {
@@ -59,7 +108,7 @@
             order: 'newest',
             page: 1,
             totalPages: 1,
-            showLoading:true,
+            showLoading: true,
             list: []
         }
         this.currentDisliked = {
@@ -67,14 +116,9 @@
             order: 'newest',
             page: 1,
             totalPages: 1,
-            showLoading:true,
+            showLoading: true,
             list: []
-        }
-        this.logout = function () {
-            fbAuthService.logout();
-            googleAuthService.signout();
         };
-
         this.getCurrentPolls = function () {
             this.currentPolls.showLoading = true;
             pollReader.getUserPolls(this.current.id, this.currentPolls.page, this.currentPolls.order).then(function (response) {
@@ -145,12 +189,12 @@
         this.getCurrentFavs();
         this.getCurrentLiked();
         this.getCurrentDisliked();
-        this.deletePoll = function(pollItem, index) {
+        this.deletePoll = function (pollItem, index) {
             var pollIndex = index;
-            if(scope.current.id == $rootScope.user.id) {
-                pollReader.deletePoll(pollItem).then(function(response){
-                    if(response.status) {
-                        scope.currentPolls.list.splice(pollIndex,1);
+            if (scope.current.id == $rootScope.user.id) {
+                pollReader.deletePoll(pollItem).then(function (response) {
+                    if (response.status) {
+                        scope.currentPolls.list.splice(pollIndex, 1);
                         scope.currentPolls.totalPolls--;
                     } else {
                         console.log(response.error);
@@ -169,22 +213,22 @@
         this.authvars = {
             login: {
                 email: '',
-                password:'',
-                remember:true
+                password: '',
+                remember: true
             },
             signup: {
-                email:''
+                email: ''
             },
             forgot: {
-                email:''
+                email: ''
             }
         };
         this.authaction = {
-            login: function() {
-                if(scope.authvars.login.email.trim() != '' && scope.authvars.login.password.trim()) {
-                    emailAuthService.login(scope.authvars.login.email.trim(),scope.authvars.login.password.trim(),scope.authvars.login.remember).then(function(response){
-                        if(response.status) {
-                            if($rootScope.redirectUrl != '') {
+            login: function () {
+                if (scope.authvars.login.email.trim() != '' && scope.authvars.login.password.trim()) {
+                    emailAuthService.login(scope.authvars.login.email.trim(), scope.authvars.login.password.trim(), scope.authvars.login.remember).then(function (response) {
+                        if (response.status) {
+                            if ($rootScope.redirectUrl != '') {
                                 location.href = $rootScope.redirectUrl;
                             } else {
                                 location.reload();
@@ -197,10 +241,10 @@
                     alert('Please enter valid login credentials');
                 }
             },
-            forgotpswd: function(){
-                if(scope.authvars.forgot.email.trim() != '') {
-                    emailAuthService.forgotpswd(scope.authvars.forgot.email.trim()).then(function(response){
-                        if(response.status) {
+            forgotpswd: function () {
+                if (scope.authvars.forgot.email.trim() != '') {
+                    emailAuthService.forgotpswd(scope.authvars.forgot.email.trim()).then(function (response) {
+                        if (response.status) {
                             alert('Check your email address for password reset instructions');
                         } else {
                             alert(response.error);
@@ -210,10 +254,10 @@
                     alert('Please enter valid email address');
                 }
             },
-            signup: function() {
-                if(scope.authvars.signup.email.trim() != '') {
-                    emailAuthService.signup(scope.authvars.signup.email.trim()).then(function(response){
-                        if(response.status) {
+            signup: function () {
+                if (scope.authvars.signup.email.trim() != '') {
+                    emailAuthService.signup(scope.authvars.signup.email.trim()).then(function (response) {
+                        if (response.status) {
                             alert('Check your email address for account activation link');
                         } else {
                             alert(response.error);
@@ -238,9 +282,9 @@
             googleAuthService.signout();
             emailAuthService.logout();
         };
-        $rootScope.$on('userloggedin',function(){
+        $rootScope.$on('userloggedin', function () {
             jQuery('#auth-modal').modal('hide');
-            if($('#main-navbar')){
+            if ($('#main-navbar')) {
                 $('#main-navbar').collapse('hide');
             }
         });
@@ -286,9 +330,9 @@
                 alert('Enter poll question');
                 return false;
             }
-            if(scope.pollimageurl != '') {
+            if (scope.pollimageurl != '') {
                 scope.poll.pollImage = true;
-                if(scope.pollimageurlinput && scope.pollimageurlinput != '') {
+                if (scope.pollimageurlinput && scope.pollimageurlinput != '') {
                     scope.poll.pollType = 'url';
                 } else {
                     scope.poll.pollType = 'upload';
@@ -314,7 +358,7 @@
             angular.element("input[type='file']").val(null);
         };
         this.attachImageUrl = function () {
-            if(checkURL(scope.pollimageurlinput)) {
+            if (checkURL(scope.pollimageurlinput)) {
                 scope.pollimageurl = scope.pollimageurlinput;
             } else {
                 alert('Enter valid image file path');
@@ -507,13 +551,13 @@
                 }
             });
         };
-        this.deleteComment = function(item, comment, index) {
+        this.deleteComment = function (item, comment, index) {
             var commIndex = index,
                 pollitem = item;
-            if(comment.userid == $scope.$parent.user.id) {
-                pollMetaData.deleteComment(comment).then(function(response){
-                    if(response.status) {
-                        pollitem.comments.splice(commIndex,1);
+            if (comment.userid == $scope.$parent.user.id) {
+                pollMetaData.deleteComment(comment).then(function (response) {
+                    if (response.status) {
+                        pollitem.comments.splice(commIndex, 1);
                     } else {
                         console.log(response.error);
                     }

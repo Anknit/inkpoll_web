@@ -138,6 +138,21 @@ nav.navbar-theme .navbar-brand:focus {
     text-decoration: none;
 }
 
+.home-poll-type-container .btn+.btn {
+    margin-left: 15px;
+}
+
+.btn-material,.btn-material:focus,.btn-material:hover {
+    border-radius: 0px;
+    box-shadow: 0px 2px 3px #ccc;
+    border:none;
+    outline:none;
+}
+
+.btn-material.btn-material-active {
+    background: #00b0ff;
+    color: #fff;
+}
 .content-container h4 {
     text-decoration: underline;
 }
