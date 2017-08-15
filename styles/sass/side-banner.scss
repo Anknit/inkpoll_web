@@ -1,0 +1,8 @@
+.side-banner-section {
+    background: $white;
+    @include box-shadow(false, 0px, 0px, 2px, 0px, $gray);
+    .side-banner-container {
+        position: sticky;
+        top: 60px;
+    }
+}

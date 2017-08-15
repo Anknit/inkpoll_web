@@ -1,0 +1,48 @@
+.menu-link{
+  color: $white;
+  @include transition(color linear 0.25s);
+  &:hover{
+    color:$theme-color;
+  }
+  &.active{
+    background: $black;
+    color:$theme-color;
+    text-decoration: none;
+  }
+}
+.store-icon {
+    height: 60px;
+    background-position: center;
+    display: block;
+    width: 100%;
+    background-repeat: no-repeat;
+    background-size: contain;
+    &.google-store{
+      background-image: url('./../images/google-play-badge.png');
+    }
+    &.apple-store{
+      background-image: url('./../images/apple-app-store.svg');
+    }
+}
+
+.inline-btn-link {
+    padding: 0px;
+    margin-right: 15px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    .like-action-btn {
+        color: $gray;
+        &:hover{
+          color:$lightgray;
+        }
+    }
+    &:hover{
+      text-decoration: none;
+    }
+}
+.no-outline{
+  outline:none;
+  &:focus, &:hover{
+    @extend .no-outline;
+  }
+}

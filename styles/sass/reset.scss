@@ -1,0 +1,13 @@
+*{
+  box-sizing: border-box;
+}
+body {
+    font-family: 'Lato', 'Arial', sans-serif;
+    background-color: $offwhite;
+}
+a{
+  text-decoration: none;
+  &:hover{
+    text-decoration: none;
+  }
+}

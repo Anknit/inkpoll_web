@@ -1,0 +1,39 @@
+nav{
+  &.navbar-theme{
+    background-color: $offblack;
+    border: none;
+    .btn-link{
+      color:$white;
+      &:hover{
+        text-decoration: none;
+      }
+    }
+    .navbar-nav{
+      & >li {
+        & >a{
+          @extend .menu-link;
+        }
+      }
+    }
+    .navbar-brand{
+      color:$white;
+      .brand-image{
+        height: $brand-img-h;
+      }
+    }
+    .navbar-toggle{
+      background: $theme-color;
+      &:hover, &:focus{
+        @extend .navbar-toggle;
+      }
+    }
+  }
+}
+.cat-list-banner {
+    overflow-x: auto;
+    white-space: nowrap;
+    background: $offblack;
+    position: fixed;
+    top: 50px;
+    z-index: 10;
+}
