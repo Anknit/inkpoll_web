@@ -20,12 +20,11 @@
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
             <link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
             <link href="https://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet">
-            <link type="text/css" rel="stylesheet" href="styles/style.css" />
-            <link type="text/css" rel="stylesheet" href="styles/polllist.css" />
+            <link type="text/css" rel="stylesheet" href="styles/app.css" />
             <link rel="icon" href="images/favicon.ico" />
     </head>
 
-    <body class="container-fluid">
+    <body class="container-fluid m-t-all-6 m-t-xs-10">
         <header class="row" data-ng-controller="headerCtrl as head">
             <nav class="navbar navbar-inverse navbar-fixed-top navbar-theme">
                 <div class="container-fluid">
@@ -37,14 +36,14 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                        <a class="navbar-brand" href="./" target="_self">
+                        <a class="navbar-brand p-t-all-1" href="./" target="_self">
                             <img class="brand-image" alt="Inkpoll" src="images/logo-v2-120.png" />
                         </a>
                     </div>
                     <div class="collapse navbar-collapse" id="main-navbar">
                         <ul class="nav navbar-nav hidden-xs cat-nav-bar">
                             <li data-ng-repeat="item in head.pollCatArr">
-                                <a data-ng-href="{{'polls/' + item.catName}}" data-ng-bind="item.catName" data-ng-class="{'active':activeCat == item.catName}"></a>
+                                <a class="menu-link" data-ng-href="{{'polls/' + item.catName}}" data-ng-bind="item.catName" data-ng-class="{'active':activeCat == item.catName}"></a>
                             </li>
                             <!--
                         <li><a href="./">Home</a></li>
@@ -82,10 +81,10 @@
                 <!-- /.navbar-collapse -->
                 <!-- /.container-fluid -->
             </nav>
-            <div class="visible-xs col-xs-12 cat-list-banner">
+            <div class="visible-xs col-xs-12 cat-list-banner p-t-all-2 m-b-all-1">
                 <ul class="list-inline">
                     <li data-ng-repeat="item in head.pollCatArr">
-                        <a data-ng-href="{{'polls/' + item.catName}}" data-ng-bind="item.catName" data-ng-class="{'active':activeCat == item.catName}"></a>
+                        <a class="menu-link" data-ng-href="{{'polls/' + item.catName}}" data-ng-bind="item.catName" data-ng-class="{'active':activeCat == item.catName}"></a>
                     </li>
                 </ul>
             </div>
@@ -211,7 +210,7 @@
             </div>
             <div class="col-xs-12 col-md-4">
                 <div class="row" style="margin:0px;" data-ng-hide="hideAboutDesc" data-ng-cloak>
-                    <div class="col-xs-12 side-banner-section">
+                    <div class="col-xs-12 side-banner-section m-b-all-2">
                         <div class="fb-video" data-controls="false" data-href="https://www.facebook.com/inkpoll/videos/1379191825521488/" data-width="500" data-show-text="false">
                             <blockquote cite="https://www.facebook.com/inkpoll/videos/1379191825521488/" class="fb-xfbml-parse-ignore">
                                 <a href="https://www.facebook.com/inkpoll/videos/1379191825521488/" style="display:none;">About Inkpoll</a>
@@ -225,7 +224,7 @@
             </div>
             <div class="col-xs-12 col-md-4 side-banner-container">
                 <div class="row" style="margin:0px;" data-ng-hide="hideAboutDesc" data-ng-cloak>
-                    <div class="col-xs-12 side-banner-section">
+                    <div class="col-xs-12 side-banner-section m-b-all-2">
                         <p class="home-description text-justified">
                             Inkpoll is a community-powered platform, where you can vote for interesting polls or can create a poll and share it with your friends.
                         </p>
@@ -236,7 +235,7 @@
                     </div>
                 </div>
                 <div class="row" style="margin:0px;">
-                    <div class="col-xs-12 side-banner-section">
+                    <div class="col-xs-12 side-banner-section m-b-all-2">
                         <h4>Connect with Inkpoll</h4>
                         <div class="fb-page" data-href="https://www.facebook.com/inkpoll" data-width="500" data-height="250" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true"></div>
                     </div>

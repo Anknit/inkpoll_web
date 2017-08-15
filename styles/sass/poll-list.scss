@@ -1,0 +1,95 @@
+.poll-item {
+  background: $white;
+  @include box-shadow(false, 0px, 0px, 2px, 0px, $gray);
+  .poll-item-question {
+    padding: 10px 15px;
+    border-bottom: 1px solid $gray;
+  }
+  .poll-item-option-container {
+    .poll-item-option {
+      border-bottom: 1px solid $gray;
+      .radio{
+        margin:0px;
+        padding: 0px;
+        label {
+          width: 100%;
+          @include transition(background linear 0.5s);
+          padding: 10px 15px;
+          &:hover{
+            background: $offwhite;
+          }
+          &.selected{
+            color: $theme-color;
+            &:after{
+              content: '\2714';
+            }
+          }
+        }
+        input[type=radio] {
+          opacity: 0;
+          width: 0px;
+          height: 0px;
+          margin: 0px;
+        }
+      }
+    }
+  }
+  .poll-item-credits {
+    padding: 10px 15px;
+  }
+  .poll-item-share {
+    @extend .poll-item-credits;
+  }
+  .poll-item-meta{
+    .btn-link{
+      color: $lightgray;
+      &:hover{
+        color: $offblack;
+      }
+      &.active{
+        .glyphicon{
+          color: $theme-color;
+        }
+      }
+    }
+  }
+  .comment-input-container {
+    border: 1px solid $gray;
+    padding: 5px;
+    textarea{
+      outline: none;
+      border: none;
+      resize: none;
+      box-shadow: none;
+      padding: 0px;
+      &:focus{
+        outline: none;
+        box-shadow: none;
+        &~.post-button{
+          display: block;
+        }
+      }
+    }
+    .post-button {
+      display: none;
+      .btn {
+        padding: 3px 15px;
+      }
+      &:focus, &:active{
+        display: block;
+      }
+    }
+  }
+  .poll-item-share-img{
+    height:30px;
+  }
+  .poll-image-container {
+    max-height: 250px;
+    height:250px;
+    text-align: center;
+    img {
+      height: 100%;
+      max-width: 100%;
+    }
+  }
+}

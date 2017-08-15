@@ -1,0 +1,132 @@
+@mixin respond-to($breakpoint){
+	/* Extra small devices (phones, less than 768px) */
+	@if $breakpoint ==	all {
+		@content;
+	}
+	/* Extra small devices (phones, less than 768px) */
+	@else if $breakpoint ==	extra-small {
+ 		@media (max-width: 767px) {
+			@content;
+		}
+	}
+	/* Small devices (ipad,tablets, 768px and up) */
+	@else if $breakpoint == small {
+ 		@media (min-width: 768px) and (max-width:991px){
+			@content;
+	 	}
+	}
+	/* Medium devices (desktops, 992px and up) */
+	@else if $breakpoint == medium {
+	 	@media (min-width: 992px) and (max-width:1199px){
+			@content;
+	 	}
+	}
+	/* Large devices (large desktops, 1200px and up) */
+	@else if $breakpoint == large {
+		@media (min-width: 1200px) {
+	 		@content;
+ 		}
+	}
+}
+
+/* For BOX SHADOW */
+@mixin box-shadow($inset, $offsetX, $offsetY, $blur, $spread, $color) {
+  @if $inset {
+    -webkit-box-shadow: inset $offsetX $offsetY $blur $spread $color;
+    -moz-box-shadow: inset $offsetX $offsetY $blur $spread $color;
+    box-shadow:inset $offsetX $offsetY $blur $spread $color;
+  } @else {
+    -webkit-box-shadow: $offsetX $offsetY $blur $spread $color;
+    -moz-box-shadow: $offsetX $offsetY $blur $spread $color;
+    box-shadow: $offsetX $offsetY $blur $spread $color;
+  }
+}
+
+/* Text tranform to uppercase and add letter spacing*/
+@mixin uppercase-letter-spacing{
+	text-transform: uppercase;
+	letter-spacing: 1px;
+}
+
+/* Use to style links*/
+@mixin style-link($base-color, $darken:false){
+	color: $base-color;
+	@include transition(color 0.4s ease);
+	&:hover{
+		@if $darken{
+			color: darken($base-color, 15%);
+		}@else{
+			color: lighten($base-color, 15%);
+		}
+	}
+}
+
+// generic transition
+@mixin transition($transition...) {
+    -moz-transition:    $transition;
+    -o-transition:      $transition;
+    -webkit-transition: $transition;
+    transition:         $transition;
+}
+//set property
+@mixin transition-property($property...) {
+    -moz-transition-property:    $property;
+    -o-transition-property:      $property;
+    -webkit-transition-property: $property;
+    transition-property:         $property;
+}
+//set duration
+@mixin transition-duration($duration...) {
+    -moz-transition-property:    $duration;
+    -o-transition-property:      $duration;
+    -webkit-transition-property: $duration;
+    transition-property:         $duration;
+}
+//set timing
+@mixin transition-timing-function($timing...) {
+    -moz-transition-timing-function:    $timing;
+    -o-transition-timing-function:      $timing;
+    -webkit-transition-timing-function: $timing;
+    transition-timing-function:         $timing;
+}
+//set delay
+@mixin transition-delay($delay...) {
+    -moz-transition-delay:    $delay;
+    -o-transition-delay:      $delay;
+    -webkit-transition-delay: $delay;
+    transition-delay:         $delay;
+}
+
+// generic transform
+@mixin transform($transforms) {
+	   -moz-transform: $transforms;
+	     -o-transform: $transforms;
+	    -ms-transform: $transforms;
+	-webkit-transform: $transforms;
+          transform: $transforms;
+}
+// rotate
+@mixin rotate ($deg) {
+  @include transform(rotate(#{$deg}deg));
+}
+
+// scale
+@mixin scale($scale) {
+	 @include transform(scale($scale));
+}
+// translate
+@mixin translate ($x, $y) {
+   @include transform(translate($x, $y));
+}
+// skew
+@mixin skew ($x, $y) {
+   @include transform(skew(#{$x}deg, #{$y}deg));
+}
+//transform origin
+@mixin transform-origin ($origin) {
+  moz-transform-origin: $origin;
+ 	-o-transform-origin: $origin;
+  -ms-transform-origin: $origin;
+	-webkit-transform-origin: $origin;
+  transform-origin: $origin;
+}

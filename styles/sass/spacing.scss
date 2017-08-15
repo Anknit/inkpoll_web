@@ -1,0 +1,14 @@
+$screens: (all:all, xs:extra-small, sm:small, md:medium, lg:large);
+$unitSpace:5;
+@each $size,$identifier in $screens {
+  @include respond-to($identifier ) {
+    @for $i from 0 through 10{
+      .m-t-#{$size}-#{$i}{margin-top: $i * $unitSpace * 2;}
+      .m-b-#{$size}-#{$i}{margin-bottom: $i * $unitSpace * 2;}
+      .p-t-#{$size}-#{$i}{padding-top: $i * $unitSpace;}
+      .p-b-#{$size}-#{$i}{padding-bottom: $i * $unitSpace;}
+      .p-l-#{$size}-#{$i}{padding-left: $i * $unitSpace;}
+      .p-r-#{$size}-#{$i}{padding-right: $i * $unitSpace;}
+    }
+  }
+}
