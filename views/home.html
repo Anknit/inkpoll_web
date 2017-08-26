@@ -1,15 +1,28 @@
-<div class="container-fluid">
+<div>
+  <site-header show-categories="true"></site-header>
+  <div class="container-fluid">
     <div class="row">
-        <div class="col-xs-12 bg-default">
-            <div class="home-poll-type-container form-group">
-                <button class="btn btn-material btn-default" data-ng-class="{'btn-material-active': Home.sortOrder == 'trending'}" data-ng-click="Home.pollSort('trending');">
-                    <span class="glyphicon glyphicon-fire"></span>&nbsp;Trending
-                </button>
-                <button class="btn btn-material btn-default" data-ng-class="{'btn-material-active': Home.sortOrder == 'newest'}" data-ng-click="Home.pollSort('newest');">
-                    <span class="glyphicon glyphicon-time"></span>&nbsp;Newest
-                </button>
-            </div>
-            <poll-list data-type="home" data-cat="all"></poll-list>
+      <div class="col-xs-12 col-sm-8">
+        <poll-list data-type="home" data-cat="all"></poll-list>
+      </div>
+      <div class="col-sm-4 hidden-xs">
+        <h1>
+          Inkpoll is a community-powered platform, where you can vote for interesting polls or can create a poll and share it with your friends.
+        </h1>
+        <h2>
+          Have something interesting to ask, create your own poll in seconds.
+        </h2>
+        <a auth-user-only class="btn btn-success text-center" href="pollcreater">Create Poll</a>
+        <div>
+          <ip-fb-video url="'https://www.facebook.com/inkpoll/videos/1379191825521488/'"></ip-fb-video>
         </div>
+        <div>
+          <ip-social-connect></ip-social-connect>
+        </div>
+        <div>
+          <ip-inline-footer></ip-inline-footer>
+        </div>
+      </div>
     </div>
+  </div>
 </div>

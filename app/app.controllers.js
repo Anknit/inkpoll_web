@@ -1,569 +1,569 @@
 (function () {
-    angular.module('app')
-        .controller('home', home)
-        .controller('headerCtrl', headerCtrl)
-        .controller('categoryHome', categoryHome)
-        .controller('userCtrl', userCtrl)
-        .controller('activityCtrl', activityCtrl)
-        .controller('pollPage', pollPage)
-        .controller('categoryPolls', categoryPolls)
-        .controller('creator', creator)
-        .controller('polllist', polllist);
+  angular.module('app')
+  .controller('home', home)
+  // .controller('headerCtrl', headerCtrl)
+  .controller('categoryHome', categoryHome)
+  .controller('userCtrl', userCtrl)
+  .controller('activityCtrl', activityCtrl)
+  .controller('pollPage', pollPage)
+  .controller('categoryPolls', categoryPolls)
+  .controller('creator', creator)
+  .controller('polllist', polllist);
 
-    home.$inject = [];
+  home.$inject = [];
 
-    function home() {
-        var scope = this;
-        this.sortOrder = 'trending';
-        this.pollSort = function (order) {
-            if (scope.sortOrder != order) {
-                scope.sortOrder = order;
-            }
-        };
+  function home() {
+    var scope = this;
+    this.sortOrder = 'trending';
+    this.pollSort = function (order) {
+      if (scope.sortOrder != order) {
+        scope.sortOrder = order;
+      }
+    };
+  }
+
+  pollPage.$inject = ['$routeParams'];
+
+  function pollPage($routeParams) {
+    var scope = this;
+    this.pollId = $routeParams.id;
+    this.pollName = $routeParams.name;
+  }
+
+  userCtrl.$inject = ['$routeParams', '$rootScope', '$location', 'UserProfileService'];
+
+  function userCtrl($routeParams, $rootScope, $location, UserProfileService) {
+    var scope = this;
+    this.current = {};
+    this.current.id = $routeParams.id;
+    if (this.current.id != $rootScope.user.id) {
+      $location.path('/');
     }
-
-    pollPage.$inject = ['$routeParams'];
-
-    function pollPage($routeParams) {
-        var scope = this;
-        this.pollId = $routeParams.id;
-        this.pollName = $routeParams.name;
-    }
-
-    userCtrl.$inject = ['$routeParams', '$rootScope', '$location', 'UserProfileService'];
-
-    function userCtrl($routeParams, $rootScope, $location, UserProfileService) {
-        var scope = this;
-        this.current = {};
-        this.current.id = $routeParams.id;
-        if (this.current.id != $rootScope.user.id) {
-            $location.path('/');
+    this.Profile = {
+      emailExist: false
+    };
+    UserProfileService.getProfileData().then(function(response){
+      if(response.status){
+        var data = response.data;
+        scope.Profile.Name = data.profileData.name;
+        scope.Profile.Email = data.profileData.email;
+        scope.Profile.Age = data.profileData.age;
+        scope.Profile.Gender = data.profileData.gender;
+        scope.Profile.Country = data.profileData.country;
+        if(data.profileData.email != '') {
+          scope.Profile.emailExist = true;
         }
-        this.Profile = {
-            emailExist: false
-        };
-        UserProfileService.getProfileData().then(function(response){
-            if(response.status){
-                var data = response.data;
-                scope.Profile.Name = data.profileData.name;
-                scope.Profile.Email = data.profileData.email;
-                scope.Profile.Age = data.profileData.age;
-                scope.Profile.Gender = data.profileData.gender;
-                scope.Profile.Country = data.profileData.country;
-                if(data.profileData.email != '') {
-                    scope.Profile.emailExist = true;
-                }
-            } else {
-                console.log(response.error);
-            }
+      } else {
+        console.log(response.error);
+      }
+    });
+    /*
+    this.usernameRegex = '\\w+$';
+    */
+    this.submitProfile = function (isValid) {
+      if(isValid) {
+        UserProfileService.updateProfileData(scope.Profile).then(function(response){
+          if(response.status) {
+            alert('Profile updated successfully');
+          } else {
+            console.log(response.error);
+          }
         });
-/*
-        this.usernameRegex = '\\w+$';
-*/
-        this.submitProfile = function (isValid) {
-            if(isValid) {
-                UserProfileService.updateProfileData(scope.Profile).then(function(response){
-                    if(response.status) {
-                        alert('Profile updated successfully');
-                    } else {
-                        console.log(response.error);
-                    }
-                });
-            }
-        };
+      }
+    };
+  }
+
+  activityCtrl.$inject = ['$routeParams', 'pollReader', '$rootScope'];
+
+  function activityCtrl($routeParams, pollReader, $rootScope) {
+    var scope = this;
+    this.current = {};
+    this.current.id = $routeParams.id;
+    this.currentPolls = {
+      totalPolls: 0,
+      order: 'newest',
+      page: 1,
+      totalPages: 1,
+      showLoading: true,
+      list: []
     }
-
-    activityCtrl.$inject = ['$routeParams', 'pollReader', '$rootScope'];
-
-    function activityCtrl($routeParams, pollReader, $rootScope) {
-        var scope = this;
-        this.current = {};
-        this.current.id = $routeParams.id;
-        this.currentPolls = {
-            totalPolls: 0,
-            order: 'newest',
-            page: 1,
-            totalPages: 1,
-            showLoading: true,
-            list: []
-        }
-        this.currentVotes = {
-            totalVotes: 0,
-            order: 'newest',
-            page: 1,
-            totalPages: 1,
-            showLoading: true,
-            list: []
-        }
-        this.currentFavs = {
-            totalFavs: 0,
-            order: 'newest',
-            page: 1,
-            totalPages: 1,
-            showLoading: true,
-            list: []
-        }
-        this.currentLiked = {
-            totalLiked: 0,
-            order: 'newest',
-            page: 1,
-            totalPages: 1,
-            showLoading: true,
-            list: []
-        }
-        this.currentDisliked = {
-            totalDisliked: 0,
-            order: 'newest',
-            page: 1,
-            totalPages: 1,
-            showLoading: true,
-            list: []
-        };
-        this.getCurrentPolls = function () {
-            this.currentPolls.showLoading = true;
-            pollReader.getUserPolls(this.current.id, this.currentPolls.page, this.currentPolls.order).then(function (response) {
-                scope.currentPolls.showLoading = false;
-                if (response.status) {
-                    scope.currentPolls.totalPolls = response.data.totalPolls;
-                    scope.currentPolls.totalPages = response.data.totalPages;
-                    scope.currentPolls.list = response.data.polllist;
-                } else {
-                    console.log(response.error);
-                }
-            });
-        };
-        this.getCurrentVotes = function () {
-            this.currentVotes.showLoading = true;
-            pollReader.getUserVotePolls(this.current.id, this.currentVotes.page, this.currentVotes.order).then(function (response) {
-                scope.currentVotes.showLoading = false;
-                if (response.status) {
-                    scope.currentVotes.totalVotes = response.data.totalVotes;
-                    scope.currentVotes.totalPages = response.data.totalPages;
-                    scope.currentVotes.list = response.data.polllist;
-                } else {
-                    console.log(response.error);
-                }
-            });
-        };
-        this.getCurrentFavs = function () {
-            this.currentFavs.showLoading = true;
-            pollReader.getUserFavPolls(this.current.id, this.currentFavs.page, this.currentFavs.order).then(function (response) {
-                scope.currentFavs.showLoading = false;
-                if (response.status) {
-                    scope.currentFavs.totalFavs = response.data.totalFavs;
-                    scope.currentFavs.totalPages = response.data.totalPages;
-                    scope.currentFavs.list = response.data.polllist;
-                } else {
-                    console.log(response.error);
-                }
-            });
-        };
-        this.getCurrentLiked = function () {
-            this.currentLiked.showLoading = true;
-            pollReader.getUserLikedPolls(this.current.id, this.currentLiked.page, this.currentLiked.order).then(function (response) {
-                scope.currentLiked.showLoading = false;
-                if (response.status) {
-                    scope.currentLiked.totalLiked = response.data.totalLiked;
-                    scope.currentLiked.totalPages = response.data.totalPages;
-                    scope.currentLiked.list = response.data.polllist;
-                } else {
-                    console.log(response.error);
-                }
-            });
-        };
-        this.getCurrentDisliked = function () {
-            this.currentDisliked.showLoading = true;
-            pollReader.getUserDislikedPolls(this.current.id, this.currentDisliked.page, this.currentDisliked.order).then(function (response) {
-                scope.currentDisliked.showLoading = false;
-                if (response.status) {
-                    scope.currentDisliked.totalDisliked = response.data.totalDisliked;
-                    scope.currentDisliked.totalPages = response.data.totalPages;
-                    scope.currentDisliked.list = response.data.polllist;
-                } else {
-                    console.log(response.error);
-                }
-            });
-        };
-        this.getCurrentPolls();
-        this.getCurrentVotes();
-        this.getCurrentFavs();
-        this.getCurrentLiked();
-        this.getCurrentDisliked();
-        this.deletePoll = function (pollItem, index) {
-            var pollIndex = index;
-            if (scope.current.id == $rootScope.user.id) {
-                pollReader.deletePoll(pollItem).then(function (response) {
-                    if (response.status) {
-                        scope.currentPolls.list.splice(pollIndex, 1);
-                        scope.currentPolls.totalPolls--;
-                    } else {
-                        console.log(response.error);
-                    }
-                });
-            }
-        };
+    this.currentVotes = {
+      totalVotes: 0,
+      order: 'newest',
+      page: 1,
+      totalPages: 1,
+      showLoading: true,
+      list: []
     }
+    this.currentFavs = {
+      totalFavs: 0,
+      order: 'newest',
+      page: 1,
+      totalPages: 1,
+      showLoading: true,
+      list: []
+    }
+    this.currentLiked = {
+      totalLiked: 0,
+      order: 'newest',
+      page: 1,
+      totalPages: 1,
+      showLoading: true,
+      list: []
+    }
+    this.currentDisliked = {
+      totalDisliked: 0,
+      order: 'newest',
+      page: 1,
+      totalPages: 1,
+      showLoading: true,
+      list: []
+    };
+    this.getCurrentPolls = function () {
+      this.currentPolls.showLoading = true;
+      pollReader.getUserPolls(this.current.id, this.currentPolls.page, this.currentPolls.order).then(function (response) {
+        scope.currentPolls.showLoading = false;
+        if (response.status) {
+          scope.currentPolls.totalPolls = response.data.totalPolls;
+          scope.currentPolls.totalPages = response.data.totalPages;
+          scope.currentPolls.list = response.data.polllist;
+        } else {
+          console.log(response.error);
+        }
+      });
+    };
+    this.getCurrentVotes = function () {
+      this.currentVotes.showLoading = true;
+      pollReader.getUserVotePolls(this.current.id, this.currentVotes.page, this.currentVotes.order).then(function (response) {
+        scope.currentVotes.showLoading = false;
+        if (response.status) {
+          scope.currentVotes.totalVotes = response.data.totalVotes;
+          scope.currentVotes.totalPages = response.data.totalPages;
+          scope.currentVotes.list = response.data.polllist;
+        } else {
+          console.log(response.error);
+        }
+      });
+    };
+    this.getCurrentFavs = function () {
+      this.currentFavs.showLoading = true;
+      pollReader.getUserFavPolls(this.current.id, this.currentFavs.page, this.currentFavs.order).then(function (response) {
+        scope.currentFavs.showLoading = false;
+        if (response.status) {
+          scope.currentFavs.totalFavs = response.data.totalFavs;
+          scope.currentFavs.totalPages = response.data.totalPages;
+          scope.currentFavs.list = response.data.polllist;
+        } else {
+          console.log(response.error);
+        }
+      });
+    };
+    this.getCurrentLiked = function () {
+      this.currentLiked.showLoading = true;
+      pollReader.getUserLikedPolls(this.current.id, this.currentLiked.page, this.currentLiked.order).then(function (response) {
+        scope.currentLiked.showLoading = false;
+        if (response.status) {
+          scope.currentLiked.totalLiked = response.data.totalLiked;
+          scope.currentLiked.totalPages = response.data.totalPages;
+          scope.currentLiked.list = response.data.polllist;
+        } else {
+          console.log(response.error);
+        }
+      });
+    };
+    this.getCurrentDisliked = function () {
+      this.currentDisliked.showLoading = true;
+      pollReader.getUserDislikedPolls(this.current.id, this.currentDisliked.page, this.currentDisliked.order).then(function (response) {
+        scope.currentDisliked.showLoading = false;
+        if (response.status) {
+          scope.currentDisliked.totalDisliked = response.data.totalDisliked;
+          scope.currentDisliked.totalPages = response.data.totalPages;
+          scope.currentDisliked.list = response.data.polllist;
+        } else {
+          console.log(response.error);
+        }
+      });
+    };
+    this.getCurrentPolls();
+    this.getCurrentVotes();
+    this.getCurrentFavs();
+    this.getCurrentLiked();
+    this.getCurrentDisliked();
+    this.deletePoll = function (pollItem, index) {
+      var pollIndex = index;
+      if (scope.current.id == $rootScope.user.id) {
+        pollReader.deletePoll(pollItem).then(function (response) {
+          if (response.status) {
+            scope.currentPolls.list.splice(pollIndex, 1);
+            scope.currentPolls.totalPolls--;
+          } else {
+            console.log(response.error);
+          }
+        });
+      }
+    };
+  }
 
-    headerCtrl.$inject = ['pollCategories', 'fbAuthService', 'googleAuthService', 'emailAuthService', '$rootScope'];
+  headerCtrl.$inject = ['pollCategories', 'fbAuthService', 'googleAuthService', 'emailAuthService', '$rootScope'];
 
-    function headerCtrl(pollCategories, fbAuthService, googleAuthService, emailAuthService, $rootScope) {
-        var scope = this;
-        this.pollCatArr = [];
-        this.authmode = 'login';
-        this.authvars = {
-            login: {
-                email: '',
-                password: '',
-                remember: true
-            },
-            signup: {
-                email: ''
-            },
-            forgot: {
-                email: ''
-            }
-        };
-        this.authaction = {
-            login: function () {
-                if (scope.authvars.login.email.trim() != '' && scope.authvars.login.password.trim()) {
-                    emailAuthService.login(scope.authvars.login.email.trim(), scope.authvars.login.password.trim(), scope.authvars.login.remember).then(function (response) {
-                        if (response.status) {
-                            if ($rootScope.redirectUrl != '') {
-                                location.href = $rootScope.redirectUrl;
-                            } else {
-                                location.reload();
-                            }
-                        } else {
-                            alert(response.error);
-                        }
-                    });
-                } else {
-                    alert('Please enter valid login credentials');
-                }
-            },
-            forgotpswd: function () {
-                if (scope.authvars.forgot.email.trim() != '') {
-                    emailAuthService.forgotpswd(scope.authvars.forgot.email.trim()).then(function (response) {
-                        if (response.status) {
-                            alert('Check your email address for password reset instructions');
-                        } else {
-                            alert(response.error);
-                        }
-                    });
-                } else {
-                    alert('Please enter valid email address');
-                }
-            },
-            signup: function () {
-                if (scope.authvars.signup.email.trim() != '') {
-                    emailAuthService.signup(scope.authvars.signup.email.trim()).then(function (response) {
-                        if (response.status) {
-                            alert('Check your email address for account activation link');
-                        } else {
-                            alert(response.error);
-                        }
-                    });
-                } else {
-                    alert('Please enter valid email address');
-                }
-            }
-        };
-        this.showAuthModal = function (mode) {
-            scope.authmode = mode;
-            jQuery('#auth-modal').modal('show');
-        };
-        pollCategories.getCategories().then(function (response) {
+  function headerCtrl(pollCategories, fbAuthService, googleAuthService, emailAuthService, $rootScope) {
+    var scope = this;
+    this.pollCatArr = [];
+    this.authmode = 'login';
+    this.authvars = {
+      login: {
+        email: '',
+        password: '',
+        remember: true
+      },
+      signup: {
+        email: ''
+      },
+      forgot: {
+        email: ''
+      }
+    };
+    this.authaction = {
+      login: function () {
+        if (scope.authvars.login.email.trim() != '' && scope.authvars.login.password.trim()) {
+          emailAuthService.login(scope.authvars.login.email.trim(), scope.authvars.login.password.trim(), scope.authvars.login.remember).then(function (response) {
             if (response.status) {
-                scope.pollCatArr = response.data;
-            }
-        });
-        this.logout = function () {
-            fbAuthService.logout();
-            googleAuthService.signout();
-            emailAuthService.logout();
-        };
-        $rootScope.$on('userloggedin', function () {
-            jQuery('#auth-modal').modal('hide');
-            if ($('#main-navbar')) {
-                $('#main-navbar').collapse('hide');
-            }
-        });
-    }
-
-    categoryPolls.$inject = ['$routeParams', '$rootScope'];
-
-    function categoryPolls($routeParams, $rootScope) {
-        var scope = this;
-        this.category = $routeParams.category;
-        $rootScope.activeCat = this.category;
-    }
-
-    categoryHome.$inject = ['pollCategories'];
-
-    function categoryHome(pollCategories) {
-        var scope = this;
-        this.catlist = [];
-        pollCategories.getCategories().then(function (response) {
-            if (response.status) {
-                scope.catlist = response.data;
-            }
-        });
-    }
-
-    creator.$inject = ['pollEditor', 'pollCategories', '$rootScope'];
-
-    function creator(pollEditor, pollCategories, $rootScope) {
-        var scope = this;
-        $rootScope.hideAboutDesc = true;
-        this.category = {};
-        this.pollimageurlinput = '';
-        resetPollEditor();
-        pollCategories.getCategories().then(function (response) {
-            if (response.status) {
-                scope.pollCatArr = response.data;
-                scope.category = scope.pollCatArr[0];
-            }
-        });
-        this.createpoll = function () {
-            scope.poll.category = scope.category.catId;
-            if (scope.poll.question.trim() == '') {
-                alert('Enter poll question');
-                return false;
-            }
-            if (scope.pollimageurl != '') {
-                scope.poll.pollImage = true;
-                if (scope.pollimageurlinput && scope.pollimageurlinput != '') {
-                    scope.poll.pollType = 'url';
-                } else {
-                    scope.poll.pollType = 'upload';
-                }
-                scope.poll.image = scope.pollimageurl;
-            }
-            for (var i = 0; i < scope.poll.optionArr.length; i++) {
-                if (scope.poll.optionArr[i].trim() == '') {
-                    alert('You have one or more empty option. Please remove them if not needed');
-                    return false;
-                }
-            }
-            pollEditor.addNewPoll(scope.poll).then(function (response) {
-                if (response.status) {
-                    alert('Success');
-                    resetPollEditor();
-                }
-            });
-        };
-        this.clearpollimage = function () {
-            scope.pollimageurl = '';
-            scope.pollimageurlinput = '';
-            angular.element("input[type='file']").val(null);
-        };
-        this.attachImageUrl = function () {
-            if (checkURL(scope.pollimageurlinput)) {
-                scope.pollimageurl = scope.pollimageurlinput;
+              if ($rootScope.redirectUrl != '') {
+                location.href = $rootScope.redirectUrl;
+              } else {
+                location.reload();
+              }
             } else {
-                alert('Enter valid image file path');
+              alert(response.error);
             }
-        };
-
-        function checkURL(url) {
-            return (url.match(/\.(jpeg|jpg|gif|png)$/) != null);
+          });
+        } else {
+          alert('Please enter valid login credentials');
         }
-        this.addoption = function () {
-            scope.poll.optionArr.push('');
-        };
-        this.moveoption = function (index, direction, event) {
-            var pos = index;
-            if (direction == 'down') {
-                pos++;
+      },
+      forgotpswd: function () {
+        if (scope.authvars.forgot.email.trim() != '') {
+          emailAuthService.forgotpswd(scope.authvars.forgot.email.trim()).then(function (response) {
+            if (response.status) {
+              alert('Check your email address for password reset instructions');
             } else {
-                pos--;
+              alert(response.error);
             }
-            scope.poll.optionArr.splice(pos, 0, scope.poll.optionArr.splice(index, 1)[0]);
-            event.currentTarget.blur();
-        };
-        this.removeoption = function (index, event) {
-            scope.poll.optionArr.splice(index, 1);
-            event.currentTarget.blur();
-        };
-
-        function resetPollEditor() {
-            scope.poll = {
-                question: '',
-                category: 0,
-                optionArr: ['', '', ''],
-                anonvote: false
-            };
-            scope.imageup
-        };
-    }
-
-    polllist.$inject = ['$scope', '$attrs', 'pollCaster', 'pollReader', 'pollMetaData'];
-
-    function polllist($scope, $attrs, pollCaster, pollReader, pollMetaData) {
-        var scope = this,
-            configObj = {};
-        this.list = [];
-        this.showLoading = false;
-        this.pIndex = 1;
-        this.category = '';
-        this.pollId = 0;
-        this.listCompleted = false;
-        if ($attrs.type == 'category-polls') {
-            this.category = $scope.catPoll.category;
-        } else if ($attrs.type == 'single-poll') {
-            this.pollId = $scope.poll.pollId;
+          });
+        } else {
+          alert('Please enter valid email address');
         }
-        this.loadPolls = function () {
-            scope.showLoading = true;
-            if (this.category != '') {
-                configObj['category'] = this.category;
-            } else if (this.pollId != 0) {
-                configObj['pollid'] = this.pollId;
-            }
-            configObj['index'] = this.pIndex;
-            pollReader.readPolls(configObj).then(function (response) {
-                scope.showLoading = false;
-                if (response.status) {
-                    scope.list = scope.list.concat(response.data);
-                    if (response.data.length == 0) {
-                        scope.listCompleted = true;
-                    }
-                }
-            });
-        };
-        this.loadmore = function () {
-            this.pIndex++;
-            this.loadPolls();
-        };
-        this.showAuthModal = function () {
-            jQuery('#auth-modal').modal('show');
-        };
-
-        this.submitPollVote = function (pollItem) {
-            var voteData = {
-                pollItemId: pollItem.id,
-                voteOption: pollItem.userChoice
-            }
-            var poll = pollItem;
-            pollCaster.castVote(voteData).then(function (response) {
-                if (response.status) {
-                    poll.optionArr = response.data.optionArr;
-                } else {
-                    alert(response.error);
-                }
-            });
-        };
-        this.loadPolls();
-        this.likepoll = function (pollItem) {
-            var poll = pollItem;
-            if (pollItem.userlikescore == 1) {
-                pollMetaData.changeuserlike(pollItem.id, 'unlike').then(function (response) {
-                    if (response.status) {
-                        poll.likecount -= 1;
-                        pollItem.userlikescore -= 1;
-                    } else {
-                        console.log(response.error);
-                    }
-                });
+      },
+      signup: function () {
+        if (scope.authvars.signup.email.trim() != '') {
+          emailAuthService.signup(scope.authvars.signup.email.trim()).then(function (response) {
+            if (response.status) {
+              alert('Check your email address for account activation link');
             } else {
-                pollMetaData.changeuserlike(pollItem.id, 'like').then(function (response) {
-                    if (response.status) {
-                        poll.likecount += 1;
-                        if (pollItem.userlikescore == -1) {
-                            poll.dislikecount -= 1;
-                            pollItem.userlikescore += 1;
-                        }
-                        pollItem.userlikescore += 1;
-                    } else {
-                        console.log(response.error);
-                    }
-                });
+              alert(response.error);
             }
-        };
-        this.dislikepoll = function (pollItem) {
-            var poll = pollItem;
+          });
+        } else {
+          alert('Please enter valid email address');
+        }
+      }
+    };
+    this.showAuthModal = function (mode) {
+      scope.authmode = mode;
+      jQuery('#auth-modal').modal('show');
+    };
+    pollCategories.getCategories().then(function (response) {
+      if (response.status) {
+        scope.pollCatArr = response.data;
+      }
+    });
+    this.logout = function () {
+      fbAuthService.logout();
+      googleAuthService.signout();
+      emailAuthService.logout();
+    };
+    $rootScope.$on('userloggedin', function () {
+      jQuery('#auth-modal').modal('hide');
+      if ($('#main-navbar')) {
+        $('#main-navbar').collapse('hide');
+      }
+    });
+  }
+
+  categoryPolls.$inject = ['$routeParams', '$rootScope'];
+
+  function categoryPolls($routeParams, $rootScope) {
+    var scope = this;
+    this.category = $routeParams.category;
+    $rootScope.activeCat = this.category;
+  }
+
+  categoryHome.$inject = ['pollCategories'];
+
+  function categoryHome(pollCategories) {
+    var scope = this;
+    this.catlist = [];
+    pollCategories.getCategories().then(function (response) {
+      if (response.status) {
+        scope.catlist = response.data;
+      }
+    });
+  }
+
+  creator.$inject = ['pollEditor', 'pollCategories', '$rootScope'];
+
+  function creator(pollEditor, pollCategories, $rootScope) {
+    var scope = this;
+    $rootScope.hideAboutDesc = true;
+    this.category = {};
+    this.pollimageurlinput = '';
+    resetPollEditor();
+    pollCategories.getCategories().then(function (response) {
+      if (response.status) {
+        scope.pollCatArr = response.data;
+        scope.category = scope.pollCatArr[0];
+      }
+    });
+    this.createpoll = function () {
+      scope.poll.category = scope.category.catId;
+      if (scope.poll.question.trim() == '') {
+        alert('Enter poll question');
+        return false;
+      }
+      if (scope.pollimageurl != '') {
+        scope.poll.pollImage = true;
+        if (scope.pollimageurlinput && scope.pollimageurlinput != '') {
+          scope.poll.pollType = 'url';
+        } else {
+          scope.poll.pollType = 'upload';
+        }
+        scope.poll.image = scope.pollimageurl;
+      }
+      for (var i = 0; i < scope.poll.optionArr.length; i++) {
+        if (scope.poll.optionArr[i].trim() == '') {
+          alert('You have one or more empty option. Please remove them if not needed');
+          return false;
+        }
+      }
+      pollEditor.addNewPoll(scope.poll).then(function (response) {
+        if (response.status) {
+          alert('Success');
+          resetPollEditor();
+        }
+      });
+    };
+    this.clearpollimage = function () {
+      scope.pollimageurl = '';
+      scope.pollimageurlinput = '';
+      angular.element("input[type='file']").val(null);
+    };
+    this.attachImageUrl = function () {
+      if (checkURL(scope.pollimageurlinput)) {
+        scope.pollimageurl = scope.pollimageurlinput;
+      } else {
+        alert('Enter valid image file path');
+      }
+    };
+
+    function checkURL(url) {
+      return (url.match(/\.(jpeg|jpg|gif|png)$/) != null);
+    }
+    this.addoption = function () {
+      scope.poll.optionArr.push('');
+    };
+    this.moveoption = function (index, direction, event) {
+      var pos = index;
+      if (direction == 'down') {
+        pos++;
+      } else {
+        pos--;
+      }
+      scope.poll.optionArr.splice(pos, 0, scope.poll.optionArr.splice(index, 1)[0]);
+      event.currentTarget.blur();
+    };
+    this.removeoption = function (index, event) {
+      scope.poll.optionArr.splice(index, 1);
+      event.currentTarget.blur();
+    };
+
+    function resetPollEditor() {
+      scope.poll = {
+        question: '',
+        category: 0,
+        optionArr: ['', '', ''],
+        anonvote: false
+      };
+      scope.imageup
+    };
+  }
+
+  polllist.$inject = ['$scope', '$attrs', 'pollCaster', 'pollReader', 'pollMetaData'];
+
+  function polllist($scope, $attrs, pollCaster, pollReader, pollMetaData) {
+    var scope = this,
+    configObj = {};
+    this.list = [];
+    this.showLoading = false;
+    this.pIndex = 1;
+    this.category = '';
+    this.pollId = 0;
+    this.listCompleted = false;
+    if ($attrs.type == 'category-polls') {
+      this.category = $scope.catPoll.category;
+    } else if ($attrs.type == 'single-poll') {
+      this.pollId = $scope.poll.pollId;
+    }
+    this.loadPolls = function () {
+      scope.showLoading = true;
+      if (this.category != '') {
+        configObj['category'] = this.category;
+      } else if (this.pollId != 0) {
+        configObj['pollid'] = this.pollId;
+      }
+      configObj['index'] = this.pIndex;
+      pollReader.readPolls(configObj).then(function (response) {
+        scope.showLoading = false;
+        if (response.status) {
+          scope.list = scope.list.concat(response.data);
+          if (response.data.length == 0) {
+            scope.listCompleted = true;
+          }
+        }
+      });
+    };
+    this.loadmore = function () {
+      this.pIndex++;
+      this.loadPolls();
+    };
+    this.showAuthModal = function () {
+      jQuery('#auth-modal').modal('show');
+    };
+
+    this.submitPollVote = function (pollItem) {
+      var voteData = {
+        pollItemId: pollItem.id,
+        voteOption: pollItem.userChoice
+      }
+      var poll = pollItem;
+      pollCaster.castVote(voteData).then(function (response) {
+        if (response.status) {
+          poll.optionArr = response.data.optionArr;
+        } else {
+          alert(response.error);
+        }
+      });
+    };
+    this.loadPolls();
+    this.likepoll = function (pollItem) {
+      var poll = pollItem;
+      if (pollItem.userlikescore == 1) {
+        pollMetaData.changeuserlike(pollItem.id, 'unlike').then(function (response) {
+          if (response.status) {
+            poll.likecount -= 1;
+            pollItem.userlikescore -= 1;
+          } else {
+            console.log(response.error);
+          }
+        });
+      } else {
+        pollMetaData.changeuserlike(pollItem.id, 'like').then(function (response) {
+          if (response.status) {
+            poll.likecount += 1;
             if (pollItem.userlikescore == -1) {
-                pollMetaData.changeuserlike(pollItem.id, 'unlike').then(function (response) {
-                    if (response.status) {
-                        poll.dislikecount -= 1;
-                        pollItem.userlikescore += 1;
-                    } else {
-                        console.log(response.error);
-                    }
-                });
-            } else {
-                pollMetaData.changeuserlike(pollItem.id, 'dislike').then(function (response) {
-                    if (response.status) {
-                        poll.dislikecount += 1;
-                        if (pollItem.userlikescore == 1) {
-                            poll.likecount -= 1;
-                            pollItem.userlikescore -= 1;
-                        }
-                        pollItem.userlikescore -= 1;
-                    } else {
-                        console.log(response.error);
-                    }
-                });
+              poll.dislikecount -= 1;
+              pollItem.userlikescore += 1;
             }
-        };
-        this.favpoll = function (pollItem) {
-            var poll = pollItem;
-            if (pollItem.userfavscore == 1) {
-                pollMetaData.changeuserfav(pollItem.id, 'unfavorite').then(function (response) {
-                    if (response.status) {
-                        pollItem.userfavscore -= 1;
-                    } else {
-                        console.log(response.error);
-                    }
-                });
-            } else {
-                pollMetaData.changeuserfav(pollItem.id, 'favorite').then(function (response) {
-                    if (response.status) {
-                        pollItem.userfavscore += 1;
-                    } else {
-                        console.log(response.error);
-                    }
-                });
+            pollItem.userlikescore += 1;
+          } else {
+            console.log(response.error);
+          }
+        });
+      }
+    };
+    this.dislikepoll = function (pollItem) {
+      var poll = pollItem;
+      if (pollItem.userlikescore == -1) {
+        pollMetaData.changeuserlike(pollItem.id, 'unlike').then(function (response) {
+          if (response.status) {
+            poll.dislikecount -= 1;
+            pollItem.userlikescore += 1;
+          } else {
+            console.log(response.error);
+          }
+        });
+      } else {
+        pollMetaData.changeuserlike(pollItem.id, 'dislike').then(function (response) {
+          if (response.status) {
+            poll.dislikecount += 1;
+            if (pollItem.userlikescore == 1) {
+              poll.likecount -= 1;
+              pollItem.userlikescore -= 1;
             }
-        };
-        this.getComments = function (item) {
-            var pollitem = item,
-                count = 4;
-            if (this.pollId != 0) {
-                count = 50;
-            }
-            pollMetaData.getPollComments(item.id, count).then(function (response) {
-                if (response.status) {
-                    pollitem.comments = response.data;
-                } else {
-                    console.log(response.error);
-                }
-            });
-        };
-        this.addcomment = function (item, parent) {
-            var pollitem = item;
-            pollMetaData.addPollComment(item.id, item.newcomment, parent).then(function (response) {
-                if (response.status) {
-                    item.newcomment = '';
-                    pollitem.comments.splice(0, 0, response.data);
-                } else {
-                    console.log(response.error);
-                }
-            });
-        };
-        this.deleteComment = function (item, comment, index) {
-            var commIndex = index,
-                pollitem = item;
-            if (comment.userid == $scope.$parent.user.id) {
-                pollMetaData.deleteComment(comment).then(function (response) {
-                    if (response.status) {
-                        pollitem.comments.splice(commIndex, 1);
-                    } else {
-                        console.log(response.error);
-                    }
-                });
-            }
-        };
-    }
+            pollItem.userlikescore -= 1;
+          } else {
+            console.log(response.error);
+          }
+        });
+      }
+    };
+    this.favpoll = function (pollItem) {
+      var poll = pollItem;
+      if (pollItem.userfavscore == 1) {
+        pollMetaData.changeuserfav(pollItem.id, 'unfavorite').then(function (response) {
+          if (response.status) {
+            pollItem.userfavscore -= 1;
+          } else {
+            console.log(response.error);
+          }
+        });
+      } else {
+        pollMetaData.changeuserfav(pollItem.id, 'favorite').then(function (response) {
+          if (response.status) {
+            pollItem.userfavscore += 1;
+          } else {
+            console.log(response.error);
+          }
+        });
+      }
+    };
+    this.getComments = function (item) {
+      var pollitem = item,
+      count = 4;
+      if (this.pollId != 0) {
+        count = 50;
+      }
+      pollMetaData.getPollComments(item.id, count).then(function (response) {
+        if (response.status) {
+          pollitem.comments = response.data;
+        } else {
+          console.log(response.error);
+        }
+      });
+    };
+    this.addcomment = function (item, parent) {
+      var pollitem = item;
+      pollMetaData.addPollComment(item.id, item.newcomment, parent).then(function (response) {
+        if (response.status) {
+          item.newcomment = '';
+          pollitem.comments.splice(0, 0, response.data);
+        } else {
+          console.log(response.error);
+        }
+      });
+    };
+    this.deleteComment = function (item, comment, index) {
+      var commIndex = index,
+      pollitem = item;
+      if (comment.userid == $scope.$parent.user.id) {
+        pollMetaData.deleteComment(comment).then(function (response) {
+          if (response.status) {
+            pollitem.comments.splice(commIndex, 1);
+          } else {
+            console.log(response.error);
+          }
+        });
+      }
+    };
+  }
 
 })();

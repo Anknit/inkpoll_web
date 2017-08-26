@@ -1,0 +1,96 @@
+<div>
+  <div class="row" data-ng-hide="auth.authmode=='forgotpswd'">
+    <div class="col-xs-12">
+      <h4 data-ng-show="auth.authmode== 'login'">Connect with social account</h4>
+      <h4 data-ng-show="auth.authmode== 'signup'">Signup with social account</h4>
+      <div class="row">
+        <div class="col-xs-12 col-md-6 form-group">
+          <div class="fb-login-button" data-display="popup" data-size="large" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false" data-scope="email, user_likes, user_friends"></div>
+        </div>
+        <div class="col-xs-12 col-md-6 form-group">
+          <div id="google-signin"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div data-ng-show="auth.authmode=='login'">
+    <div class="row">
+      <div class="col-xs-12">
+        <h4>Login with email address</h4>
+        <div class="form">
+          <div class="form-group">
+            <label class="control-label">Email</label>
+            <input type="email" class="form-control" placeholder="Email address" data-ng-model="auth.authvars.login.email" />
+          </div>
+          <div class="form-group">
+            <label class="control-label">Password</label>
+            <input type="password" class="form-control" placeholder="Password" data-ng-model="auth.authvars.login.password" />
+          </div>
+          <div class="form-group">
+            <a role="button" data-ng-click="auth.authmode = 'forgotpswd'">
+              <span class="text-muted">Forgot Password ?</span>
+            </a>
+          </div>
+          <div class="form-group">
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" data-ng-model="auth.authvars.login.remember" />
+                Remember me
+              </label>
+            </div>
+          </div>
+          <div class="form-group">
+            <button type="button" class="btn btn-info" data-ng-click="auth.authaction.login()">Login</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
+        <h4>New to <span class="text-brand-inline">Inkpoll</span>. <a role="button" data-ng-click="auth.authmode='signup'"><span class="text-info">Create Account</span></a></h4>
+      </div>
+    </div>
+  </div>
+  <div data-ng-show="auth.authmode=='signup'">
+    <div class="row">
+      <div class="col-xs-12">
+        <h4>Signup with email address</h4>
+        <div class="form">
+          <div class="form-group">
+            <label class="control-label">Email</label>
+            <input type="email" class="form-control" placeholder="Email address" data-ng-model="auth.authvars.signup.email" />
+          </div>
+          <div class="form-group">
+            <button type="button" class="btn btn-info" data-ng-click="auth.authaction.signup()">Signup</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
+        <h4>Already have an account. <a role="button" data-ng-click="auth.authmode='login'"><span class="text-info">Login</span></a></h4>
+      </div>
+    </div>
+  </div>
+  <div data-ng-show="auth.authmode=='forgotpswd'">
+    <div class="row">
+      <div class="col-xs-12">
+        <h4>Reset you password</h4>
+        <div class="form">
+          <div class="form-group">
+            <label class="control-label">Email</label>
+            <input type="email" class="form-control" placeholder="Email address" data-ng-model="auth.authvars.forgot.email" />
+          </div>
+          <div class="form-group">
+            <button type="button" class="btn btn-info" data-ng-click="auth.authaction.forgotpswd()">Reset</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
+        <h4>Back to <a role="button" data-ng-click="auth.authmode='login'"><span class="text-info">Login</span></a></h4>
+      </div>
+    </div>
+  </div>
+</div>

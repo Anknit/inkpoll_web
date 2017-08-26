@@ -1,179 +1,179 @@
 <div class="row" data-ng-repeat="item in plst.list">
-    <div class="col-xs-12">
-        <div class="poll-item m-b-all-2" data-ng-init="item.alreadyVoted = !!item.userChoice">
-            <div class="poll-item-question">
-                <a data-ng-href="{{item | pollurlfilter}}">
-                    <h4 data-ng-bind="item.questionText"></h4>
-                </a>
+  <div class="col-xs-12">
+    <div class="poll-item m-b-all-2" data-ng-init="item.alreadyVoted = !!item.userChoice">
+      <div class="poll-item-question">
+        <a data-ng-href="{{item | pollurlfilter}}">
+          <h4 data-ng-bind="item.questionText"></h4>
+        </a>
+      </div>
+      <div data-ng-if="item.imageurl && item.imageurl != ''" class="poll-image-container">
+        <img data-ng-src="{{item.imageurl}}" />
+      </div>
+      <ul class="poll-item-option-container m-b-all-0 list-unstyled">
+        <li class="poll-item-option" data-ng-repeat="option in item.optionArr track by $index">
+          <div class="radio">
+            <label data-ng-class="{'selected':item.userChoice == option.id}" auth-user-only>
+              <input type="radio" data-ng-model="item.userChoice" name="{{'optionsRadios_' + (item.id)}}" value="{{option.id}}" data-ng-change="plst.submitPollVote(item)">
+              {{option.optionText}}
+              <div class="pull-right text-muted" data-ng-bind="option.optionVotes + ' votes'"></div>
+            </label>
+          </div>
+        </li>
+      </ul>
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="col-xs-12 col-md-6">
+            <div class="poll-item-meta row">
+              <a class="btn btn-link" data-ng-href="{{item | pollurlfilter}}" data-ng-if="item.likecount > 0">
+                <span data-ng-bind="item.likecount"></span> Like<span data-ng-if="item.likecount > 1">s</span>
+              </a>
+              <a class="btn btn-link" data-ng-href="{{item | pollurlfilter}}" data-ng-if="item.dislikecount > 0">
+                <span data-ng-bind="item.dislikecount"></span> Dislike<span data-ng-if="item.dislikecount > 1">s</span>
+              </a>
+              <a class="btn btn-link hide" data-ng-href="{{(item | pollurlfilter) + '@comments'}}">
+                8 comments
+              </a>
             </div>
-            <div data-ng-if="item.imageurl && item.imageurl != ''" class="poll-image-container">
-                <img data-ng-src="{{item.imageurl}}" />
+          </div>
+          <div class="col-xs-12 col-md-6 poll-item-meta hide">
+            <div class="text-right row">
+              <a data-ng-href="{{'polls/' + item.pollcategory}}" class="btn btn-link">
+                <span data-ng-bind="item.pollcategory" title="{{'See polls of ' + item.pollcategory + ' category'}}">
+                </span>
+              </a>
+              <a data-ng-href="{{'users/' + item.userId + '/' + item.createdby.split(' ').join('-')}}" class="btn btn-link">
+                <span data-ng-bind="item.createdby" title="{{'Go to ' + item.createdby + '\'s profile'}}">
+                </span>
+              </a>
             </div>
-            <ul class="poll-item-option-container m-b-all-0 list-unstyled">
-                <li class="poll-item-option" data-ng-repeat="option in item.optionArr track by $index">
-                    <div class="radio">
-                        <label data-ng-class="{'selected':item.userChoice == option.id}" auth-user-only>
-                            <input type="radio" data-ng-model="item.userChoice" name="{{'optionsRadios_' + (item.id)}}" value="{{option.id}}" data-ng-change="plst.submitPollVote(item)">
-                            {{option.optionText}}
-                            <div class="pull-right text-muted" data-ng-bind="option.optionVotes + ' votes'"></div>
-                        </label>
-                    </div>
-                </li>
-            </ul>
-            <div class="row">
-                <div class="col-xs-12">
-                    <div class="col-xs-12 col-md-6">
-                        <div class="poll-item-meta row">
-                            <a class="btn btn-link" data-ng-href="{{item | pollurlfilter}}" data-ng-if="item.likecount > 0">
-                                <span data-ng-bind="item.likecount"></span> Like<span data-ng-if="item.likecount > 1">s</span>
-                            </a>
-                            <a class="btn btn-link" data-ng-href="{{item | pollurlfilter}}" data-ng-if="item.dislikecount > 0">
-                                <span data-ng-bind="item.dislikecount"></span> Dislike<span data-ng-if="item.dislikecount > 1">s</span>
-                            </a>
-                            <a class="btn btn-link hide" data-ng-href="{{(item | pollurlfilter) + '@comments'}}">
-                                8 comments
-                            </a>
-                        </div>
-                    </div>
-                    <div class="col-xs-12 col-md-6 poll-item-meta hide">
-                        <div class="text-right row">
-                            <a data-ng-href="{{'polls/' + item.pollcategory}}" class="btn btn-link">
-                                <span data-ng-bind="item.pollcategory" title="{{'See polls of ' + item.pollcategory + ' category'}}">
-                                </span>
-                            </a>
-                            <a data-ng-href="{{'users/' + item.userId + '/' + item.createdby.split(' ').join('-')}}" class="btn btn-link">
-                                <span data-ng-bind="item.createdby" title="{{'Go to ' + item.createdby + '\'s profile'}}">
-                                </span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xs-12">
-                    <div class="col-xs-12 col-md-6">
-                        <div class="poll-item-meta row">
-                            <button class="btn btn-link btn-lg" auth-user-only data-ng-click="plst.likepoll(item)" data-ng-class="{'active':item.userlikescore == '1'}">
-                                <span class="glyphicon glyphicon-arrow-up"></span>
-                            </button>
-                            <button class="btn btn-link btn-lg" auth-user-only data-ng-click="plst.dislikepoll(item)" data-ng-class="{'active':item.userlikescore == '-1'}">
-                                <span class="glyphicon glyphicon-arrow-down"></span>
-                            </button>
-                            <button class="btn btn-link btn-lg" auth-user-only data-ng-click="plst.favpoll(item)">
-                                <span class="glyphicon glyphicon-star-empty" data-ng-if="item.userfavscore == 0"></span>
-                                <span class="glyphicon glyphicon-star" data-ng-if="item.userfavscore == 1"></span>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="col-xs-12 col-md-6 text-right poll-item-share">
-                        <ul class="list-inline">
-                            <li>
-                                <img role="button" class="poll-item-share-img" src="images/fb-share.png" fb-share data-ng-href="{{item | pollurlfilter}}" data-mobile-iframe="true"/>
-                            </li>
-                            <li>
-                                <a data-ng-href="{{'https://plus.google.com/share?url=http://localhost/feeddasm/' + (item | pollurlfilter)}}" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">
-                                    <img src="images/gplus-share.png" alt="Share on Google+" class="poll-item-share-img" />
-                                </a>
-                            </li>
-                        </ul>
-
-                    </div>
-                </div>
-                <div class="col-xs-12" data-ng-init="plst.getComments(item)">
-                    <div class="col-xs-12">
-                        <ul class="list-unstyled">
-                            <li>
-                                <div class="comment-input-container">
-                                    <div auth-user-only>
-                                        <textarea class="form-control m-b-all-1" placeholder="Add a comment to support your vote" data-ng-model="item.newcomment"></textarea>
-                                        <div class="text-right post-button">
-                                            <button type="button" class="btn btn-info" data-ng-click="plst.addcomment(item, 0)">Post</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li data-ng-repeat="comment in item.comments" style="padding-top:5px;padding-bottom:5px;">
-                                <div class="row">
-                                    <div class="col-xs-12">
-                                        <a data-ng-href="{{'users/' + comment.userid + '/' + comment.username.split(' ').join('-')}}">
-                                            <span data-ng-bind="comment.username"></span>
-                                        </a>
-                                        <span data-ng-bind="comment.commenttext"></span>
-                                        <div data-ng-click="plst.deleteComment(item, comment, $index);" role="button" data-ng-if="user.id == comment.userid">
-                                            <small class="text-danger">Delete</small>
-                                        </div>
-
-                                        <div class="row hide">
-                                            <div class="col-xs-12">
-                                                <a class="inline-btn-link">
-                                                    <span class="text-muted">Reply</span>
-                                                </a>
-                                                <a class="inline-btn-link">
-                                                    <span class="like-action-btn">
-                                                        <span class="glyphicon glyphicon-arrow-up"></span>
-                                                    </span>
-                                                </a>
-                                                <a class="inline-btn-link">
-                                                    <span class="like-action-btn">
-                                                        <span class="glyphicon glyphicon-arrow-down"></span>
-                                                    </span>
-                                                </a>
-                                            </div>
-                                        </div>
-                                        <!--
-                                        <div class="col-xs-12">
-                                            <ul class="list-unstyled">
-                                                <li data-ng-repeat="reply in comment.childComments" style="padding-top:5px; padding-bottom:5px;">
-                                                    <div class="row">
-                                                        <div class="col-xs-12">
-                                                            <a data-ng-href="{{'user/' + reply.userid + '/' + reply.username.split(' ').join('-')}}">
-                                                                <span data-ng-bind="reply.username"></span>
-                                                            </a>
-                                                            <span data-ng-bind="reply.commentText"></span>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </div>
--->
-                                    </div>
-                                </div>
-                            </li>
-                            <li data-ng-if="plst.pollId == 0">
-                                <a data-ng-href="{{item | pollurlfilter}}" data-ng-if="item.comments && item.comments.length >= 4">
-                                    <span class="text-muted">
-                                        See more comments
-                                    </span>
-                                </a>
-                            </li>
-                            <li>
-                                <a target="_blank" class="pull-right" href="https://goo.gl/forms/7Yj0kMJ6kInjwSSI3" style="padding:5px;">
-                                    <span class="text-muted">
-                                        Report a problem
-                                    </span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+          </div>
         </div>
+        <div class="col-xs-12">
+          <div class="col-xs-12 col-md-6">
+            <div class="poll-item-meta row">
+              <button class="btn btn-link btn-lg" auth-user-only data-ng-click="plst.likepoll(item)" data-ng-class="{'active':item.userlikescore == '1'}">
+                <span class="glyphicon glyphicon-arrow-up"></span>
+              </button>
+              <button class="btn btn-link btn-lg" auth-user-only data-ng-click="plst.dislikepoll(item)" data-ng-class="{'active':item.userlikescore == '-1'}">
+                <span class="glyphicon glyphicon-arrow-down"></span>
+              </button>
+              <button class="btn btn-link btn-lg" auth-user-only data-ng-click="plst.favpoll(item)">
+                <span class="glyphicon glyphicon-star-empty" data-ng-if="item.userfavscore == 0"></span>
+                <span class="glyphicon glyphicon-star" data-ng-if="item.userfavscore == 1"></span>
+              </button>
+            </div>
+          </div>
+          <div class="col-xs-12 col-md-6 text-right poll-item-share">
+            <ul class="list-inline">
+              <li>
+                <img role="button" class="poll-item-share-img" src="images/fb-share.png" fb-share data-ng-href="{{item | pollurlfilter}}" data-mobile-iframe="true"/>
+              </li>
+              <li>
+                <a data-ng-href="{{'https://plus.google.com/share?url=http://localhost/feeddasm/' + (item | pollurlfilter)}}" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">
+                  <img src="images/gplus-share.png" alt="Share on Google+" class="poll-item-share-img" />
+                </a>
+              </li>
+            </ul>
+
+          </div>
+        </div>
+        <div class="col-xs-12" data-ng-init="plst.getComments(item)">
+          <div class="col-xs-12">
+            <ul class="list-unstyled">
+              <li>
+                <div class="comment-input-container">
+                  <div auth-user-only>
+                    <textarea class="form-control m-b-all-1" placeholder="Add a comment to support your vote" data-ng-model="item.newcomment"></textarea>
+                    <div class="text-right post-button">
+                      <button type="button" class="btn btn-info" data-ng-click="plst.addcomment(item, 0)">Post</button>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li data-ng-repeat="comment in item.comments" style="padding-top:5px;padding-bottom:5px;">
+                <div class="row">
+                  <div class="col-xs-12">
+                    <a data-ng-href="{{'users/' + comment.userid + '/' + comment.username.split(' ').join('-')}}">
+                      <span data-ng-bind="comment.username"></span>
+                    </a>
+                    <span data-ng-bind="comment.commenttext"></span>
+                    <div data-ng-click="plst.deleteComment(item, comment, $index);" role="button" data-ng-if="user.id == comment.userid">
+                      <small class="text-danger">Delete</small>
+                    </div>
+
+                    <div class="row hide">
+                      <div class="col-xs-12">
+                        <a class="inline-btn-link">
+                          <span class="text-muted">Reply</span>
+                        </a>
+                        <a class="inline-btn-link">
+                          <span class="like-action-btn">
+                            <span class="glyphicon glyphicon-arrow-up"></span>
+                          </span>
+                        </a>
+                        <a class="inline-btn-link">
+                          <span class="like-action-btn">
+                            <span class="glyphicon glyphicon-arrow-down"></span>
+                          </span>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!--
+                <div class="col-xs-12">
+                  <ul class="list-unstyled">
+                    <li data-ng-repeat="reply in comment.childComments" style="padding-top:5px; padding-bottom:5px;">
+                      <div class="row">
+                        <div class="col-xs-12">
+                          <a data-ng-href="{{'user/' + reply.userid + '/' + reply.username.split(' ').join('-')}}">
+                            <span data-ng-bind="reply.username"></span>
+                          </a>
+                          <span data-ng-bind="reply.commentText"></span>
+                        </div>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              -->
+              </li>
+              <li data-ng-if="plst.pollId == 0">
+                <a data-ng-href="{{item | pollurlfilter}}" data-ng-if="item.comments && item.comments.length >= 4">
+                  <span class="text-muted">
+                    See more comments
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a target="_blank" class="pull-right" href="https://goo.gl/forms/7Yj0kMJ6kInjwSSI3" style="padding:5px;">
+                  <span class="text-muted">
+                    Report a problem
+                  </span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 <div id="mobile-create-poll" class="visible-xs">
-    <a auth-user-only class="btn btn-success" href="pollcreater">Create Poll</a>
+  <a auth-user-only class="btn btn-success" href="pollcreater">Create Poll</a>
 </div>
 <div class="col-xs-12 text-center" data-ng-if="!plst.showLoading" data-ng-hide="plst.listCompleted || (plst.pollId != 0)" ng-cloak>
-    <p>
-        <button class="btn btn-default" data-ng-click="plst.loadmore()">Show more</button>
-    </p>
+  <p>
+    <button class="btn btn-default" data-ng-click="plst.loadmore()">Show more</button>
+  </p>
 </div>
 <div class="col-xs-12 text-center" data-ng-show="plst.showLoading" ng-cloak>
-    <div class="loader"></div>
+  <div class="loader"></div>
 </div>
 <div class="col-xs-12" data-ng-show="plst.listCompleted" ng-cloak>
-    <p data-ng-if="plst.list.length == 0">
-        <i>Sorry currently there are no items in this list. Please try after a while</i>
-    </p>
-    <p data-ng-if="plst.list.length != 0">
-        <i>That's all folks</i>
-    </p>
+  <p data-ng-if="plst.list.length == 0">
+    <i>Sorry currently there are no items in this list. Please try after a while</i>
+  </p>
+  <p data-ng-if="plst.list.length != 0">
+    <i>That's all folks</i>
+  </p>
 </div>
