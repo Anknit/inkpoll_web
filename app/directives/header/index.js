@@ -14,7 +14,10 @@
       controller:'headerCtrl',
       controllerAs:'head',
       link: function(scope, elem, attr){
-
+        angular.element('body').addClass('fixed-header');
+        scope.$on('$destroy', function(){
+          angular.element('body').removeClass('fixed-header');
+        });
       }
     }
   }

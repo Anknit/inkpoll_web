@@ -1,18 +1,25 @@
 <div>
   <site-header show-categories="true"></site-header>
+  <div class="home-banner p-t-all-6 p-b-all-6 m-b-all-2">
+    <div class="container text-center">
+      <h1 class="m-t-all-1">
+        Inkpoll is a community-powered platform, where you can vote for interesting polls or can create a poll and share it with the community.
+      </h1>
+      <p class="m-t-all-2 m-b-all-1">
+        Have something interesting to ask, create your own poll in seconds.
+      </p>
+      <p class="m-t-all-1 m-b-all-1">
+        <a auth-user-only redirect="'pollcreater'" class="btn btn-success btn-lg" href="pollcreater">Create Poll</a>
+      </p>
+    </div>
+  </div>
   <div class="container-fluid">
     <div class="row">
       <div class="col-xs-12 col-sm-8">
         <poll-list data-type="home" data-cat="all"></poll-list>
       </div>
       <div class="col-sm-4 hidden-xs">
-        <h1>
-          Inkpoll is a community-powered platform, where you can vote for interesting polls or can create a poll and share it with your friends.
-        </h1>
-        <h2>
-          Have something interesting to ask, create your own poll in seconds.
-        </h2>
-        <a auth-user-only class="btn btn-success text-center" href="pollcreater">Create Poll</a>
+
         <div>
           <ip-fb-video url="'https://www.facebook.com/inkpoll/videos/1379191825521488/'"></ip-fb-video>
         </div>

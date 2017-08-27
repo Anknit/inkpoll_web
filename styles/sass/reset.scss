@@ -4,6 +4,12 @@
 body {
     font-family: 'Lato', 'Arial', sans-serif;
     background-color: $offwhite;
+    &.fixed-header{
+      margin-top:50px;
+      @include respond-to(extra-small) {
+        margin-top:100px;
+      }
+    }
 }
 a{
   text-decoration: none;

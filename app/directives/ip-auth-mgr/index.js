@@ -2,8 +2,8 @@
   angular.module('app')
   .directive('ipAuthMgr',ipAuthMgr);
 
-  ipAuthMgr.$inject = ['authService'];
-  function ipAuthMgr(authService){
+  ipAuthMgr.$inject = ['authService', '$location', '$rootScope'];
+  function ipAuthMgr(authService, $location, $rootScope){
     return {
       restrict: 'EA',
       replace:true,
@@ -34,9 +34,10 @@
               authService.login(email, pswd, remember).then(function (response) {
                 if (response.status) {
                   if ($rootScope.redirectUrl) {
-                    location.href = $rootScope.redirectUrl;
+                    $location.path($rootScope.redirectUrl);
+                    $rootScope.redirectUrl = '';
                   } else {
-                    location.reload();
+                    location.path('/');
                   }
                 } else {
                   alert(response.error);

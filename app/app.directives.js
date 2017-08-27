@@ -5,17 +5,25 @@
   .directive("fileSelect", fileSelect)
   .directive('pollList', pollList);
 
-  authUserOnly.$inject = ['$rootScope'];
+  authUserOnly.$inject = ['$rootScope', '$location', '$timeout'];
 
-  function authUserOnly($rootScope) {
+  function authUserOnly($rootScope, $location, $timeout) {
     var DDO = {
       restrict: 'AC',
+      scope:{
+        redirect:'='
+      },
       link: function (scope, elem, attr) {
         elem[0].onclick = function () {
           if (!$rootScope.user.name) {
-            jQuery('#auth-modal').modal('show');
-            event.preventDefault();
-            event.stopPropagation();
+            if(scope.redirect){
+              $rootScope.redirectUrl = scope.redirect;
+            } else {
+              $rootScope.redirectUrl = $location.path();
+            }
+            $timeout(function(){
+              $location.path('login');
+            },0);
           }
         };
       }
