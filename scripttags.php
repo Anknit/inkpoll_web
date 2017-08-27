@@ -40,14 +40,17 @@ if($mode == 'prod') {
   <script type="application/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-route.min.js"></script>
   <script type="application/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script type="application/javascript" src="app/modules/auth/index.js"></script>
+  <script type="application/javascript" src="app/modules/auth/auth-controller.js"></script>
   <script type="application/javascript" src="app/modules/admin/category-management/index.js"></script>
   <script type="application/javascript" src="app/app.js"></script>
   <script type="application/javascript" src="app/app.controllers.js"></script>
   <script type="application/javascript" src="app/app.services.js"></script>
   <script type="application/javascript" src="app/services/catMgr.js"></script>
+  <script type="application/javascript" src="app/services/authService.js"></script>
   <script type="application/javascript" src="app/directives/header/header-controller.js"></script>
   <script type="application/javascript" src="app/directives/header/index.js"></script>
   <script type="application/javascript" src="app/directives/ip-fb-video/index.js"></script>
   <script type="application/javascript" src="app/directives/ip-inline-footer/index.js"></script>
   <script type="application/javascript" src="app/directives/ip-social-connect/index.js"></script>
+  <script type="application/javascript" src="app/directives/ip-auth-mgr/index.js"></script>
   <script type="application/javascript" src="app/app.directives.js"></script>

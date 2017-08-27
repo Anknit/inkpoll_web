@@ -1,7 +1,7 @@
 /*global angular*/
 (function () {
   'use strict';
-  angular.module('app', ['ngRoute', 'categoryManagement'])
+  angular.module('app', ['ngRoute', 'categoryManagement', 'authMgr'])
   .config(appConfig)
   .constant('APIBASE', './server/request.php')
   .filter('pollurlfilter', pollurlfilter)

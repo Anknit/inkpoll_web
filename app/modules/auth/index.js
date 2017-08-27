@@ -4,18 +4,18 @@
 
   function configObj($routeProvider) {
     $routeProvider.when('/login',{
-      templateUrl: 'app/modules/auth/layout-root.html',
+      templateUrl: 'app/modules/auth/layout.html',
       controller: 'authCtrl',
       controllerAs: 'Auth',
-      data: {
-        defaultView: 'login'
+      resolve: {
+        defaultView: function (){ return 'login';}
       }
     }).when('/signup', {
-      templateUrl: 'app/modules/auth/layout-root.html',
+      templateUrl: 'app/modules/auth/layout.html',
       controller: 'authCtrl',
       controllerAs: 'Auth',
-      data: {
-        defaultView: 'signup'
+      resolve: {
+        defaultView: function (){ return 'signup';}
       }
     }).otherwise({redirectTo:'/'});
   }

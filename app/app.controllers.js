@@ -1,7 +1,6 @@
 (function () {
   angular.module('app')
   .controller('home', home)
-  // .controller('headerCtrl', headerCtrl)
   .controller('categoryHome', categoryHome)
   .controller('userCtrl', userCtrl)
   .controller('activityCtrl', activityCtrl)
@@ -13,13 +12,6 @@
   home.$inject = [];
 
   function home() {
-    var scope = this;
-    this.sortOrder = 'trending';
-    this.pollSort = function (order) {
-      if (scope.sortOrder != order) {
-        scope.sortOrder = order;
-      }
-    };
   }
 
   pollPage.$inject = ['$routeParams'];
@@ -202,92 +194,6 @@
         });
       }
     };
-  }
-
-  headerCtrl.$inject = ['pollCategories', 'fbAuthService', 'googleAuthService', 'emailAuthService', '$rootScope'];
-
-  function headerCtrl(pollCategories, fbAuthService, googleAuthService, emailAuthService, $rootScope) {
-    var scope = this;
-    this.pollCatArr = [];
-    this.authmode = 'login';
-    this.authvars = {
-      login: {
-        email: '',
-        password: '',
-        remember: true
-      },
-      signup: {
-        email: ''
-      },
-      forgot: {
-        email: ''
-      }
-    };
-    this.authaction = {
-      login: function () {
-        if (scope.authvars.login.email.trim() != '' && scope.authvars.login.password.trim()) {
-          emailAuthService.login(scope.authvars.login.email.trim(), scope.authvars.login.password.trim(), scope.authvars.login.remember).then(function (response) {
-            if (response.status) {
-              if ($rootScope.redirectUrl != '') {
-                location.href = $rootScope.redirectUrl;
-              } else {
-                location.reload();
-              }
-            } else {
-              alert(response.error);
-            }
-          });
-        } else {
-          alert('Please enter valid login credentials');
-        }
-      },
-      forgotpswd: function () {
-        if (scope.authvars.forgot.email.trim() != '') {
-          emailAuthService.forgotpswd(scope.authvars.forgot.email.trim()).then(function (response) {
-            if (response.status) {
-              alert('Check your email address for password reset instructions');
-            } else {
-              alert(response.error);
-            }
-          });
-        } else {
-          alert('Please enter valid email address');
-        }
-      },
-      signup: function () {
-        if (scope.authvars.signup.email.trim() != '') {
-          emailAuthService.signup(scope.authvars.signup.email.trim()).then(function (response) {
-            if (response.status) {
-              alert('Check your email address for account activation link');
-            } else {
-              alert(response.error);
-            }
-          });
-        } else {
-          alert('Please enter valid email address');
-        }
-      }
-    };
-    this.showAuthModal = function (mode) {
-      scope.authmode = mode;
-      jQuery('#auth-modal').modal('show');
-    };
-    pollCategories.getCategories().then(function (response) {
-      if (response.status) {
-        scope.pollCatArr = response.data;
-      }
-    });
-    this.logout = function () {
-      fbAuthService.logout();
-      googleAuthService.signout();
-      emailAuthService.logout();
-    };
-    $rootScope.$on('userloggedin', function () {
-      jQuery('#auth-modal').modal('hide');
-      if ($('#main-navbar')) {
-        $('#main-navbar').collapse('hide');
-      }
-    });
   }
 
   categoryPolls.$inject = ['$routeParams', '$rootScope'];

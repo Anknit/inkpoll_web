@@ -25,9 +25,9 @@
         -->
       </ul>
       <form class="navbar-form navbar-right">
-        <button data-ng-if="!user.name" type="button" class="btn btn-link" data-ng-click="head.showAuthModal('login')">
+        <a href="login" data-ng-if="!user.name" type="button" class="btn btn-link">
           Login
-        </button>
+        </a>
         <button data-ng-if="!user.name" type="button" class="btn btn-warning" data-ng-click="head.showAuthModal('signup')">
           Sign up
         </button>
