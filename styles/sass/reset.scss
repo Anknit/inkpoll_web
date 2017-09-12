@@ -3,9 +3,9 @@
 }
 body {
     font-family: 'Lato', 'Arial', sans-serif;
-    background-color: $offwhite;
+    font-size: 16px;
     &.fixed-header{
-      margin-top:50px;
+      margin-top:80px;
       @include respond-to(extra-small) {
         margin-top:100px;
       }
@@ -13,7 +13,8 @@ body {
 }
 a{
   text-decoration: none;
+  color: $theme-blue;
   &:hover{
-    text-decoration: none;
+    @extend a;
   }
 }

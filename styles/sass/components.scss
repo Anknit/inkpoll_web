@@ -1,8 +1,9 @@
 .menu-link{
-  color: $white;
+  color: $theme-blue;
   @include transition(color linear 0.25s);
   &:hover{
     color:$theme-color;
+    background-color: inherit;
   }
   &.active{
     background: $black;

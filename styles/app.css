@@ -1001,27 +1001,27 @@
 
 body {
   font-family: 'Lato', 'Arial', sans-serif;
-  background-color: #f9f9f9; }
+  font-size: 16px; }
   body.fixed-header {
-    margin-top: 50px;
+    margin-top: 80px;
     /* Extra small devices (phones, less than 768px) */ }
     @media (max-width: 767px) {
       body.fixed-header {
         margin-top: 100px; } }
 
-a {
-  text-decoration: none; }
-  a:hover {
-    text-decoration: none; }
+a, a:hover {
+  text-decoration: none;
+  color: #5864ff; }
 
 .menu-link, nav.navbar-theme .navbar-nav > li > a {
-  color: #ffffff;
+  color: #5864ff;
   -moz-transition: color linear 0.25s;
   -o-transition: color linear 0.25s;
   -webkit-transition: color linear 0.25s;
   transition: color linear 0.25s; }
   .menu-link:hover, nav.navbar-theme .navbar-nav > li > a:hover {
-    color: #f0ad4e; }
+    color: #f0ad4e;
+    background-color: inherit; }
   .menu-link.active, nav.navbar-theme .navbar-nav > li > a.active {
     background: #000000;
     color: #f0ad4e;
@@ -1055,16 +1055,19 @@ a {
   outline: none; }
 
 nav.navbar-theme {
-  background-color: #333333;
+  background-color: #ffffff;
   border: none; }
+  nav.navbar-theme.scroll {
+    box-shadow: 0px 3px 5px #efefef; }
   nav.navbar-theme .btn-link {
-    color: #ffffff; }
+    color: #5864ff; }
     nav.navbar-theme .btn-link:hover {
-      text-decoration: none; }
+      text-decoration: none;
+      color: #f0ad4e; }
   nav.navbar-theme .navbar-brand {
     color: #ffffff; }
     nav.navbar-theme .navbar-brand .brand-image {
-      height: 40px; }
+      height: 50px; }
   nav.navbar-theme .navbar-toggle, nav.navbar-theme .navbar-toggle:hover, nav.navbar-theme .navbar-toggle:focus {
     background: #f0ad4e; }
 
@@ -1089,10 +1092,11 @@ nav.navbar-theme {
   margin-right: -15px; }
 
 .home-banner {
-  background-color: #f0ad4e; }
+  background-color: #ffffff; }
   .home-banner h1 {
     font-size: 36px;
-    color: #333333; }
+    color: #333333;
+    line-height: 1.6; }
   .home-banner p {
     font-size: 20px; }
 
